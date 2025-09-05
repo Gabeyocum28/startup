@@ -132,3 +132,6 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
 - [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+
+
+Here is my first edit!
