@@ -23,7 +23,7 @@ Imagine never waiting in long office hour lines again, while still getting perso
 
 ### Design
 
-![Application Wireframes](design-wireframes.jpg)
+![Application Wireframes](IMG_1695.JPG)
 
 The application features a role-based interface with distinct experiences for teachers and students:
 
