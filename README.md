@@ -23,33 +23,66 @@ Imagine never waiting in long office hour lines again, while still getting perso
 
 ### Design
 
-![Design image](placeholder.png)
+![Application Wireframes](design-wireframes.jpg)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The application features a role-based interface with distinct experiences for teachers and students:
 
-```mermaid
-sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
-```
+**Login/Registration Flow**: Secure authentication distinguishing between teacher and student accounts with encrypted password storage.
 
-### Key features
+**Teacher Dashboard**: Comprehensive class management where teachers can create classes, upload course materials, monitor student interactions, and customize their AI assistant's behavior and knowledge base.
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+**Student Dashboard**: Simple interface showing enrolled classes with easy access to AI chat sessions and the ability to join new classes via teacher-provided codes.
+
+**AI Chat Interface**: Interactive learning environment where students can chat with course-aware AI, take practice tests, get homework help, upload files for assistance, and receive personalized learning support that adapts to their individual needs.
+
+- **Role-Based Authentication**: Secure login system distinguishing between teachers and students with encrypted credentials
+- **Class Management**: Teachers create classes with unique join codes for easy student enrollment
+- **Intelligent File Processing**: Teachers upload course materials (syllabi, notes, assignments) for AI context training
+- **Adaptive AI Assistant**: AI that learns each student's preferences, knowledge level, and optimal learning style
+- **Interactive Learning Tools**: Practice test generation, homework checking, and step-by-step problem solving assistance
+- **Conversation Memory**: AI remembers past interactions to provide increasingly personalized help
+- **File Upload Support**: Students can upload assignments or questions for AI analysis and feedback
+- **Teacher Oversight**: Teachers can monitor AI interactions and customize assistant behavior for their specific course needs
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Proper HTML structure for login/registration pages, teacher dashboard with expandable class sections, student dashboard with class listings, and interactive chat interface. Semantic elements for accessibility and clean navigation between all application views.
+
+- **CSS** - Professional responsive design that works on desktop and mobile devices. Modern UI with chat bubbles, expandable class cards, file upload styling, loading animations, and consistent branding. Grid and flexbox layouts for dashboard organization.
+
+- **React** - Component-based architecture with:
+  - Authentication components for login/registration with role selection
+  - Teacher dashboard with dynamic class expansion and file management
+  - Student dashboard with class joining and chat access
+  - Interactive chat interface with real-time messaging
+  - File upload components with progress tracking
+  - Routing between different user views and chat sessions
+
+- **Service** - Backend service providing:
+  - User registration, login, and logout with role-based authentication
+  - Class creation and management with unique join codes
+  - File upload processing and text extraction for AI training
+  - AI integration with OpenAI API including conversation context and memory
+  - Student progress tracking and learning preference storage
+  - Third-party service integration for enhanced learning features (educational APIs)
+  - Practice test generation and homework checking endpoints
+
+- **DB/Login** - MongoDB storage for:
+  - User accounts with encrypted passwords and role designation (teacher/student)
+  - Class information with join codes and enrolled students
+  - Uploaded course materials and extracted text content
+  - Conversation history and student learning profiles
+  - AI interaction logs and student progress tracking
+  - Secure session management with authentication required for all features
+
+- **WebSocket** - Real-time features including:
+  - Live chat messaging between students and AI
+  - Real-time notifications when students join classes or start chat sessions
+  - Live updates of student activity for teacher monitoring
+  - Instant delivery of AI responses and typing indicators
+  - Real-time file upload progress and processing status updates
 
 ## 🚀 AWS deliverable
 
