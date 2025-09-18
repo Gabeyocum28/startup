@@ -11,8 +11,8 @@
 ## AWS
 
 My Elastic IP address is: 44.196.180.132
-http://44.196.180.132/
-http://polyrhythmd.com/
+https://44.196.180.132/
+https://polyrhythmd.com/
 
 To shell in use ssh -i /Users/gabrielyocum/Desktop/School/Fall2025/CS260/Server-Key/production.pem ubuntu@44.196.180.132
 
