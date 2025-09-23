@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Album Review</title>
+</head>
+<body>
+    <h1>Album Review</h1>
+
+    <!-- Album Search -->
+    <label for="album-search">Search Album:</label>
+    <input type="text" id="album-search" name="album-search" placeholder="Enter album name">
+
+    <!-- Album Cover (hardcoded example) -->
+    <div>
+        <h2>Album Cover</h2>
+        <img src="https://via.placeholder.com/200x200?text=Album+Cover" alt="Album Cover" width="200" height="200">
+    </div>
+
+    <!-- Star Rating (1-5, half stars) -->
+    <div>
+        <h2>Rating</h2>
+        <label>
+            <input type="radio" name="rating" value="0.5"> 0.5
+        </label>
+        <label>
+            <input type="radio" name="rating" value="1"> 1
+        </label>
+        <label>
+            <input type="radio" name="rating" value="1.5"> 1.5
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2"> 2
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2.5"> 2.5
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3"> 3
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3.5"> 3.5
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4"> 4
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4.5"> 4.5
+        </label>
+        <label>
+            <input type="radio" name="rating" value="5"> 5
+        </label>
+    </div>
+
+    <!-- Review Textarea -->
+    <div>
+        <h2>Your Review</h2>
+        <textarea name="review" rows="5" cols="40" placeholder="Write your review here..."></textarea>
+    </div>
+
+    <!-- Like Option -->
+    <div>
+        <label>
+            <input type="checkbox" name="like" value="like"> Like this album
+        </label>
+    </div>
+
+    <!-- Tag Option -->
+    <div>
+        <label for="tag">Tag:</label>
+        <input type="text" id="tag" name="tag" placeholder="Enter a tag">
+    </div>
+
+    <!-- Submit Button -->
+    <div>
+        <button type="submit">Submit Review</button>
+    </div>
+</body>
+</html>
