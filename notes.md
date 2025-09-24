@@ -18,6 +18,8 @@ To shell in use ssh -i /Users/gabrielyocum/Desktop/School/Fall2025/CS260/Server-
 
 ssh -i /Users/gabrielyocum/Desktop/School/Fall2025/CS260/Server-Key/production.pem ubuntu@polyrhythmd.com
 
+./deployFiles.sh -k /Users/gabrielyocum/Desktop/School/Fall2025/CS260/Server-Key/production.pem -h polyrhythmd.com -s startup
+
 ## Caddy
 
 No problems worked just like it said in the [instruction](https://github.com/webprogramming260/.github/blob/main/profile/webServers/https/https.md).
