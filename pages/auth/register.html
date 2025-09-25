@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <p style="color: red;">Data from here will be stored in DB for auth</p>
+    <h2>Register</h2>
+    <form>
+        <div>
+            
+            <label for="firstname">First Name</label>
+            <input id="firstname" name="firstname" type="text" required>
+            <label for="lastname">Last Name</label>
+            <input id="lastname" name="lastname" type="text" required>
+        </div>
+        <div>
+            <label for="birthday">Birthday</label>
+            <input id="birthday" name="birthday" type="date" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+        </div>
+        <div>
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" required>
+        </div>
+        <div>
+            <label for="genres">Favorite Music Genres</label>
+            <select id="genres" name="genres" multiple required>
+                <option value="rock">Rock</option>
+                <option value="pop">Pop</option>
+                <option value="hiphop">Hip-Hop</option>
+                <option value="jazz">Jazz</option>
+                <option value="classical">Classical</option>
+                <option value="country">Country</option>
+                <option value="electronic">Electronic</option>
+                <option value="blues">Blues</option>
+                <option value="reggae">Reggae</option>
+                <option value="metal">Metal</option>
+            </select>
+        </div>
+        <div>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+        </div>
+        <div>
+            <label for="confirm_password">Confirm Password</label>
+            <input id="confirm_password" name="confirm_password" type="password" required>
+        </div>
+        <div>
+            <button type="button" onclick="window.location.href='/index.html'">Return</button>
+            <button type="button" onclick="window.location.href='/pages/user/profile.html'">Register</button>
+        </div>
+    </form>
+
+</body>
+</html>

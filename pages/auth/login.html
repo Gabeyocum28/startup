@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <p style="color: red;">Data from here will be checked in DB for login</p>
+    <h2>Login</h2>
+    <form>
+        <div>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+        </div>
+        <div>
+            <button type="button" onclick="window.location.href='/pages/auth/register.html'">Register</button>
+            <button type="button" onclick="window.location.href='/pages/user/profile.html'">Login</button>
+        </div>
+    </form>
+
+</body>
+</html>
