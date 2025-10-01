@@ -1,8 +1,8 @@
-# OfficeHoursAI - Intelligent TA Assistant
+# Polyrhythmd - Music Review Platform
 
 [My Notes](notes.md)
 
-OfficeHoursAI revolutionizes office hours by providing students with instant, intelligent tutoring assistance while helping teachers manage virtual office hours efficiently. Students can join virtual offices, upload course materials, and chat with an AI teaching assistant that understands their specific coursework in a way that incentivises learning, not simply giving answers.
+Polyrhythmd is a music review platform designed for the music critic in all of us. Users can discover, review, and share their thoughts on albums while connecting with other music enthusiasts in a community-driven environment.
 
 ## 🚀 Specification Deliverable
 
@@ -19,70 +19,72 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 ### Elevator pitch
 
-Imagine never waiting in long office hour lines again, while still getting personalized help with your coursework. OfficeHoursAI creates virtual office hours where students can instantly chat with an intelligent TA that has been trained on their specific course materials. Teachers upload their class materials such as their syllabus, lecture notes, and assignments, then share a simple join code with students. The AI provides immediate help to homework questions and explains concepts from uploaded materials. This AI would be trained to promote learning and focus on student development over quick answers. It's like having a teaching assistant available 24/7 who actually knows your specific class content.
+Music discovery shouldn't be limited to algorithmic recommendations. Polyrhythmd empowers music lovers to share honest reviews, discover albums through community recommendations, and connect with others who share their musical tastes. Users can search for albums, write detailed reviews with ratings, follow other critics, and build their own music discovery feed. Whether you're a casual listener or a serious music critic, Polyrhythmd provides the tools to explore, evaluate, and share your musical journey with a community that values authentic opinions over popularity metrics.
 
 ### Design
 
 ![Application Wireframes](IMG_1695.JPG)
 
-The application features a role-based interface with distinct experiences for teachers and students:
+The application features a clean, music-focused interface designed for easy navigation and content discovery:
 
-**Login/Registration Flow**: Secure authentication distinguishing between teacher and student accounts with encrypted password storage.
+**Authentication Flow**: Simple login and registration system allowing users to create accounts and manage their profiles.
 
-**Teacher Dashboard**: Comprehensive class management where teachers can create classes, upload course materials, monitor student interactions, and customize their AI assistant's behavior and knowledge base.
+**User Profiles**: Personalized spaces where users can showcase their favorite genres, view their review history, and customize their musical identity.
 
-**Student Dashboard**: Simple interface showing enrolled classes with easy access to AI chat sessions and the ability to join new classes via teacher-provided codes.
+**Album Search & Review**: Integrated search functionality for finding albums, with detailed review forms including star ratings, written reviews, and tagging systems.
 
-**AI Chat Interface**: Interactive learning environment where students can chat with course-aware AI, take practice tests, get homework help, upload files for assistance, and receive personalized learning support that adapts to their individual needs.
+**Social Feed**: Community-driven discovery feed where users can see reviews from followed critics, trending albums, and personalized recommendations.
 
-- **Role-Based Authentication**: Secure login system distinguishing between teachers and students with encrypted credentials
-- **Class Management**: Teachers create classes with unique join codes for easy student enrollment
-- **Intelligent File Processing**: Teachers upload course materials (syllabi, notes, assignments) for AI context training
-- **Adaptive AI Assistant**: AI that learns each student's preferences, knowledge level, and optimal learning style
-- **Interactive Learning Tools**: Practice test generation, homework checking, and step-by-step problem solving assistance
-- **Conversation Memory**: AI remembers past interactions to provide increasingly personalized help
-- **File Upload Support**: Students can upload assignments or questions for AI analysis and feedback
-- **Teacher Oversight**: Teachers can monitor AI interactions and customize assistant behavior for their specific course needs
+**Music Discovery**: Browse albums by genre, rating, popularity, or through user-curated lists and recommendations.
+
+### Key Features
+
+- **Album Search & Discovery**: Search for albums with integrated music database
+- **Review System**: Write detailed reviews with 0.5-5 star ratings and custom tags
+- **User Profiles**: Customizable profiles with favorite genres and review history
+- **Social Feed**: Follow other users and see their latest reviews and discoveries
+- **Rating Analytics**: View aggregate ratings and detailed review breakdowns
+- **Music Recommendations**: Get personalized suggestions based on your review history
+- **Community Features**: Like, comment on, and share reviews with other users
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Proper HTML structure for login/registration pages, teacher dashboard with expandable class sections, student dashboard with class listings, and interactive chat interface. Semantic elements for accessibility and clean navigation between all application views.
+- **HTML** - Proper HTML structure for authentication pages, user profiles, album search interface, review creation forms, and social feed displays. Semantic elements ensure accessibility and clean navigation throughout the application.
 
-- **CSS** - Professional responsive design that works on desktop and mobile devices. Modern UI with chat bubbles, expandable class cards, file upload styling, loading animations, and consistent branding. Grid and flexbox layouts for dashboard organization.
+- **CSS** - Professional responsive design with a dark theme featuring orange-pink gradient branding. Modern UI elements including album art displays, review cards, rating components, and smooth transitions. Responsive grid layouts optimized for both desktop and mobile viewing.
 
-- **React** - Component-based architecture with:
-  - Authentication components for login/registration with role selection
-  - Teacher dashboard with dynamic class expansion and file management
-  - Student dashboard with class joining and chat access
-  - Interactive chat interface with real-time messaging
-  - File upload components with progress tracking
-  - Routing between different user views and chat sessions
+- **React** - Component-based architecture featuring:
+  - Authentication components for login/registration
+  - Album search and display components with dynamic filtering
+  - Review creation and editing interfaces
+  - User profile management and customization
+  - Social feed with infinite scroll and real-time updates
+  - Rating and tagging systems with interactive elements
 
 - **Service** - Backend service providing:
-  - User registration, login, and logout with role-based authentication
-  - Class creation and management with unique join codes
-  - File upload processing and text extraction for AI training
-  - AI integration with OpenAI API including conversation context and memory
-  - Student progress tracking and learning preference storage
-  - Third-party service integration for enhanced learning features (educational APIs)
-  - Practice test generation and homework checking endpoints
+  - User authentication and session management
+  - Album data integration with music APIs (Spotify/Last.fm)
+  - Review creation, editing, and retrieval endpoints
+  - User profile management and social following systems
+  - Search functionality with filtering and sorting
+  - Recommendation engine based on user preferences and behavior
 
 - **DB/Login** - MongoDB storage for:
-  - User accounts with encrypted passwords and role designation (teacher/student)
-  - Class information with join codes and enrolled students
-  - Uploaded course materials and extracted text content
-  - Conversation history and student learning profiles
-  - AI interaction logs and student progress tracking
-  - Secure session management with authentication required for all features
+  - User accounts with encrypted passwords and profile data
+  - Album information and metadata cache
+  - User reviews with ratings, text content, and tags
+  - Social connections and following relationships
+  - User preferences and recommendation data
+  - Secure session management with role-based access
 
 - **WebSocket** - Real-time features including:
-  - Live chat messaging between students and AI
-  - Real-time notifications when students join classes or start chat sessions
-  - Live updates of student activity for teacher monitoring
-  - Instant delivery of AI responses and typing indicators
-  - Real-time file upload progress and processing status updates
+  - Live updates for new reviews and ratings
+  - Real-time notifications for follows, likes, and comments
+  - Live activity feed updates
+  - Instant search suggestions and auto-complete
+  - Real-time recommendation updates based on user activity
 
 ## 🚀 AWS deliverable
 
@@ -100,7 +102,7 @@ I completed all of the HTML files needed and explicitly put down where I was goi
 - [x] **Proper HTML element usage**
 - [x] **Links**
 - [x] **Text**
-- [x] **Images** 
+- [x] **Images**
 - [x] **Login placeholder**
 - [x] **DB data placeholder**
 - [x] **WebSocket placeholder**

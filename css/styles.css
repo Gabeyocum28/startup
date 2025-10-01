@@ -1,1 +1,39 @@
-/*Future css edits here*/
+:root {
+  /* Gradient From icon */
+  --gradient-orange: #FF7E5F;  
+  --gradient-pink: #FD3A84;   
+  
+  /* Background Colors - Dark theme base */
+  --bg-primary: #0F0B1F;    
+  --bg-secondary: #1A1530;  
+  --bg-tertiary: #252040;   
+  --bg-elevated: #2D2550;   
+  
+  /* Text Colors - Hierarchy system for readability */
+  --text-primary: #F5F5F7;    /* Brightest - main headings, important text */
+  --text-secondary: #C4C4D4;  /* Medium - body text, descriptions */
+  --text-muted: #8B8B9E;      /* Softest - less important info, footer */
+  
+  /* Accent Colors - Your brand gradient and effects */
+  --accent-gradient: linear-gradient(135deg, #FF7E5F 0%, #FD3A84 100%);  /* Main gradient */
+  --accent-glow: rgba(255, 126, 95, 0.3);      /* Orange glow effect for shadows */
+  --accent-pink-glow: rgba(253, 58, 132, 0.25); /* Pink glow effect (optional use) */
+  
+  /* UI Elements - Borders and shadows */
+  --border-color: #3A3454;     /* Standard border color for separation */
+  --border-accent: #FF7E5F;    /* Accent border for highlighted elements */
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);      /* Standard shadow for depth */
+  --shadow-glow: 0 4px 30px var(--accent-glow); /* Glowing shadow for accents */
+  
+  /* Status Colors - For notifications and alerts */
+  --success: #4CAF50;  /* Green - success messages */
+  --warning: #FFB74D;  /* Orange - warnings */
+  --error: #EF5350;    /* Red - errors and development markers */
+  
+  /* Spacing Scale - Consistent spacing throughout site */
+  --spacing-xs: 0.5rem;  /* 8px - Tiny gaps */
+  --spacing-sm: 1rem;    /* 16px - Small gaps, standard padding */
+  --spacing-md: 1.5rem;  /* 24px - Medium gaps */
+  --spacing-lg: 2rem;    /* 32px - Large gaps, section padding */
+  --spacing-xl: 3rem;    /* 48px - Extra large gaps */
+}
