@@ -1,7 +1,7 @@
 /* World Values */
 :root {
   /* Gradient From icon */
-  --gradient-orange: #FF7E5F;  
+  --gradient-orange: #FF8A2B;  
   --gradient-pink: #FD3A84;   
   
   /* Background Colors - Dark theme base */
@@ -16,7 +16,7 @@
   --text-muted: #8B8B9E;      /* Softest - less important info, footer */
   
   /* Accent Colors - Your brand gradient and effects */
-  --accent-gradient: linear-gradient(135deg, #FF7E5F 0%, #FD3A84 100%);  /* Main gradient */
+  --accent-gradient: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);  /* Main gradient */
   --accent-glow: rgba(255, 126, 95, 0.3);      /* Orange glow effect for shadows */
   --accent-pink-glow: rgba(253, 58, 132, 0.25); /* Pink glow effect (optional use) */
   
@@ -53,4 +53,53 @@ body {
   color: var(--text-primary);           
   line-height: 1.6;      
   min-height: 100vh;     
+}
+
+/* HEADER STYLES */
+
+header {
+  background: var(--bg-secondary); 
+  padding: var(--spacing-lg) var(--spacing-md); 
+  text-align: center;  
+  border-bottom: 2px solid var(--border-color);  
+  box-shadow: var(--shadow); 
+}
+
+header h1 {
+  font-size: 2.5rem; 
+  background: var(--accent-gradient);  
+  -webkit-background-clip: text;  
+  -webkit-text-fill-color: transparent;  
+  background-clip: text;  
+  margin-bottom: var(--spacing-xs);  
+  font-weight: 700;  
+}
+
+header p {
+  color: var(--text-secondary);  
+  font-size: 1.1rem;  
+  font-style: italic; 
+}
+
+/* Form Styles */
+
+form {
+  text-align: center;
+  width: 100%;              /* Full width on mobile */
+  max-width: 500px;         /* Limits width on larger screens */
+  background-color: var(--bg-tertiary); /* Background color */
+  border: 2px solid var(--border-color); /* Fixed: added 'solid' */
+  border-radius: 12px;      /* Rounded corners */
+  padding: 15px;            /* Space inside the form */
+  margin: 15px auto;        /* 'auto' centers the form horizontally */
+  box-sizing: border-box;   /* Include padding/border in width */
+}
+
+form h2 {
+  font-size: 2rem; 
+  background: var(--accent-gradient);  
+  -webkit-background-clip: text;  
+  -webkit-text-fill-color: transparent;  
+  background-clip: text;  
+  font-weight: 700;
 }
