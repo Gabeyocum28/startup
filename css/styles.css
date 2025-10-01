@@ -147,15 +147,31 @@ button:active {
    BUTTON VARIATIONS
    ================= */
 
-button[type="button ring"] {
+button[type="button aura"] {
   background: var(--bg-elevated);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
 }
 
-button[type="button ring"]:hover {
+button[type="button aura"]:hover {
   background: var(--bg-tertiary);
   border-color: var(--gradient-orange);
+}
+
+/* ============
+   INPUT FIELDS
+   ============ */
+input[type="standard"],
+select,
+textarea {
+  width: 100%;  /* Fill container width */
+  padding: 0.75rem;  /* Comfortable touch target */
+  background: var(--bg-primary);  /* Dark background */
+  border: 1px solid var(--border-color);  /* Subtle border */
+  border-radius: 8px;  /* Rounded corners */
+  color: var(--text-primary);  /* Bright text */
+  font-size: 1rem;  /* Match body text size */
+  transition: all 0.3s ease;  /* Smooth animation */
 }
 
 /* =========================
