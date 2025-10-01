@@ -1,4 +1,7 @@
-/* World Values */
+/* ============
+   World Values 
+   ============ */
+
 :root {
   /* Gradient From icon */
   --gradient-orange: #FF8A2B;  
@@ -10,36 +13,38 @@
   --bg-tertiary: #252040;   
   --bg-elevated: #2D2550;   
   
-  /* Text Colors - Hierarchy system for readability */
-  --text-primary: #F5F5F7;    /* Brightest - main headings, important text */
-  --text-secondary: #C4C4D4;  /* Medium - body text, descriptions */
-  --text-muted: #8B8B9E;      /* Softest - less important info, footer */
+  /* Text Colors */
+  --text-primary: #F5F5F7;    
+  --text-secondary: #C4C4D4; 
+  --text-muted: #8B8B9E;      
   
-  /* Accent Colors - Your brand gradient and effects */
-  --accent-gradient: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);  /* Main gradient */
-  --accent-glow: rgba(255, 126, 95, 0.3);      /* Orange glow effect for shadows */
-  --accent-pink-glow: rgba(253, 58, 132, 0.25); /* Pink glow effect (optional use) */
+  /* Accent Colors  */
+  --accent-gradient: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);  
+  --accent-glow: rgba(255, 126, 95, 0.3);      
+  --accent-pink-glow: rgba(253, 58, 132, 0.25); 
   
-  /* UI Elements - Borders and shadows */
-  --border-color: #3A3454;     /* Standard border color for separation */
-  --border-accent: #FF7E5F;    /* Accent border for highlighted elements */
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);      /* Standard shadow for depth */
-  --shadow-glow: 0 4px 30px var(--accent-glow); /* Glowing shadow for accents */
+  /* UI Elements */
+  --border-color: #3A3454;     
+  --border-accent: #FF7E5F;    
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);      
+  --shadow-glow: 0 4px 30px var(--accent-glow); 
   
-  /* Status Colors - For notifications and alerts */
-  --success: #4CAF50;  /* Green - success messages */
-  --warning: #FFB74D;  /* Orange - warnings */
-  --error: #EF5350;    /* Red - errors and development markers */
+  /* Status Colors */
+  --success: #4CAF50;  
+  --warning: #FFB74D;  
+  --error: #EF5350;  
   
-  /* Spacing Scale - Consistent spacing throughout site */
-  --spacing-xs: 0.5rem;  /* 8px - Tiny gaps */
-  --spacing-sm: 1rem;    /* 16px - Small gaps, standard padding */
-  --spacing-md: 1.5rem;  /* 24px - Medium gaps */
-  --spacing-lg: 2rem;    /* 32px - Large gaps, section padding */
-  --spacing-xl: 3rem;    /* 48px - Extra large gaps */
+  /* Spacing Scale */
+  --spacing-xs: 0.5rem;  /* 8px */
+  --spacing-sm: 1rem;    /* 16px */
+  --spacing-md: 1.5rem;  /* 24px */
+  --spacing-lg: 2rem;    /* 32px */
+  --spacing-xl: 3rem;    /* 48px */
 }
 
-/* Global Styles */
+/* ============= 
+   Global Styles 
+   ============= */
 
 * {
   margin: 0;           
@@ -55,7 +60,9 @@ body {
   min-height: 100vh;     
 }
 
-/* HEADER STYLES */
+/* ======
+   HEADER 
+   ====== */
 
 header {
   background: var(--bg-secondary); 
@@ -81,18 +88,24 @@ header p {
   font-style: italic; 
 }
 
-/* Form Styles */
+/* ====
+   FORM
+   ==== */
 
 form {
   text-align: center;
   width: 100%;              /* Full width on mobile */
   max-width: 500px;         /* Limits width on larger screens */
-  background-color: var(--bg-tertiary); /* Background color */
+  background: var(--bg-tertiary); /* Background color */
   border: 2px solid var(--border-color); /* Fixed: added 'solid' */
   border-radius: 12px;      /* Rounded corners */
-  padding: 15px;            /* Space inside the form */
+  padding: var(--spacing-lg);            /* Space inside the form */
   margin: 15px auto;        /* 'auto' centers the form horizontally */
   box-sizing: border-box;   /* Include padding/border in width */
+}
+
+form div {
+  margin-bottom: var(--spacing-sm);  /* Space between form fields */
 }
 
 form h2 {
@@ -102,4 +115,40 @@ form h2 {
   -webkit-text-fill-color: transparent;  
   background-clip: text;  
   font-weight: 700;
+}
+
+form button {
+  padding: 0.75rem 1.5rem;  /* Comfortable click area */
+  background: var(--accent-gradient);  /* Brand gradient */
+  color: white;  /* White text on gradient */
+  border: none;  /* Remove default border */
+  border-radius: 12px;  /* Rounded corners */
+  font-size: 1rem;  /* Match body text */
+  font-weight: 600;  /* Bold for emphasis */
+  cursor: pointer;  /* Show it's clickable */
+  transition: all 0.3s ease;  /* Smooth animations */
+  box-shadow: var(--shadow);  /* Initial depth */
+}
+
+/* Hover state - lift and glow */
+form button:hover {
+  transform: translateY(-2px);  /* Lift up slightly */
+  box-shadow: var(--shadow-glow);  /* Add glow effect */
+}
+
+/* Active/click state - press down */
+ form button:active {
+  transform: translateY(0);  /* Return to normal position */
+}
+
+/* =========================
+   DEBUG/DEVELOPMENT MARKERS
+   ========================= */
+p[type="dev"] {
+  background: rgba(239, 83, 80, 0.1);  /* Light red tint background */
+  padding: var(--spacing-sm);  /* Internal padding */
+  border-radius: 6px;  /* Rounded corners */
+  border-left: 3px solid var(--error);  /* Red accent stripe */
+  color: var(--error) !important;  /* Force red color */
+  font-weight: 500;  /* Medium weight for emphasis */
 }

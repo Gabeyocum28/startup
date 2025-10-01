@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Login</title>
@@ -8,7 +7,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <p style="color: red;">Data from here will be checked in DB for login</p>
+    <p type="dev">Data from here will be checked in DB for login</p>
     <form>
         <h2>Login</h2>
         <div>
@@ -18,8 +17,8 @@
             <input id="password" name="password" type="password" placeholder="Password" required>
         </div>
         <div>
+              <button type="button" onclick="window.location.href='/pages/user/profile.html'">Log in</button>
               <button type="button" onclick="window.location.href='/pages/auth/register.html'">Register</button>
-            <button type="button" onclick="window.location.href='/pages/user/profile.html'">Login</button>
         </div>
     </form>
 
