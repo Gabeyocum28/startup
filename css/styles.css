@@ -4,35 +4,35 @@
 
 :root {
   /* Gradient From icon */
-  --gradient-orange: #FF8A2B;  
-  --gradient-pink: #FD3A84;   
+  --gradient-orange: #FF8A2B;
+  --gradient-pink: #FD3A84;
   
   /* Background Colors - Dark theme base */
-  --bg-primary: #0F0B1F;    
-  --bg-secondary: #1A1530;  
-  --bg-tertiary: #252040;   
-  --bg-elevated: #2D2550;   
+  --bg-primary: #0F0B1F;
+  --bg-secondary: #1A1530;
+  --bg-tertiary: #252040;
+  --bg-elevated: #2D2550;
   
   /* Text Colors */
-  --text-primary: #F5F5F7;    
-  --text-secondary: #C4C4D4; 
-  --text-muted: #8B8B9E;      
+  --text-primary: #F5F5F7;
+  --text-secondary: #C4C4D4;
+  --text-muted: #8B8B9E;
   
   /* Accent Colors  */
-  --accent-gradient: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);  
-  --accent-glow: rgba(255, 126, 95, 0.3);      
-  --accent-pink-glow: rgba(253, 58, 132, 0.25); 
+  --accent-gradient: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);
+  --accent-glow: rgba(255, 126, 95, 0.3);
+  --accent-pink-glow: rgba(253, 58, 132, 0.25);
   
   /* UI Elements */
-  --border-color: #3A3454;     
-  --border-accent: #FF7E5F;    
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);      
-  --shadow-glow: 0 4px 30px var(--accent-glow); 
+  --border-color: #3A3454;
+  --border-accent: #FF7E5F;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 4px 30px var(--accent-glow);
   
   /* Status Colors */
-  --success: #4CAF50;  
-  --warning: #FFB74D;  
-  --error: #EF5350;  
+  --success: #4CAF50;
+  --warning: #FFB74D;
+  --error: #EF5350;
   
   /* Spacing Scale */
   --spacing-xs: 0.5rem;  /* 8px */
@@ -47,17 +47,17 @@
    ============= */
 
 * {
-  margin: 0;           
-  padding: 0;          
-  box-sizing: border-box;  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--bg-primary);  
-  color: var(--text-primary);           
-  line-height: 1.6;      
-  min-height: 100vh;     
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
 /* ======
@@ -65,27 +65,27 @@ body {
    ====== */
 
 header {
-  background: var(--bg-secondary); 
-  padding: var(--spacing-lg) var(--spacing-md); 
-  text-align: center;  
-  border-bottom: 2px solid var(--border-color);  
-  box-shadow: var(--shadow); 
+  background: var(--bg-secondary);
+  padding: var(--spacing-lg) var(--spacing-md);
+  text-align: center;
+  border-bottom: 2px solid var(--border-color);
+  box-shadow: var(--shadow);
 }
 
 header h1 {
-  font-size: 2.5rem; 
-  background: var(--accent-gradient);  
-  -webkit-background-clip: text;  
-  -webkit-text-fill-color: transparent;  
-  background-clip: text;  
-  margin-bottom: var(--spacing-xs);  
-  font-weight: 700;  
+  font-size: 2.5rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 700;
 }
 
 header p {
-  color: var(--text-secondary);  
-  font-size: 1.1rem;  
-  font-style: italic; 
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-style: italic;
 }
 
 /* ====
@@ -94,102 +94,79 @@ header p {
 
 form {
   text-align: center;
-  width: 100%;              /* Full width on mobile */
-  max-width: 500px;         /* Limits width on larger screens */
-  background: var(--bg-tertiary); /* Background color */
-  border: 2px solid var(--border-color); /* Fixed: added 'solid' */
-  border-radius: 12px;      /* Rounded corners */
-  padding: var(--spacing-lg);            /* Space inside the form */
-  margin: 15px auto;        /* 'auto' centers the form horizontally */
-  box-sizing: border-box;   /* Include padding/border in width */
+  width: 100%;
+  max-width: 500px;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  margin: 15px auto;   
+  box-sizing: border-box;
 }
 
 form div {
-  margin-bottom: var(--spacing-sm);  /* Space between form fields */
+  margin-bottom: var(--spacing-sm);
 }
 
 form h2 {
-  font-size: 2rem; 
-  background: var(--accent-gradient);  
-  -webkit-background-clip: text;  
-  -webkit-text-fill-color: transparent;  
-  background-clip: text;  
+  font-size: 2rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 700;
-}
-
-form button {
-  padding: 0.75rem 1.5rem;  /* Comfortable click area */
-  background: var(--accent-gradient);  /* Brand gradient */
-  color: white;  /* White text on gradient */
-  border: none;  /* Remove default border */
-  border-radius: 12px;  /* Rounded corners */
-  font-size: 1rem;  /* Match body text */
-  font-weight: 600;  /* Bold for emphasis */
-  cursor: pointer;  /* Show it's clickable */
-  transition: all 0.3s ease;  /* Smooth animations */
-  box-shadow: var(--shadow);  /* Initial depth */
-}
-
-/* Hover state - lift and glow */
-form button:hover {
-  transform: translateY(-2px);  /* Lift up slightly */
-  box-shadow: var(--shadow-glow);  /* Add glow effect */
-}
-
-/* Active/click state - press down */
- form button:active {
-  transform: translateY(0);  /* Return to normal position */
 }
 
 /* =======
    BUTTONS
    ======= */
+
 button {
-  padding: 0.75rem 1.5rem;  /* Comfortable click area */
-  background: var(--accent-gradient);  /* Brand gradient */
-  color: white;  /* White text on gradient */
-  border: none;  /* Remove default border */
-  border-radius: 8px;  /* Rounded corners */
-  font-size: 1rem;  /* Match body text */
-  font-weight: 600;  /* Bold for emphasis */
-  cursor: pointer;  /* Show it's clickable */
-  transition: all 0.3s ease;  /* Smooth animations */
-  box-shadow: var(--shadow);  /* Initial depth */
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-gradient);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
 }
 
-/* Hover state - lift and glow */
 button:hover {
-  transform: translateY(-2px);  /* Lift up slightly */
-  box-shadow: var(--shadow-glow);  /* Add glow effect */
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
-/* Active/click state - press down */
 button:active {
-  transform: translateY(0);  /* Return to normal position */
+  transform: translateY(0);
 }
 
 /* =================
-   SECONDARY BUTTONS
+   BUTTON VARIATIONS
    ================= */
+
 button[type="button ring"] {
-  background: var(--bg-elevated);  /* Lighter background */
-  color: var(--text-primary);  /* Normal text color */
-  border: 1px solid var(--border-color);  /* Subtle border */
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 button[type="button ring"]:hover {
-  background: var(--bg-tertiary);  /* Slightly darker on hover */
-  border-color: var(--gradient-orange);  /* Orange accent border */
+  background: var(--bg-tertiary);
+  border-color: var(--gradient-orange);
 }
 
 /* =========================
    DEBUG/DEVELOPMENT MARKERS
    ========================= */
+
 p[type="dev"] {
-  background: rgba(239, 83, 80, 0.1);  /* Light red tint background */
-  padding: var(--spacing-sm);  /* Internal padding */
-  border-radius: 6px;  /* Rounded corners */
-  border-left: 3px solid var(--error);  /* Red accent stripe */
-  color: var(--error) !important;  /* Force red color */
-  font-weight: 500;  /* Medium weight for emphasis */
+  background: rgba(239, 83, 80, 0.1);
+  padding: var(--spacing-sm);
+  border-radius: 6px;
+  border-left: 3px solid var(--error);
+  color: var(--error) !important;
+  font-weight: 500;
 }
