@@ -141,6 +141,47 @@ form button:hover {
   transform: translateY(0);  /* Return to normal position */
 }
 
+/* =======
+   BUTTONS
+   ======= */
+button {
+  padding: 0.75rem 1.5rem;  /* Comfortable click area */
+  background: var(--accent-gradient);  /* Brand gradient */
+  color: white;  /* White text on gradient */
+  border: none;  /* Remove default border */
+  border-radius: 8px;  /* Rounded corners */
+  font-size: 1rem;  /* Match body text */
+  font-weight: 600;  /* Bold for emphasis */
+  cursor: pointer;  /* Show it's clickable */
+  transition: all 0.3s ease;  /* Smooth animations */
+  box-shadow: var(--shadow);  /* Initial depth */
+}
+
+/* Hover state - lift and glow */
+button:hover {
+  transform: translateY(-2px);  /* Lift up slightly */
+  box-shadow: var(--shadow-glow);  /* Add glow effect */
+}
+
+/* Active/click state - press down */
+button:active {
+  transform: translateY(0);  /* Return to normal position */
+}
+
+/* =================
+   SECONDARY BUTTONS
+   ================= */
+button[type="button ring"] {
+  background: var(--bg-elevated);  /* Lighter background */
+  color: var(--text-primary);  /* Normal text color */
+  border: 1px solid var(--border-color);  /* Subtle border */
+}
+
+button[type="button ring"]:hover {
+  background: var(--bg-tertiary);  /* Slightly darker on hover */
+  border-color: var(--gradient-orange);  /* Orange accent border */
+}
+
 /* =========================
    DEBUG/DEVELOPMENT MARKERS
    ========================= */
