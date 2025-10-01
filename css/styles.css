@@ -1,3 +1,4 @@
+/* World Values */
 :root {
   /* Gradient From icon */
   --gradient-orange: #FF7E5F;  
@@ -36,4 +37,20 @@
   --spacing-md: 1.5rem;  /* 24px - Medium gaps */
   --spacing-lg: 2rem;    /* 32px - Large gaps, section padding */
   --spacing-xl: 3rem;    /* 48px - Extra large gaps */
+}
+
+/* Global Styles */
+
+* {
+  margin: 0;           
+  padding: 0;          
+  box-sizing: border-box;  
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-primary);  
+  color: var(--text-primary);           
+  line-height: 1.6;      
+  min-height: 100vh;     
 }
