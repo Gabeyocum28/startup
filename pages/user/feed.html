@@ -8,49 +8,110 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <p style="color: red;">Data from here will be in DB</p>
+    <p type="dev">Data from here will be in DB</p>
     <h1>Friend Feed</h1>
-    <section>
-        <div>
-            <h3>Great Album!</h3>
-            <p>★★★★☆</p>
-            <p>This album is a masterpiece. The production quality and lyrical depth are outstanding.</p>
-            <p>- MusicLover123</p>
-        </div>    
-    <section>
-        <div>
-            <h3>Not my style</h3>
-            <p>★★☆☆☆</p>
-            <p>I found the album to be a bit too experimental for my taste, but I can see why others enjoy it.</p>
-            <p>- IndieFan456</p>
-        </div>
-    </section>
-    <aside>
-        <div>
-            <h2>Quick Actions</h2>
-            <button type="button" onclick="window.location.href='/pages/user/profile.html'">View Profile</button>
-            <button type="button" onclick="window.location.href='/pages/music/search.html'">Search Albums</button>
-            <button type="button" onclick="window.location.href='/pages/music/review.html'">Write a Review</button>
-        </div>
-        <p style="color: red;">Data from here will be from spotify api</p>
-        <div>
-            <h3>Top Friends' Spotify Tracks</h3>
-            <ul>
-                <li>
-                    <p><strong>Alice:</strong>"Blinding Lights" by The Weeknd</p>
-                </li>
-                <li>
-                    <p><strong>Bob:</strong>"Mr. Brightside" by The Killers</p>
-                </li>
-                <li>
-                    <p><strong>Charlie:</strong>"Levitating" by Dua Lipa</p>
-                </li>
-            </ul>
-        </div>
-        <div>
-            <p style="color: red;">Data from here will be in DB and webhook when a friend has reviewed</p>
-        </div>
-    </aside>
+    
+    <!-- Main container for sidebar layout -->
+    <div class="feed-container">
+        <!-- Main content area -->
+        <main class="feed-main">
+            <!-- Review Card 1 -->
+            <div class="review-card">
+                <!-- Album Info Section -->
+                <div class="album-info">
+                    <img src="/images/igor.jpg" alt="IGOR Album Cover" class="album-cover">
+                    <div class="album-details">
+                        <h3 class="album-title">IGOR</h3>
+                        <p class="album-artist">Tyler, the Creator</p>
+                        <p class="review-rating">★★★★☆</p>
+                    </div>
+                </div>
+                
+                <!-- Review Content -->
+                <div class="review-content">
+                    <h4 class="review-title">Great Album!</h4>
+                    <p class="review-text">This album is a masterpiece. The production quality and lyrical depth are outstanding.</p>
+                </div>
+                
+                <!-- User Info -->
+                <p class="review-author">@MusicLover123</p>
+                
+                <!-- Interaction Buttons -->
+                <div class="review-actions">
+                    <button class="action-btn like-btn">
+                        <span class="icon">♥</span>
+                        <span class="count">24</span>
+                    </button>
+                    <button class="action-btn comment-btn">
+                        <span class="icon">💬</span>
+                        <span class="count">5</span>
+                    </button>
+                </div>
+            </div>
+
+            
+            <div class="review-card">
+                <div class="album-info">
+                    <img src="https://via.placeholder.com/80x80?text=Album" alt="Album Cover" class="album-cover">
+                    <div class="album-details">
+                        <h3 class="album-title">Random Access Memories</h3>
+                        <p class="album-artist">Daft Punk</p>
+                        <p class="review-rating">★★☆☆☆</p>
+                    </div>
+                </div>
+                
+               
+                <div class="review-content">
+                    <h4 class="review-title">Not my style</h4>
+                    <p class="review-text">I found the album to be a bit too experimental for my taste, but I can see why others enjoy it.</p>
+                </div>
+                
+                
+                <p class="review-author">@IndieFan456</p>
+                
+                
+                <div class="review-actions">
+                    <button class="action-btn like-btn">
+                        <span class="icon">♥</span>
+                        <span class="count">12</span>
+                    </button>
+                    <button class="action-btn comment-btn">
+                        <span class="icon">💬</span>
+                        <span class="count">3</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        
+        <aside class="feed-sidebar">
+            <div class="sidebar-section">
+                <h2>Quick Actions</h2>
+                <button type="button" onclick="window.location.href='/pages/user/profile.html'">View Profile</button>
+                <button type="button" onclick="window.location.href='/pages/music/search.html'">Search Albums</button>
+                <button type="button" onclick="window.location.href='/pages/music/review.html'">Write a Review</button>
+            </div>
+            
+            <p type="dev">Data from here will be from spotify api</p>
+            
+            <div class="sidebar-section">
+                <h3>Top Friends' Spotify Tracks</h3>
+                <ul>
+                    <li>
+                        <p><strong>Alice:</strong> "Blinding Lights" by The Weeknd</p>
+                    </li>
+                    <li>
+                        <p><strong>Bob:</strong> "Mr. Brightside" by The Killers</p>
+                    </li>
+                    <li>
+                        <p><strong>Charlie:</strong> "Levitating" by Dua Lipa</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <p type="dev">Data from here will be in DB and webhook when a friend has reviewed</p>
+        </aside>
+    </div>
     
 </body>
 </html>
