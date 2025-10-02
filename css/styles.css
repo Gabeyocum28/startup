@@ -161,17 +161,30 @@ button[type="button aura"]:hover {
 /* ============
    INPUT FIELDS
    ============ */
+
 input[type="standard"],
 select,
 textarea {
-  width: 100%;  /* Fill container width */
-  padding: 0.75rem;  /* Comfortable touch target */
-  background: var(--bg-primary);  /* Dark background */
-  border: 1px solid var(--border-color);  /* Subtle border */
-  border-radius: 8px;  /* Rounded corners */
-  color: var(--text-primary);  /* Bright text */
-  font-size: 1rem;  /* Match body text size */
-  transition: all 0.3s ease;  /* Smooth animation */
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-row {
+  display: flex;
+  gap: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+  .input-row {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
 }
 
 /* =========================

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Register</title>
@@ -8,26 +7,30 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <p style="color: red;">Data from here will be stored in DB four auth</p>
-    <h2>Register</h2>
+    <p type="dev">Data from here will be stored in DB four auth</p>
     <form>
-        <div>
-            <label for="firstname">First Name</label>
-            <input id="firstname" name="firstname" type="standard" required>
-            <label for="lastname">Last Name</label>
-            <input id="lastname" name="lastname" type="standard" required>
+        <h2>Register</h2>
+        <div class="input-row">
+            <div>
+                <input id="firstname" name="firstname" type="standard" placeholder="First Name" required>
+            </div>
+            <div>
+                <input id="lastname" name="lastname" type="standard" placeholder="Last Name" required>
+            </div>
         </div>
-        <div>
-            <label for="birthday">Birthday</label>
-            <input id="birthday" name="birthday" type="standard" required>
+        
+        <div class="input-row">
+            <div>
+                <label for="birthday">Birthday</label>
+                <input id="birthday" name="birthday" type="date" placeholder="Date of Birth" required>
+            </div>
+            <div>
+                <input id="phone" name="phone" type="standard" placeholder="(555) 123-4567" required>
+            </div>
         </div>
+        
         <div>
-            <label for="email">Email</label>
-            <input id="email" name="email" type="standard" required>
-        </div>
-        <div>
-            <label for="phone">Phone Number</label>
-            <input id="phone" name="phone" type="standard" required>
+            <input id="email" name="email" type="standard" placeholder="Email" required>
         </div>
         <div>
             <label for="genres">Favorite Music Genres</label>
@@ -45,20 +48,17 @@
             </select>
         </div>
         <div>
-            <label for="username">Username</label>
-            <input id="username" name="username" type="standard" required>
+            <input id="username" name="username" type="standard" placeholder="Username" required>
         </div>
         <div>
-            <label for="password">Password</label>
-            <input id="password" name="password" type="standard" required>
+            <input id="password" name="password" type="standard" placeholder="Password" required>
         </div>
         <div>
-            <label for="confirm_password">Confirm Password</label>
-            <input id="confirm_password" name="confirm_password" type="standard" required>
+            <input id="confirm_password" name="confirm_password" type="standard" placeholder="Confirm Password" required>
         </div>
         <div>
-            <button type="button" onclick="window.location.href='/index.html'">Return</button>
-            <button type="button" onclick="window.location.href='/pages/user/profile.html'">Register</button>
+            <button type="button aura" onclick="window.location.href='/index.html'">Return</button>
+            <button type="button aura" onclick="window.location.href='/pages/user/profile.html'">Register</button>
         </div>
     </form>
 
