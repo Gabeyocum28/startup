@@ -8,71 +8,80 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Album Review</h1>
     <p type="dev">Search and album cover will be helped by spotify api</p>
-    <label for="album-search">Search Album:</label>
-    <input id="album-search" name="album-search" type="standard" placeholder="Enter album name">
+    <header type="banner">
+        <h1 type="banner">Polyrhythmd</h1>
+        <button type="button aura" onclick="window.location.href='/index.html'">Home</button>
+    </header>
+    <main>
+        <h1>Review</h1>
+        <label for="album-search">Search Album:</label>
+        <input id="album-search" name="album-search" type="standard" placeholder="Enter album name">
 
-    <div>
-        <h2>Album Cover</h2>
-        <img src="https://via.placeholder.com/200x200?text=Album+Cover" alt="Album Cover" width="200" height="200">
-    </div>
-    <p type="dev">Data from here will stored be in DB</p>
+        <div>
+            <h2>Album Cover</h2>
+            <img src="https://via.placeholder.com/200x200?text=Album+Cover" alt="Album Cover" width="200" height="200">
+        </div>
+        <p type="dev">Data from here will stored be in DB</p>
 
-    <div>
-        <h2>Rating</h2>
-        <div class="rating-group">
+        <div>
+            <h2>Rating</h2>
+            <div class="rating-group">
+                <label>
+                    <input type="radio" name="rating" value="0.5"> 0.5
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="1"> 1
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="1.5"> 1.5
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="2"> 2
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="2.5"> 2.5
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="3"> 3
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="3.5"> 3.5
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="4"> 4
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="4.5"> 4.5
+                </label>
+                <label>
+                    <input type="radio" name="rating" value="5"> 5
+                </label>
+            </div>
+        </div>
+
+        <div>
+            <h2>Your Review</h2>
+            <textarea name="review" rows="5" cols="40" placeholder="Write your review here..."></textarea>
+        </div>
+
+        <div>
             <label>
-                <input type="radio" name="rating" value="0.5"> 0.5
-            </label>
-            <label>
-                <input type="radio" name="rating" value="1"> 1
-            </label>
-            <label>
-                <input type="radio" name="rating" value="1.5"> 1.5
-            </label>
-            <label>
-                <input type="radio" name="rating" value="2"> 2
-            </label>
-            <label>
-                <input type="radio" name="rating" value="2.5"> 2.5
-            </label>
-            <label>
-                <input type="radio" name="rating" value="3"> 3
-            </label>
-            <label>
-                <input type="radio" name="rating" value="3.5"> 3.5
-            </label>
-            <label>
-                <input type="radio" name="rating" value="4"> 4
-            </label>
-            <label>
-                <input type="radio" name="rating" value="4.5"> 4.5
-            </label>
-            <label>
-                <input type="radio" name="rating" value="5"> 5
+                <input type="checkbox" name="like" value="like"> Like this album
             </label>
         </div>
-    </div>
 
-    <div>
-        <h2>Your Review</h2>
-        <textarea name="review" rows="5" cols="40" placeholder="Write your review here..."></textarea>
-    </div>
+        <div>
+            <label for="tag">Tag:</label>
+            <input id="tag" name="tag" type="standard", placeholder="Enter a tag">
+        </div>
 
-    <div>
-        <label>
-            <input type="checkbox" name="like" value="like"> Like this album
-        </label>
-    </div>
-
-    <div>
-        <label for="tag">Tag:</label>
-        <input id="tag" name="tag" type="standard", placeholder="Enter a tag">
-    </div>
-
-    <div>
-        <button type="submit" onclick="window.location.href='/pages/user/feed.html'">Submit Review</button>
-    </div>
+        <div>
+            <button type="submit" onclick="window.location.href='/pages/user/feed.html'">Submit Review</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 polyrhythmd. All rights reserved.</p>
+    </footer>
 </body>
 </html>

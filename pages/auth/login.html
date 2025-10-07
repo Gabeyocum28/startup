@@ -8,19 +8,27 @@
 </head>
 <body>
     <p type="dev">Data from here will be checked in DB for login</p>
-    <form>
-        <h2>Login</h2>
-        <div>
-            <input id="username" name="username" type="standard" placeholder="Username" required>
-        </div>
-        <div>
-            <input id="password" name="password" type="standard" placeholder="Password" required>
-        </div>
-        <div>
-              <button type="button aura" onclick="window.location.href='/pages/user/profile.html'">Log in</button>
-              <button type="button aura" onclick="window.location.href='/pages/auth/register.html'">Register</button>
-        </div>
-    </form>
-
+    <header type="banner">
+        <h1 type="banner">Polyrhythmd</h1>
+        <button type="button aura" onclick="window.location.href='/index.html'">Home</button>
+    </header>
+    <main>
+        <form>
+            <h1>Login</h1>
+            <div>
+                <input id="username" name="username" type="standard" placeholder="Username" required>
+            </div>
+            <div>
+                <input id="password" name="password" type="standard" placeholder="Password" required>
+            </div>
+            <div>
+                <button type="button aura" onclick="window.location.href='/pages/user/profile.html'">Log in</button>
+                <button type="button aura" onclick="window.location.href='/pages/auth/register.html'">Register</button>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2025 polyrhythmd. All rights reserved.</p>
+    </footer>
 </body>
 </html>
