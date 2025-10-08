@@ -4,19 +4,14 @@
   "description": "[My Notes](notes.md)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Gabeyocum28/startup.git"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Gabeyocum28/startup/issues"
-  },
   "homepage": "https://github.com/Gabeyocum28/startup#readme",
   "devDependencies": {
     "vite": "^7.1.9"
