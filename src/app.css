@@ -65,36 +65,35 @@ body {
    ======== */
 
 h1, h2, h3 {
-    margin-bottom: var(--spacing-sm);  /* Space below headings */
+    margin-bottom: var(--spacing-sm);
 }
 
 h2 {
-    color: var(--gradient-orange);  /* Orange from gradient */
-    font-size: 1.8rem;  /* Large section heading */
+    color: var(--gradient-orange);
+    font-size: 1.8rem;
 }
 
 h3 {
-    color: var(--gradient-pink);  /* Pink from gradient */
-    font-size: 1.4rem;  /* Medium subsection heading */
+    color: var(--gradient-pink);
+    font-size: 1.4rem;
 }
 
 /* ==========
    PARAGRAPHS
    ========== */
 p {
-    color: var(--text-secondary);  /* Softer than headings */
-    margin-bottom: var(--spacing-sm);  /* Space between paragraphs */
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
 }
-
 
 /* ======
    LABELS
    ====== */
 label {
-    display: block;  /* Take full width, push input below */
-    color: var(--text-primary);  /* Bright and readable */
-    margin-bottom: var(--spacing-xs);  /* Small gap before input */
-    font-weight: 500;  /* Medium weight for emphasis */
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
 }
 
 /* ======
@@ -132,19 +131,18 @@ header a {
     font-weight: 500;
 }
 
-
 header[type="banner"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md) var(--spacing-lg);
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 header[type="banner"] h1 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     background: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -153,7 +151,7 @@ header[type="banner"] h1 {
 
 header[type="banner"] button {
     padding: 0.5rem 1.5rem;
-    background: var(--accent-gradient, linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%));
+    background: var(--accent-gradient);
     color: white;
     border: none;
     border-radius: 6px;
@@ -165,7 +163,6 @@ header[type="banner"] button {
 header[type="banner"] button:hover {
     opacity: 0.9;
 }
-
 
 /* ====
    FORM
@@ -187,7 +184,7 @@ form div {
     margin-bottom: var(--spacing-sm);
 }
 
-form h2 {
+form h2, form h1 {
     font-size: 2rem;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
@@ -222,10 +219,6 @@ button:active {
     transform: translateY(0);
 }
 
-/* =================
-   BUTTON VARIATIONS
-   ================= */
-
 button[type="button aura"] {
     background: var(--bg-elevated);
     color: var(--text-primary);
@@ -242,6 +235,7 @@ button[type="button aura"]:hover {
    ============ */
 
 input[type="standard"],
+input[type="date"],
 select,
 textarea {
     width: 100%;
@@ -252,6 +246,24 @@ textarea {
     color: var(--text-primary);
     font-size: 1rem;
     transition: all 0.3s ease;
+}
+
+input[type="standard"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--gradient-orange);
+    box-shadow: 0 0 0 3px rgba(255, 138, 43, 0.1);
+}
+
+select {
+    cursor: pointer;
+}
+
+select option {
+    background: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 .input-row {
@@ -419,34 +431,41 @@ main {
     padding: var(--spacing-lg);
 }
 
+main > h1 {
+    font-size: 2.5rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-lg);
+    font-weight: 700;
+}
+
 /* =====================
    FEED LAYOUT (Sidebar)
    ===================== */
 .feed-container {
-    display: flex;              /* Side-by-side layout */
-    gap: var(--spacing-lg);     /* Space between main and sidebar */
-    max-width: 1400px;          /* Maximum width */
-    margin: 0 auto;             /* Center the container */
-    padding: var(--spacing-lg); /* Outer padding */
+    display: flex;
+    gap: var(--spacing-lg);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
 }
 
-/* Main content area (left side) */
 .feed-main {
-    flex: 1;                    /* Takes remaining space */
-    min-width: 0;               /* Prevents flex overflow */
+    flex: 1;
+    min-width: 0;
 }
 
-/* Sidebar (right side) */
 .feed-sidebar {
     width: 320px;
     position: sticky;
-    top: calc(var(--spacing-lg) + 80px); /* Adjust 80px to match your header height */
+    top: calc(var(--spacing-lg) + 80px);
     align-self: flex-start;
     max-height: calc(100vh - 2rem);
     overflow-y: auto;
 }
 
-/* Sidebar sections */
 .sidebar-section {
     background: var(--bg-secondary);
     padding: var(--spacing-md);
@@ -456,21 +475,42 @@ main {
     box-shadow: var(--shadow);
 }
 
-/* Stack buttons vertically in sidebar */
 .sidebar-section button {
-    width: 100%;                /* Full width buttons */
-    margin-bottom: var(--spacing-sm); /* Space between buttons */
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
 }
 
 .sidebar-section button:last-of-type {
-    margin-bottom: 0;           /* Remove margin from last button */
+    margin-bottom: 0;
+}
+
+.sidebar-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-section li {
+    background: var(--bg-tertiary);
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.sidebar-section li:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-section li strong {
+    color: var(--gradient-pink);
 }
 
 /* =====================
    REVIEW CARDS
    ===================== */
 .review-card {
-    background: var(--bg-secondary);  /* Card background */
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: var(--spacing-lg);
@@ -480,11 +520,10 @@ main {
 }
 
 .review-card:hover {
-    transform: translateY(-2px);  /* Lift on hover */
+    transform: translateY(-2px);
     box-shadow: var(--shadow-glow);
 }
 
-/* Album Info Section - Image and details side by side */
 .album-info {
     display: flex;
     gap: var(--spacing-md);
@@ -497,8 +536,8 @@ main {
     height: 80px;
     border-radius: 8px;
     border: 2px solid var(--border-color);
-    object-fit: cover;  /* Ensures image fills space properly */
-    flex-shrink: 0;     /* Prevents image from shrinking */
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 .album-details {
@@ -523,7 +562,6 @@ main {
     margin: 0;
 }
 
-/* Review Content */
 .review-content {
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
@@ -542,7 +580,6 @@ main {
     margin: 0;
 }
 
-/* User Info */
 .review-author {
     color: var(--gradient-pink);
     font-weight: 600;
@@ -550,7 +587,6 @@ main {
     font-size: 0.95rem;
 }
 
-/* Interaction Buttons */
 .review-actions {
     display: flex;
     gap: var(--spacing-sm);
@@ -584,7 +620,6 @@ main {
     font-weight: 600;
 }
 
-/* Like button active state */
 .action-btn.like-btn.active {
     background: var(--accent-gradient);
     border-color: transparent;
@@ -595,70 +630,69 @@ main {
     animation: heartbeat 0.3s ease;
 }
 
-/* Heartbeat animation for likes */
 @keyframes heartbeat {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.3); }
 }
 
 /* Responsive: Stack on mobile */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .feed-container {
-    flex-direction: column;   /* Stack vertically on mobile */
-    padding: var(--spacing-sm);
+        flex-direction: column;
+        padding: var(--spacing-sm);
     }
   
-  .feed-sidebar {
-    width: 100%;              /* Full width on mobile */
-    position: static;         /* Remove sticky on mobile */
-    max-height: none;         /* Remove height limit */
+    .feed-sidebar {
+        width: 100%;
+        position: static;
+        max-height: none;
     }
   
-  .album-info {
-    flex-direction: column;   /* Stack album cover and details */
-    text-align: center;
+    .album-info {
+        flex-direction: column;
+        text-align: center;
     }
   
-  .album-cover {
-    width: 120px;
-    height: 120px;
+    .album-cover {
+        width: 120px;
+        height: 120px;
     }
   
-  .review-actions {
-      justify-content: center;  /* Center buttons on mobile */
-  }
+    .review-actions {
+        justify-content: center;
+    }
 }
 
 /* ===============
    HORIZONTAL RULE
    =============== */
 hr {
-    border: none;  /* Remove default border */
-    border-top: 1px solid var(--border-color);  /* Thin top line */
-    margin: var(--spacing-lg) 0;  /* Vertical spacing */
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: var(--spacing-lg) 0;
 }
 
 /* ======
    FOOTER
    ====== */
 footer {
-    text-align: center;  /* Center text */
-    padding: var(--spacing-lg);  /* Breathing room */
-    background: var(--bg-secondary);  /* Matches header */
-    border-top: 1px solid var(--border-color);  /* Top separation line */
-    color: var(--text-muted);  /* Softer, less prominent text */
+    text-align: center;
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
 }
 
 /* =====
    LINKS
    ===== */
 a {
-    color: var(--gradient-pink);  /* Pink links by default */
-    transition: color 0.3s ease;  /* Smooth color change */
+    color: var(--gradient-pink);
+    transition: color 0.3s ease;
 }
 
 a:hover {
-    color: var(--gradient-orange);  /* Orange on hover */
+    color: var(--gradient-orange);
 }
 
 /* =========================
