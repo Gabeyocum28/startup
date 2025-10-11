@@ -98,33 +98,33 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 I completed all of the HTML files needed and explicitly put down where I was going to put each part. I have a login, images, db data place holder, api place holder, and WebSocket place holder.
 
-- [x] **HTML pages**
-- [x] **Proper HTML element usage**
-- [x] **Links**
-- [x] **Text**
-- [x] **Images**
-- [x] **Login placeholder**
-- [x] **DB data placeholder**
-- [x] **WebSocket placeholder**
+- [x] **HTML pages** - Made HTML Pages for all of the diferent aspects of my project
+- [x] **Proper HTML element usage** - Used propper elements
+- [x] **Links** - links to other pages
+- [x] **Text** - data shown
+- [x] **Images** - images for profiles
+- [x] **Login placeholder** - yes
+- [x] **DB data placeholder** - db of login data and reviews
+- [x] **WebSocket placeholder** - when a friend posts
 
 ## 🚀 CSS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Header, footer, and main content body** 
-- [x] **Navigation elements**
-- [x] **Responsive to window resizing**
-- [x] **Application elements** 
-- [x] **Application text content**
-- [x] **Application images**
+- [x] **Header, footer, and main content body** - propper header footer and main
+- [x] **Navigation elements** - navigable website
+- [x] **Responsive to window resizing** - responsive window 
+- [x] **Application elements** - all elements acounted for
+- [x] **Application text content** - shown text
+- [x] **Application images** - images shown
 
 ## 🚀 React part 1: Routing deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [x] **Bundled using Vite** - Vite bundles and working
+- [x] **Components** - all components working
+- [x] **Router** - router routes to all the propper pages
 
 ## 🚀 React part 2: Reactivity deliverable
 
