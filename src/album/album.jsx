@@ -1,0 +1,42 @@
+import React from 'react';
+import './app.css';
+
+export function Album() {
+    return (
+        <div>
+            <main>
+                <p className="dev">Data from here will be from spotify api</p>
+                <div>
+                    <h1>IGOR</h1>
+                    <h3>by Tyler, the Creator</h3>
+                    <img src="igor.jpg" alt="Album Art" style={{width: '200px', height: '200px'}} />
+                    <p>Award-winning album by Tyler, the Creator, released in 2019.</p>
+                    <p type="dev">Data from here will be in DB</p>
+                    <p>Average Rating: ★★★★☆ (4.5)</p>
+                    <p>Total Reviews: 1500</p>
+                    <button type="button">Write a Review</button>
+                </div>
+
+                <div>
+                    <p type="dev">Data from here will be in DB</p>
+                    <h2>Reviews</h2>
+                    <div>
+                        <h3>Great Album!</h3>
+                        <p>★★★★☆</p>
+                        <p>This album is a masterpiece. The production quality and lyrical depth are outstanding.</p>
+                        <p>- MusicLover123</p>
+                    </div>
+                    <div>
+                        <h3>Not my style</h3>
+                        <p>★★☆☆☆</p>
+                        <p>I found the album to be a bit too experimental for my taste, but I can see why others enjoy it.</p>
+                        <p>- IndieFan456</p>
+                    </div>
+                </div>
+                <div>
+                    <button type="button">Back</button>
+                </div>
+            </main>
+        </div>
+    );
+}

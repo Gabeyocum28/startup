@@ -1,26 +1,34 @@
 <html lang="en">
 <head>
     <title>Register</title>
-    <link rel="icon" href="/public/polyrhythmd_orange_pink_gradient.ico" />
+    <link rel="icon" href="/polyrhythmd_orange_pink_gradient.ico" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/src/app.css">
 </head>
 <body>
-    <p type="dev">Data from here will be stored in DB four auth</p>
-    <header type="banner">
-        <h1 type="banner">Polyrhythmd</h1>
-        <button type="button aura" onclick="window.location.href='/index.html'">Home</button>
+    <header class="banner">
+        <h1>Polyrhythmd</h1>
+        <a href="/index.html">Home</a>
+        <a href="/src/about/about.html">About</a>
+        <a href="/src/login/login.html">Login</a>
+        <a href="/src/register/register.html">Register</a>
+        <a href="/src/profile/profile.html">Profile</a>
+        <a href="/src/search/search.html">Search</a>
+        <a href="/src/album/album.html">Album</a>
+        <a href="/src/review/review.html">Review</a>
+        <a href="/src/feed/feed.html">Feed</a>
     </header>
     <main>
+        <p class="dev">Data from here will be stored in DB four auth</p>
         <form>
             <h1>Register</h1>
             <div class="input-row">
                 <div>
-                    <input id="firstname" name="firstname" type="standard" placeholder="First Name" required>
+                    <input id="firstname" name="firstname" class="standard" placeholder="First Name" required>
                 </div>
                 <div>
-                    <input id="lastname" name="lastname" type="standard" placeholder="Last Name" required>
+                    <input id="lastname" name="lastname" class="standard" placeholder="Last Name" required>
                 </div>
             </div>
             
@@ -30,12 +38,12 @@
                     <input id="birthday" name="birthday" type="date" placeholder="Date of Birth" required>
                 </div>
                 <div>
-                    <input id="phone" name="phone" type="standard" placeholder="(555) 123-4567" required>
+                    <input id="phone" name="phone" class="standard" placeholder="(555) 123-4567" required>
                 </div>
             </div>
             
             <div>
-                <input id="email" name="email" type="standard" placeholder="Email" required>
+                <input id="email" name="email" class="standard" placeholder="Email" required>
             </div>
             <div>
                 <label for="genres">Favorite Music Genres</label>
@@ -53,17 +61,17 @@
                 </select>
             </div>
             <div>
-                <input id="username" name="username" type="standard" placeholder="Username" required>
+                <input id="username" name="username" class="standard" placeholder="Username" required>
             </div>
             <div>
-                <input id="password" name="password" type="standard" placeholder="Password" required>
+                <input id="password" name="password" class="standard" placeholder="Password" required>
             </div>
             <div>
-                <input id="confirm_password" name="confirm_password" type="standard" placeholder="Confirm Password" required>
+                <input id="confirm_password" name="confirm_password" class="standard" placeholder="Confirm Password" required>
             </div>
             <div>
-                <button type="button aura" onclick="window.location.href='/index.html'">Return</button>
-                <button type="button aura" onclick="window.location.href='/src/profile/profile.html'">Register</button>
+                <button class="aura" onclick="window.location.href='/index.html'">Return</button>
+                <button class="aura" onclick="window.location.href='/src/profile/profile.html'">Register</button>
             </div>
         </form>
     </main>

@@ -1,29 +1,37 @@
 <html lang="en">
 <head>
     <title>Login</title>
-    <link rel="icon" href="/public/polyrhythmd_orange_pink_gradient.ico" />
+    <link rel="icon" href="/polyrhythmd_orange_pink_gradient.ico" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/src/app.css">
 </head>
 <body>
-    <p type="dev">Data from here will be checked in DB for login</p>
-    <header type="banner">
-        <h1 type="banner">Polyrhythmd</h1>
-        <button type="button aura" onclick="window.location.href='/index.html'">Home</button>
+    <header class="banner">
+        <h1>Polyrhythmd</h1>
+        <a href="/index.html">Home</a>
+        <a href="/src/about/about.html">About</a>
+        <a href="/src/login/login.html">Login</a>
+        <a href="/src/register/register.html">Register</a>
+        <a href="/src/profile/profile.html">Profile</a>
+        <a href="/src/search/search.html">Search</a>
+        <a href="/src/album/album.html">Album</a>
+        <a href="/src/review/review.html">Review</a>
+        <a href="/src/feed/feed.html">Feed</a>
     </header>
     <main>
+        <p class="dev">Data from here will be checked in DB for login</p>
         <form>
             <h1>Login</h1>
             <div>
-                <input id="username" name="username" type="standard" placeholder="Username" required>
+                <input id="username" name="username" class="standard" placeholder="Username" required>
             </div>
             <div>
-                <input id="password" name="password" type="standard" placeholder="Password" required>
+                <input id="password" name="password" class="standard" placeholder="Password" required>
             </div>
             <div>
-                <button type="button aura" onclick="window.location.href='/src/profile/profile.html'">Log in</button>
-                <button type="button aura" onclick="window.location.href='/src/register/register.html'">Register</button>
+                <button class="aura" onclick="window.location.href='/src/profile/profile.html'">Log in</button>
+                <button class="aura" onclick="window.location.href='/src/register/register.html'">Register</button>
             </div>
         </form>
     </main>
