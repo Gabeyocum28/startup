@@ -15,7 +15,7 @@ import './app.css';
 function App() {
     return (
         <BrowserRouter>
-            <div>
+            <div className="app-container">
                 <header className="banner">
                     <h1>Polyrhythmd</h1>
                     <NavLink to="/">Home</NavLink>
@@ -28,18 +28,20 @@ function App() {
                     <NavLink to="/review">Review</NavLink>
                     <NavLink to="/feed">Feed</NavLink>
                 </header>
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/about' element={<About />} />
-                    <Route path='/album' element={<Album />} />
-                    <Route path='/feed' element={<Feed />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/profile' element={<Profile />} />
-                    <Route path='/register' element={<Register />} />
-                    <Route path='/review' element={<Review />} />
-                    <Route path='/search' element={<Search />} />
-                    <Route path='*' element={<NotFound />} />
-                </Routes>
+                <main className="main-content">
+                    <Routes>
+                        <Route path='/' element={<Home />} />
+                        <Route path='/about' element={<About />} />
+                        <Route path='/album' element={<Album />} />
+                        <Route path='/feed' element={<Feed />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/profile' element={<Profile />} />
+                        <Route path='/register' element={<Register />} />
+                        <Route path='/review' element={<Review />} />
+                        <Route path='/search' element={<Search />} />
+                        <Route path='*' element={<NotFound />} />
+                    </Routes>
+                </main>
                 <footer>
                     <p>&copy; 2025 polyrhythmd. All rights reserved.</p>
                     <a href="https://github.com/Gabeyocum28/startup.git">My Github Repo</a>
@@ -51,17 +53,15 @@ function App() {
 
 function Home() {
     return (
-        <main>
-            <div className="text-center mt-5">
-                <h1>Welcome to Polyrhythmd</h1>
-                <p>Your gateway to exploring and reviewing albums.</p>
-            </div>
-        </main>
+        <div className="text-center mt-5">
+            <h1>Welcome to Polyrhythmd</h1>
+            <p>Your gateway to exploring and reviewing albums.</p>
+        </div>
     );
 }
 
 function NotFound() {
-    return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
+    return <div className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</div>;
 }
 
 export default App;

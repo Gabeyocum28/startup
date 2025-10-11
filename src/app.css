@@ -52,13 +52,14 @@
     box-sizing: border-box;
 }
 
-body {
+body, #root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
 }
+
 
 /* ========
    HEADINGS
@@ -133,11 +134,16 @@ header a {
 
 .banner {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: var(--spacing-sm);
     padding: var(--spacing-md) var(--spacing-lg);
-    max-width: 1400px;
-    margin: 0 auto;
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: var(--shadow);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .banner h1 {
@@ -147,6 +153,7 @@ header a {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    flex-shrink: 0;
 }
 
 .banner a {
@@ -158,6 +165,7 @@ header a {
     font-weight: 500;
     transition: opacity 0.2s;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .banner a:hover {
@@ -441,6 +449,16 @@ main > h1 {
     background-clip: text;
     margin-bottom: var(--spacing-lg);
     font-weight: 700;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
 }
 
 /* =====================

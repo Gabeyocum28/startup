@@ -8,7 +8,7 @@ export function Profile() {
                 <h1>Profile</h1>
                 <p className="dev">Data here will be in DB</p>
                 <h1>Hey John</h1>
-                <img src="/public/images/blank_pfp.jpg" alt="Profile Photo" style={{width: '200px', height: '200px'}} />
+                <img src="/images/blank_pfp.jpg" alt="Profile Photo" style={{width: '200px', height: '200px'}} />
                 <ul>
                     <li><strong>Username:</strong> johndoe</li>
                     <li><strong>Email:</strong> johndoe@example.com</li>
