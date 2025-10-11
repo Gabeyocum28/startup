@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import { About } from './about/about';
 import { Album } from './album/album';
-import { Edit } from './about/about';
 import { Feed } from './feed/feed';
 import { Login } from './login/login';
 import { Profile } from './profile/profile';
@@ -17,23 +16,22 @@ function App() {
     return (
         <BrowserRouter>
             <div>
-                <header class="banner">
+                <header className="banner">
                     <h1>Polyrhythmd</h1>
-                    <NavLink to="">Home</NavLink>
-                    <NavLink to="About">About</NavLink>
-                    <NavLink to="Login">Login</NavLink>
-                    <NavLink to="Register">Register</NavLink>
-                    <NavLink to="Profile">Profile</NavLink>
-                    <NavLink to="Search">Search</NavLink>
-                    <NavLink to="Album">Album</NavLink>
-                    <NavLink to="Review">Review</NavLink>
-                    <NavLink to="Feed">Feed</NavLink>
+                    <NavLink to="/">Home</NavLink>
+                    <NavLink to="/about">About</NavLink>
+                    <NavLink to="/login">Login</NavLink>
+                    <NavLink to="/register">Register</NavLink>
+                    <NavLink to="/profile">Profile</NavLink>
+                    <NavLink to="/search">Search</NavLink>
+                    <NavLink to="/album">Album</NavLink>
+                    <NavLink to="/review">Review</NavLink>
+                    <NavLink to="/feed">Feed</NavLink>
                 </header>
                 <Routes>
-                    <Route path='/'/>
+                    <Route path='/' element={<Home />} />
                     <Route path='/about' element={<About />} />
                     <Route path='/album' element={<Album />} />
-                    <Route path='/edit' element={<Edit />} />
                     <Route path='/feed' element={<Feed />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/profile' element={<Profile />} />
@@ -47,13 +45,23 @@ function App() {
                     <a href="https://github.com/Gabeyocum28/startup.git">My Github Repo</a>
                 </footer>
             </div>
-
         </BrowserRouter>
     );
 }
 
+function Home() {
+    return (
+        <main>
+            <div className="text-center mt-5">
+                <h1>Welcome to Polyrhythmd</h1>
+                <p>Your gateway to exploring and reviewing albums.</p>
+            </div>
+        </main>
+    );
+}
+
 function NotFound() {
-  return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
+    return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
 }
 
 export default App;
