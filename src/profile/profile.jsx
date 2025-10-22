@@ -6,19 +6,73 @@ export function Profile() {
         <div>
             <main>
                 <h1>Profile</h1>
-                <p className="dev">Data here will be in DB</p>
-                <h1>Hey John</h1>
-                <img src="/images/blank_pfp.jpg" alt="Profile Photo" style={{width: '200px', height: '200px'}} />
-                <ul>
-                    <li><strong>Username:</strong> johndoe</li>
-                    <li><strong>Email:</strong> johndoe@example.com</li>
-                    <li><strong>Full Name:</strong> John Doe</li>
-                    <li><strong>Date of Birth:</strong> 2000-01-01</li>
-                    <li><strong>Phone:</strong> (555) 123-4567</li>
-                    <li><strong>Favorite Genres:</strong> Rock, Jazz, Classical</li>
-                </ul>
-                <button>Edit Profile</button>
-                <button>Logout</button>
+                <p class="dev">Data here will be in DB</p>
+                <h1>Hey johndoe</h1>
+                <div className="feed-container">
+                    <main className="feed-main">
+                        <div className="review-card">
+                            <div className="album-info">
+                                <img src="/images/igor.jpg" alt="IGOR Album Cover" className="album-cover" />
+                                <div className="album-details">
+                                    <h3 className="album-title">IGOR</h3>
+                                    <p className="album-artist">Tyler, the Creator</p>
+                                    <p className="review-rating">★★★★☆</p>
+                                </div>
+                            </div>
+                            
+                            <div className="review-content">
+                                <h4 className="review-title">Great Album!</h4>
+                                <p className="review-text">This album is a masterpiece. The production quality and lyrical depth are outstanding.</p>
+                            </div>
+                            
+                            <p className="review-author">@johndoe</p>
+                            
+                            <div className="review-actions">
+                                <button className="action-btn like-btn">
+                                    <span className="icon">♥</span>
+                                    <span className="count">24</span>
+                                </button>
+                                <button className="action-btn comment-btn">
+                                    <span className="icon">💬</span>
+                                    <span className="count">5</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        
+                        <div className="review-card">
+                            <div className="album-info">
+                                <img src="https://via.placeholder.com/80x80?text=Album" alt="Album Cover" className="album-cover" />
+                                <div className="album-details">
+                                    <h3 className="album-title">Random Access Memories</h3>
+                                    <p className="album-artist">Daft Punk</p>
+                                    <p className="review-rating">★★☆☆☆</p>
+                                </div>
+                            </div>
+                            
+                        
+                            <div className="review-content">
+                                <h4 className="review-title">Not my style</h4>
+                                <p className="review-text">I found the album to be a bit too experimental for my taste, but I can see why others enjoy it.</p>
+                            </div>
+                            
+                            
+                            <p className="review-author">@johndoe</p>
+                            
+                            
+                            <div className="review-actions">
+                                <button className="action-btn like-btn">
+                                    <span className="icon">♥</span>
+                                    <span className="count">12</span>
+                                </button>
+                                <button className="action-btn comment-btn">
+                                    <span className="icon">💬</span>
+                                    <span className="count">3</span>
+                                </button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
             </main>
         </div>
     );

@@ -5,7 +5,6 @@ import { Album } from './album/album';
 import { Feed } from './feed/feed';
 import { Login } from './login/login';
 import { Profile } from './profile/profile';
-import { Register } from './register/register';
 import { Review } from './review/review';
 import { Search } from './search/search';
 
@@ -21,7 +20,6 @@ function App() {
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/about">About</NavLink>
                     <NavLink to="/login">Login</NavLink>
-                    <NavLink to="/register">Register</NavLink>
                     <NavLink to="/profile">Profile</NavLink>
                     <NavLink to="/search">Search</NavLink>
                     <NavLink to="/album">Album</NavLink>
@@ -36,7 +34,6 @@ function App() {
                         <Route path='/feed' element={<Feed />} />
                         <Route path='/login' element={<Login />} />
                         <Route path='/profile' element={<Profile />} />
-                        <Route path='/register' element={<Register />} />
                         <Route path='/review' element={<Review />} />
                         <Route path='/search' element={<Search />} />
                         <Route path='*' element={<NotFound />} />

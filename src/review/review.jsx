@@ -63,17 +63,6 @@ export function Review() {
                             <textarea name="review" rows="5" placeholder="Write your review here..."></textarea>
                         </div>
 
-                        <div className="mb-4">
-                            <label>
-                                <input type="checkbox" name="like" value="like" /> Like this album 
-                            </label>
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="tag">Tag:</label>
-                            <input id="tag" name="tag" className="standard" placeholder="Enter a tag" />
-                        </div>
-
                         <div className="text-center">
                             <button type="submit">Submit Review</button>
                         </div>

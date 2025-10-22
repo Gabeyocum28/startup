@@ -23,16 +23,77 @@
     <main>
         <h1>Profile</h1>
         <p class="dev">Data here will be in DB</p>
-        <h1>Hey John</h1>
-        <img src="/images/blank_pfp.jpg" alt="Profile Photo" width="150" height="150">
-        <ul>
-            <li><strong>Username:</strong> johndoe</li>
-            <li><strong>Email:</strong> johndoe@example.com</li>
-            <li><strong>Full Name:</strong> John Doe</li>
-            <li><strong>Date of Birth:</strong> 2000-01-01</li>
-            <li><strong>Phone:</strong> (555) 123-4567</li>
-            <li><strong>Favorite Genres:</strong> Rock, Jazz, Classical</li>
-        </ul>
+        <h1>Hey johndoe</h1>
+        <div class="feed-container">
+            <!-- Main content area -->
+            <main class="feed-main">
+                <!-- Review Card 1 -->
+                <div class="review-card">
+                    <!-- Album Info Section -->
+                    <div class="album-info">
+                        <img src="/images/igor.jpg" alt="IGOR Album Cover" class="album-cover">
+                        <div class="album-details">
+                            <h3 class="album-title">IGOR</h3>
+                            <p class="album-artist">Tyler, the Creator</p>
+                            <p class="review-rating">★★★★☆</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Review Content -->
+                    <div class="review-content">
+                        <h4 class="review-title">Great Album!</h4>
+                        <p class="review-text">This album is a masterpiece. The production quality and lyrical depth are outstanding.</p>
+                    </div>
+                    
+                    <!-- User Info -->
+                    <p class="review-author">@johndoe</p>
+                    
+                    <!-- Interaction Buttons -->
+                    <div class="review-actions">
+                        <button class="action-btn like-btn">
+                            <span class="icon">♥</span>
+                            <span class="count">24</span>
+                        </button>
+                        <button class="action-btn comment-btn">
+                            <span class="icon">💬</span>
+                            <span class="count">5</span>
+                        </button>
+                    </div>
+                </div>
+
+                
+                <div class="review-card">
+                    <div class="album-info">
+                        <img src="https://via.placeholder.com/80x80?text=Album" alt="Album Cover" class="album-cover">
+                        <div class="album-details">
+                            <h3 class="album-title">Random Access Memories</h3>
+                            <p class="album-artist">Daft Punk</p>
+                            <p class="review-rating">★★☆☆☆</p>
+                        </div>
+                    </div>
+                    
+                
+                    <div class="review-content">
+                        <h4 class="review-title">Not my style</h4>
+                        <p class="review-text">I found the album to be a bit too experimental for my taste, but I can see why others enjoy it.</p>
+                    </div>
+                    
+                    
+                    <p class="review-author">@johndoe</p>
+                    
+                    
+                    <div class="review-actions">
+                        <button class="action-btn like-btn">
+                            <span class="icon">♥</span>
+                            <span class="count">12</span>
+                        </button>
+                        <button class="action-btn comment-btn">
+                            <span class="icon">💬</span>
+                            <span class="count">3</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
         <button onclick="window.location.href='/index.html'">Logout</button>
     </main>
     <footer>
