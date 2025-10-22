@@ -8,33 +8,74 @@ import { Profile } from './profile/profile';
 import { Review } from './review/review';
 import { Search } from './search/search';
 
+import { AuthState } from './login/authState';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 function App() {
+    const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+    const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+    const [authState, setAuthState] = React.useState(currentAuthState);
+
+
+
     return (
         <BrowserRouter>
             <div className="app-container">
                 <header className="banner">
                     <h1>Polyrhythmd</h1>
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/about">About</NavLink>
-                    <NavLink to="/login">Login</NavLink>
-                    <NavLink to="/profile">Profile</NavLink>
-                    <NavLink to="/search">Search</NavLink>
-                    <NavLink to="/album">Album</NavLink>
-                    <NavLink to="/review">Review</NavLink>
-                    <NavLink to="/feed">Feed</NavLink>
+                    {authState === AuthState.Unauthenticated && (
+                        <NavLink className='nav-link' to='/'>
+                            Home
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Unauthenticated && (
+                        <NavLink className='nav-link' to='/about'>
+                            About
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/search'>
+                            Search
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/review'>
+                            Review
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/feed'>
+                            Feed
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/profile'>
+                            Profile
+                        </NavLink>
+                    )}
                 </header>
                 <main className="main-content">
                     <Routes>
-                        <Route path='/' element={<Home />} />
+                        <Route
+                            path='/'
+                            element={
+                            <Login
+                                userName={userName}
+                                authState={authState}
+                                onAuthChange={(userName, authState) => {
+                                setAuthState(authState);
+                                setUserName(userName);
+                                }}
+                            />
+                            }
+                            exact
+                        />
                         <Route path='/about' element={<About />} />
                         <Route path='/album' element={<Album />} />
-                        <Route path='/feed' element={<Feed />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/profile' element={<Profile />} />
-                        <Route path='/review' element={<Review />} />
+                        <Route path='/feed' element={<Feed userName={userName} />} />
+                        <Route path='/profile' element={<Profile userName={userName} />} />
+                        <Route path='/review' element={<Review userName={userName} />} />
                         <Route path='/search' element={<Search />} />
                         <Route path='*' element={<NotFound />} />
                     </Routes>

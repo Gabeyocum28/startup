@@ -1,13 +1,12 @@
 import React from 'react';
 import '../app.css';
 
-export function Profile() {
+export function Profile(props) {
     return (
         <div>
             <main>
-                <h1>Profile</h1>
                 <p class="dev">Data here will be in DB</p>
-                <h1>Hey johndoe</h1>
+                <h1>Hey {props.userName}!</h1>
                 <div className="feed-container">
                     <main className="feed-main">
                         <div className="review-card">

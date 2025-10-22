@@ -1,23 +1,28 @@
 import React from 'react';
+
+import { Authenticated } from './authenticated';
+import { Unauthenticated } from './unauthenticated';
+import { AuthState } from './authState';
 import '../app.css';
 
-export function Login() {
+export function Login({ userName, authState, onAuthChange }) {
     return (
         <div>
             <main>
                 <p className="dev">Data from here will be checked in DB for login</p>
                 <form>
-                    <h1>Login</h1>
-                    <div>
-                        <input id="username" name="username" className="standard" placeholder="Username" required />
-                    </div>
-                    <div>
-                        <input id="password" name="password" className="standard" placeholder="Password" required />
-                    </div>
-                    <div>
-                        <button className="aura">Log in</button>
-                        <button className="aura">Register</button>
-                    </div>
+                    {authState !== AuthState.Unknown && <h1>Welcome to Polyrhythmd</h1>}
+                    {authState === AuthState.Authenticated && (
+                <Authenticated userName={userName} onLogout={() => onAuthChange(userName, AuthState.Unauthenticated)} />
+                )}
+                {authState === AuthState.Unauthenticated && (
+                <Unauthenticated
+                    userName={userName}
+                    onLogin={(loginUserName) => {
+                    onAuthChange(loginUserName, AuthState.Authenticated);
+                    }}
+                />
+                )}
                 </form>
             </main>
         </div>
