@@ -685,8 +685,6 @@ button:active {
 
 .review-content {
     margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--border-color);
 }
 
 .review-title {

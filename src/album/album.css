@@ -87,9 +87,53 @@
    REVIEWS SECTION
    ===================== */
 
+.album-reviews-section {
+    margin-top: 3rem;
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.average-rating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.average-stars {
+    color: var(--gradient-orange);
+    font-size: 1.5rem;
+}
+
+.average-number {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
 .reviews-placeholder {
     color: var(--text-muted);
     font-style: italic;
+}
+
+.reviews-list {
+    margin-top: var(--spacing-md);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-sm);
+}
+
+.review-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* =====================

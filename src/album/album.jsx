@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getReviewsByAlbum } from '../review/reviewService';
 import '../app.css';
 import './album.css';
 
@@ -8,6 +9,7 @@ export function Album() {
     const navigate = useNavigate();
     const [album, setAlbum] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [reviews, setReviews] = React.useState([]);
 
     React.useEffect(() => {
         fetch('/album_info.JSON')
@@ -21,6 +23,10 @@ export function Album() {
                 console.error('Error loading album:', error);
                 setIsLoading(false);
             });
+
+        // Load reviews for this album
+        const albumReviews = getReviewsByAlbum(albumId);
+        setReviews(albumReviews);
     }, [albumId]);
 
     function formatDuration(ms) {
@@ -31,6 +37,20 @@ export function Album() {
 
     const handleImageError = (e) => {
         e.target.src = '/images/no_album_cover.jpg';
+    };
+
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 !== 0;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        return (
+            <>
+                {'★'.repeat(fullStars)}
+                {hasHalfStar && '⯨'}
+                {'☆'.repeat(emptyStars)}
+            </>
+        );
     };
 
     if (isLoading) {
@@ -112,11 +132,46 @@ export function Album() {
                     ))}
                 </div>
 
-                <div>
-                    <h2>Reviews</h2>
-                    <p className="reviews-placeholder">
-                        No reviews yet. Be the first to review this album!
-                    </p>
+                <div className="album-reviews-section">
+                    <div className="reviews-header">
+                        <h2>Reviews</h2>
+                        {reviews.length > 0 && (
+                            <div className="average-rating">
+                                <span className="average-stars">{renderStars(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length)}</span>
+                                <span className="average-number">
+                                    {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)} / 5
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    {reviews.length === 0 ? (
+                        <p className="reviews-placeholder">
+                            No reviews yet. Be the first to review this album!
+                        </p>
+                    ) : (
+                        <div className="reviews-list">
+                            {reviews.map(review => (
+                                <div key={review.id} className="review-card">
+                                    <div className="review-header">
+                                        <div>
+                                            <p className="review-author">@{review.reviewerName}</p>
+                                            <p className="review-rating">{renderStars(review.rating)}</p>
+                                        </div>
+                                        <p className="review-date">
+                                            {new Date(review.createdAt).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                            })}
+                                        </p>
+                                    </div>
+                                    <div className="review-content">
+                                        <p className="review-text">{review.reviewText}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </main>
         </div>
