@@ -29,31 +29,6 @@ function App() {
                             Home
                         </NavLink>
                     )}
-                    {authState === AuthState.Unauthenticated && (
-                        <NavLink className='nav-link' to='/about'>
-                            About
-                        </NavLink>
-                    )}
-                    {authState === AuthState.Authenticated && (
-                        <NavLink className='nav-link' to='/search'>
-                            Search
-                        </NavLink>
-                    )}
-                    {authState === AuthState.Authenticated && (
-                        <NavLink className='nav-link' to='/review'>
-                            Review
-                        </NavLink>
-                    )}
-                    {authState === AuthState.Authenticated && (
-                        <NavLink className='nav-link' to='/feed'>
-                            Feed
-                        </NavLink>
-                    )}
-                    {authState === AuthState.Authenticated && (
-                        <NavLink className='nav-link' to='/profile'>
-                            Profile
-                        </NavLink>
-                    )}
                 </header>
                 <main className="main-content">
                     <Routes>
@@ -72,7 +47,7 @@ function App() {
                             exact
                         />
                         <Route path='/about' element={<About />} />
-                        <Route path='/album' element={<Album />} />
+                        <Route path='/album/:albumId' element={<Album />} />
                         <Route path='/feed' element={<Feed userName={userName} />} />
                         <Route path='/profile' element={<Profile userName={userName} />} />
                         <Route path='/review' element={<Review userName={userName} />} />
@@ -80,10 +55,40 @@ function App() {
                         <Route path='*' element={<NotFound />} />
                     </Routes>
                 </main>
-                <footer>
-                    <p>&copy; 2025 polyrhythmd. All rights reserved.</p>
-                    <a href="https://github.com/Gabeyocum28/startup.git">My Github Repo</a>
-                </footer>
+                <nav className="bottom-nav">
+                    <div className="sidebar-header">
+                        <h1>Polyrhythmd</h1>
+                    </div>
+                    {authState === AuthState.Unauthenticated && (
+                        <NavLink className='nav-link' to='/about'>
+                            About
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/search'>
+                            Search
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/feed'>
+                            Feed
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/review'>
+                            Review
+                        </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && (
+                        <NavLink className='nav-link' to='/profile'>
+                            Profile
+                        </NavLink>
+                    )}
+                    <div className="footer-info">
+                        <p>&copy; 2025 polyrhythmd</p>
+                        <a href="https://github.com/Gabeyocum28/startup.git">GitHub</a>
+                    </div>
+                </nav>
             </div>
         </BrowserRouter>
     );

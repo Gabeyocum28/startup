@@ -1,0 +1,194 @@
+{
+  "albums": [
+    {
+      "album_type": "album",
+      "total_tracks": 17,
+      "id": "3mH6qwIy9crq0I9YQbOuDf",
+      "images": [
+        {"url": "https://upload.wikimedia.org/wikipedia/en/a/a0/Blonde_-_Frank_Ocean.jpeg", "height": 640, "width": 640},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/a/a0/Blonde_-_Frank_Ocean.jpeg", "height": 300, "width": 300},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/a/a0/Blonde_-_Frank_Ocean.jpeg", "height": 64, "width": 64}
+      ],
+      "name": "Blonde",
+      "release_date": "2016-08-20",
+      "type": "album",
+      "artists": [{"name": "Frank Ocean", "id": "2h93pZq0e7k5yf4dywlkpM"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "Frank Ocean"}], "duration_ms": 313426, "explicit": false, "id": "1", "name": "Nikes", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "Frank Ocean"}], "duration_ms": 249333, "explicit": false, "id": "2", "name": "Ivy", "track_number": 2, "type": "track"},
+          {"artists": [{"name": "Frank Ocean"}], "duration_ms": 184426, "explicit": false, "id": "3", "name": "Pink + White", "track_number": 3, "type": "track"}
+        ]
+      },
+      "genres": ["alternative r&b", "hip hop"],
+      "label": "Boys Don't Cry",
+      "popularity": 82
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 12,
+      "id": "5eyZZoQEFQWRHkV2xgAeBw",
+      "images": [
+        {"url": "https://via.placeholder.com/640/FF69B4/FFFFFF?text=IGOR", "height": 640, "width": 640},
+        {"url": "https://via.placeholder.com/300/FF69B4/FFFFFF?text=IGOR", "height": 300, "width": 300},
+        {"url": "https://via.placeholder.com/64/FF69B4/FFFFFF?text=IGOR", "height": 64, "width": 64}
+      ],
+      "name": "IGOR",
+      "release_date": "2019-05-17",
+      "type": "album",
+      "artists": [{"name": "Tyler, The Creator", "id": "4V8LLVI7PbaPR0K2TGSxFF"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "Tyler, The Creator"}], "duration_ms": 207146, "explicit": true, "id": "1", "name": "IGOR'S THEME", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "Tyler, The Creator"}], "duration_ms": 190226, "explicit": true, "id": "2", "name": "EARFQUAKE", "track_number": 2, "type": "track"}
+        ]
+      },
+      "genres": ["hip hop"],
+      "label": "Columbia",
+      "popularity": 85
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 13,
+      "id": "2noRn2Aes5aoNVsU6iWThc",
+      "images": [
+        {"url": "https://via.placeholder.com/640/FFD700/000000?text=Random+Access+Memories", "height": 640, "width": 640},
+        {"url": "https://via.placeholder.com/300/FFD700/000000?text=RAM", "height": 300, "width": 300},
+        {"url": "https://via.placeholder.com/64/FFD700/000000?text=RAM", "height": 64, "width": 64}
+      ],
+      "name": "Random Access Memories",
+      "release_date": "2013-05-17",
+      "type": "album",
+      "artists": [{"name": "Daft Punk", "id": "4tZwfgrHOc3mvqYlEYSvVi"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "Daft Punk"}], "duration_ms": 368293, "explicit": false, "id": "1", "name": "Get Lucky (feat. Pharrell Williams)", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "Daft Punk"}], "duration_ms": 337560, "explicit": false, "id": "2", "name": "Instant Crush (feat. Julian Casablancas)", "track_number": 2, "type": "track"}
+        ]
+      },
+      "genres": ["electronic", "french house"],
+      "label": "Columbia",
+      "popularity": 73
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 11,
+      "id": "6dVIqQ8qmQ5GBnJ9shOYGE",
+      "images": [
+        {"url": "https://upload.wikimedia.org/wikipedia/en/f/fb/FMRumours.PNG", "height": 640, "width": 640},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/f/fb/FMRumours.PNG", "height": 300, "width": 300},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/f/fb/FMRumours.PNG", "height": 64, "width": 64}
+      ],
+      "name": "Rumours",
+      "release_date": "1977-02-04",
+      "type": "album",
+      "artists": [{"name": "Fleetwood Mac", "id": "08GQAI4eElDnROBrJRGE0X"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "Fleetwood Mac"}], "duration_ms": 257733, "explicit": false, "id": "1", "name": "Dreams", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "Fleetwood Mac"}], "duration_ms": 218133, "explicit": false, "id": "2", "name": "Go Your Own Way", "track_number": 2, "type": "track"},
+          {"artists": [{"name": "Fleetwood Mac"}], "duration_ms": 270226, "explicit": false, "id": "3", "name": "The Chain", "track_number": 3, "type": "track"}
+        ]
+      },
+      "genres": ["classic rock", "soft rock"],
+      "label": "Rhino/Warner Records",
+      "popularity": 77
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 13,
+      "id": "4aawyAB9vmqN3uQ7FjRGTy",
+      "images": [
+        {"url": "https://via.placeholder.com/640/1E90FF/FFFFFF?text=good+kid+mAAd+city", "height": 640, "width": 640},
+        {"url": "https://via.placeholder.com/300/1E90FF/FFFFFF?text=GKMC", "height": 300, "width": 300},
+        {"url": "https://via.placeholder.com/64/1E90FF/FFFFFF?text=GKMC", "height": 64, "width": 64}
+      ],
+      "name": "good kid, m.A.A.d city",
+      "release_date": "2012-10-22",
+      "type": "album",
+      "artists": [{"name": "Kendrick Lamar", "id": "2YZyLoL8N0Wb9xBt1NhZWg"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "Kendrick Lamar"}], "duration_ms": 341893, "explicit": true, "id": "1", "name": "Sherane a.k.a Master Splinter's Daughter", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "Kendrick Lamar"}], "duration_ms": 238400, "explicit": true, "id": "2", "name": "Bitch, Don't Kill My Vibe", "track_number": 2, "type": "track"},
+          {"artists": [{"name": "Kendrick Lamar"}], "duration_ms": 348573, "explicit": true, "id": "3", "name": "Swimming Pools (Drank)", "track_number": 3, "type": "track"}
+        ]
+      },
+      "genres": ["hip hop", "west coast rap"],
+      "label": "Interscope",
+      "popularity": 88
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 11,
+      "id": "7gsWAHLeT0w7es6FofOXk1",
+      "images": [
+        {"url": "https://via.placeholder.com/640/FFFF00/000000?text=Velvet+Underground", "height": 640, "width": 640},
+        {"url": "https://via.placeholder.com/300/FFFF00/000000?text=VU+Nico", "height": 300, "width": 300},
+        {"url": "https://via.placeholder.com/64/FFFF00/000000?text=VU", "height": 64, "width": 64}
+      ],
+      "name": "The Velvet Underground & Nico",
+      "release_date": "1967-03-12",
+      "type": "album",
+      "artists": [{"name": "The Velvet Underground", "id": "1w15FlAFgzczqCWePUxUFw"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "The Velvet Underground"}], "duration_ms": 173000, "explicit": false, "id": "1", "name": "Sunday Morning", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "The Velvet Underground"}], "duration_ms": 171000, "explicit": false, "id": "2", "name": "I'm Waiting for the Man", "track_number": 2, "type": "track"},
+          {"artists": [{"name": "The Velvet Underground"}], "duration_ms": 198000, "explicit": false, "id": "3", "name": "Femme Fatale", "track_number": 3, "type": "track"}
+        ]
+      },
+      "genres": ["art rock", "proto-punk"],
+      "label": "Verve",
+      "popularity": 71
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 17,
+      "id": "0ETFjACtuP2ADo6LFhL6HN",
+      "images": [
+        {"url": "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg", "height": 640, "width": 640},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg", "height": 300, "width": 300},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg", "height": 64, "width": 64}
+      ],
+      "name": "Abbey Road",
+      "release_date": "1969-09-26",
+      "type": "album",
+      "artists": [{"name": "The Beatles", "id": "3WrFJ7ztbogyGnTHbHJFl2"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "The Beatles"}], "duration_ms": 259000, "explicit": false, "id": "1", "name": "Come Together", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "The Beatles"}], "duration_ms": 187000, "explicit": false, "id": "2", "name": "Something", "track_number": 2, "type": "track"},
+          {"artists": [{"name": "The Beatles"}], "duration_ms": 183000, "explicit": false, "id": "3", "name": "Here Comes the Sun", "track_number": 3, "type": "track"}
+        ]
+      },
+      "genres": ["rock", "classic rock"],
+      "label": "Apple Records",
+      "popularity": 89
+    },
+    {
+      "album_type": "album",
+      "total_tracks": 10,
+      "id": "7dxKtc08dYeRVHt3p9CZJn",
+      "images": [
+        {"url": "https://upload.wikimedia.org/wikipedia/en/1/14/Inrainbowscover.png", "height": 640, "width": 640},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/1/14/Inrainbowscover.png", "height": 300, "width": 300},
+        {"url": "https://upload.wikimedia.org/wikipedia/en/1/14/Inrainbowscover.png", "height": 64, "width": 64}
+      ],
+      "name": "In Rainbows",
+      "release_date": "2007-10-10",
+      "type": "album",
+      "artists": [{"name": "Radiohead", "id": "4Z8W4fKeB5YxbusRsdQVPb"}],
+      "tracks": {
+        "items": [
+          {"artists": [{"name": "Radiohead"}], "duration_ms": 255000, "explicit": false, "id": "1", "name": "15 Step", "track_number": 1, "type": "track"},
+          {"artists": [{"name": "Radiohead"}], "duration_ms": 233000, "explicit": false, "id": "2", "name": "Bodysnatchers", "track_number": 2, "type": "track"},
+          {"artists": [{"name": "Radiohead"}], "duration_ms": 304000, "explicit": false, "id": "3", "name": "Nude", "track_number": 3, "type": "track"}
+        ]
+      },
+      "genres": ["alternative rock", "art rock"],
+      "label": "XL Recordings",
+      "popularity": 80
+    }
+  ]
+}

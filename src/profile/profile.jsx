@@ -5,7 +5,6 @@ export function Profile(props) {
     return (
         <div>
             <main>
-                <p class="dev">Data here will be in DB</p>
                 <h1>Hey {props.userName}!</h1>
                 <div className="feed-container">
                     <main className="feed-main">

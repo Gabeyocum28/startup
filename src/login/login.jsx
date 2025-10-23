@@ -9,7 +9,6 @@ export function Login({ userName, authState, onAuthChange }) {
     return (
         <div>
             <main>
-                <p className="dev">Data from here will be checked in DB for login</p>
                 <form>
                     {authState !== AuthState.Unknown && <h1>Welcome to Polyrhythmd</h1>}
                     {authState === AuthState.Authenticated && (

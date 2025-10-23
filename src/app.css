@@ -1,39 +1,35 @@
 /* ============
-   World Values 
+   CSS Variables
    ============ */
 
 :root {
-    /* Gradient From icon */
+    /* Gradient Colors */
     --gradient-orange: #FF8A2B;
     --gradient-pink: #FD3A84;
-  
-    /* Background Colors - Dark theme base */
+
+    /* Background Colors - Dark theme */
     --bg-primary: #0F0B1F;
     --bg-secondary: #1A1530;
     --bg-tertiary: #252040;
     --bg-elevated: #2D2550;
-    
+
     /* Text Colors */
     --text-primary: #F5F5F7;
     --text-secondary: #C4C4D4;
     --text-muted: #8B8B9E;
-  
-    /* Accent Colors  */
+
+    /* Accent Colors */
     --accent-gradient: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);
     --accent-glow: rgba(255, 126, 95, 0.3);
-    --accent-pink-glow: rgba(253, 58, 132, 0.25);
-  
+
     /* UI Elements */
     --border-color: #3A3454;
-    --border-accent: #FF7E5F;
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     --shadow-glow: 0 4px 30px var(--accent-glow);
-  
+
     /* Status Colors */
-    --success: #4CAF50;
-    --warning: #FFB74D;
     --error: #EF5350;
-  
+
     /* Spacing Scale */
     --spacing-xs: 0.5rem;  /* 8px */
     --spacing-sm: 1rem;    /* 16px */
@@ -42,8 +38,8 @@
     --spacing-xl: 3rem;    /* 48px */
 }
 
-/* ============= 
-   Global Styles 
+/* =============
+   Global Styles
    ============= */
 
 * {
@@ -59,7 +55,6 @@ body, #root {
     line-height: 1.6;
     min-height: 100vh;
 }
-
 
 /* ========
    HEADINGS
@@ -97,40 +92,66 @@ label {
     font-weight: 500;
 }
 
-/* ======
-   HEADER 
-   ====== */
-
-header {
-    text-align: center;
-    background: var(--bg-secondary);
-    padding: var(--spacing-lg) var(--spacing-md);
-    border-bottom: 2px solid var(--border-color);
-    box-shadow: var(--shadow);
+/* =====
+   LINKS
+   ===== */
+a {
+    color: var(--gradient-pink);
+    transition: color 0.3s ease;
 }
 
-header h1 {
+a:hover {
+    color: var(--gradient-orange);
+}
+
+/* =================
+   LAYOUT CONTAINERS
+   ================= */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+    .app-container {
+        flex-direction: row;
+    }
+}
+
+.main-content {
+    flex: 1;
+    padding-bottom: 120px; /* Space for mobile bottom nav */
+}
+
+@media (min-width: 992px) {
+    .main-content {
+        padding-bottom: 0;
+        margin-left: 220px; /* Width of sidebar */
+        padding-top: var(--spacing-lg);
+    }
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+main > h1 {
     font-size: 2.5rem;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
     font-weight: 700;
 }
 
-header p {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    font-style: italic;
-}
-
-header a {
-    margin-top: var(--spacing-sm);
-    color: var(--gradient-pink);
-    text-decoration: none;
-    font-weight: 500;
-}
+/* ================
+   MOBILE HEADER
+   ================ */
 
 .banner {
     display: flex;
@@ -146,10 +167,16 @@ header a {
     box-sizing: border-box;
 }
 
+@media (min-width: 992px) {
+    .banner {
+        display: none; /* Hidden on desktop - sidebar shows navigation */
+    }
+}
+
 .banner h1 {
     margin: 0;
     font-size: 1.8rem;
-    background: linear-gradient(135deg, #FF8A2B 0%, #FD3A84 100%);
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -163,7 +190,7 @@ header a {
     border: 1px solid var(--border-color);
     border-radius: 6px;
     font-weight: 500;
-    transition: opacity 0.2s;
+    transition: all 0.2s;
     cursor: pointer;
     text-decoration: none;
 }
@@ -171,6 +198,115 @@ header a {
 .banner a:hover {
     background: var(--bg-tertiary);
     border-color: var(--gradient-orange);
+}
+
+/* ========================
+   BOTTOM NAV / SIDEBAR NAV
+   ======================== */
+
+/* Mobile: Bottom fixed navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    z-index: 100;
+}
+
+.bottom-nav .sidebar-header {
+    display: none; /* Hide logo on mobile */
+}
+
+.bottom-nav .nav-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.bottom-nav .nav-link:hover {
+    color: var(--gradient-orange);
+}
+
+.bottom-nav .footer-info {
+    display: none; /* Hide on mobile */
+}
+
+/* Desktop: Left sidebar navigation */
+@media (min-width: 992px) {
+    .bottom-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: 220px;
+        height: 100vh;
+        border-top: none;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: var(--spacing-md);
+        gap: var(--spacing-xs);
+    }
+
+    .bottom-nav .sidebar-header {
+        display: block;
+        padding: var(--spacing-md) 0;
+        margin-bottom: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .bottom-nav .sidebar-header h1 {
+        font-size: 2rem;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .bottom-nav .nav-link {
+        padding: var(--spacing-md);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .bottom-nav .nav-link:hover {
+        background: var(--bg-elevated);
+        border-color: var(--gradient-orange);
+    }
+
+    .bottom-nav .footer-info {
+        display: block;
+        margin-top: auto;
+        text-align: center;
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid var(--border-color);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+
+    .bottom-nav .footer-info p {
+        margin-bottom: var(--spacing-xs);
+        font-size: 0.85rem;
+    }
+
+    .bottom-nav .footer-info a {
+        font-size: 0.85rem;
+    }
 }
 
 /* ====
@@ -185,7 +321,7 @@ form {
     border: 2px solid var(--border-color);
     border-radius: 12px;
     padding: var(--spacing-lg);
-    margin: 15px auto;   
+    margin: 15px auto;
     box-sizing: border-box;
 }
 
@@ -232,6 +368,7 @@ button:active {
     background: var(--bg-elevated);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
+    border-radius: 8px;
 }
 
 .aura:hover {
@@ -239,11 +376,12 @@ button:active {
     border-color: var(--gradient-orange);
 }
 
+
 /* ============
    INPUT FIELDS
    ============ */
 
-.standard, .date {
+.standard {
     width: 100%;
     padding: 0.75rem;
     background: var(--bg-primary);
@@ -254,32 +392,10 @@ button:active {
     transition: all 0.3s ease;
 }
 
-.standard:focus,
-.dat:focus {
+.standard:focus {
     outline: none;
     border-color: var(--gradient-orange);
     box-shadow: 0 0 0 3px rgba(255, 138, 43, 0.1);
-}
-
-select {
-    cursor: pointer;
-}
-
-select option {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-}
-
-.input-row {
-    display: flex;
-    gap: var(--spacing-xl);
-}
-
-@media (max-width: 768px) {
-    .input-row {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
 }
 
 /* ============================
@@ -344,126 +460,10 @@ select option {
     background: var(--bg-elevated);
 }
 
-/* ============================
-   CHECKBOX - Like Album
-   ============================ */
-
-input[type="checkbox"] {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    margin-right: var(--spacing-sm);
-    cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-input[type="checkbox"]:checked {
-    background: var(--accent-gradient);
-    border-color: var(--gradient-pink);
-}
-
-input[type="checkbox"]:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-input[type="checkbox"]:hover {
-    border-color: var(--gradient-orange);
-}
-
-label:has(input[type="checkbox"]) {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    padding: var(--spacing-sm);
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-label:has(input[type="checkbox"]):hover {
-    background: var(--bg-elevated);
-    border-color: var(--gradient-orange);
-}
-
-/* ==========
-   NAVIGATION
-   ========== */
-
-.navbar-brand {
-  padding-left: 0.3em;
-  border-bottom: solid --border-color thin;
-}
-
-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-    justify-content: center;
-    padding: var(--spacing-md);
-}
-
-nav a {
-    color: var(--text-primary);
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-nav a:hover {
-    background: var(--accent-gradient);
-    border-color: transparent;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
-}
-
-/* =================
-   MAIN CONTENT AREA
-   ================= */
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--spacing-lg);
-}
-
-main > h1 {
-    font-size: 2.5rem;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: var(--spacing-lg);
-    font-weight: 700;
-}
-
-.app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.main-content {
-    flex: 1;
-}
-
 /* =====================
-   FEED LAYOUT (Sidebar)
+   FEED LAYOUT
    ===================== */
+
 .feed-container {
     display: flex;
     gap: var(--spacing-lg);
@@ -526,9 +526,108 @@ main > h1 {
     color: var(--gradient-pink);
 }
 
+/* Responsive: Stack on mobile */
+@media (max-width: 991px) {
+    .feed-container {
+        flex-direction: column;
+        padding: var(--spacing-sm);
+    }
+
+    .feed-sidebar {
+        width: 100%;
+        position: static;
+        max-height: none;
+    }
+
+    .album-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .album-cover {
+        width: 120px;
+        height: 120px;
+    }
+
+    .review-actions {
+        justify-content: center;
+    }
+}
+
+/* =====================
+   SEARCH RESULTS LAYOUT
+   ===================== */
+
+/* Mobile: Stack album cover on top, centered */
+@media (max-width: 991px) {
+    .search-album-info {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+    }
+
+    .search-album-cover {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* Desktop: Side-by-side layout */
+@media (min-width: 992px) {
+    .search-album-info {
+        flex-direction: row !important;
+        align-items: center !important;
+        text-align: left;
+    }
+}
+
+/* =====================
+   ALBUM DETAIL PAGE
+   ===================== */
+
+/* Mobile: Stack and center album detail info */
+@media (max-width: 991px) {
+    .album-detail-info {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .album-detail-cover {
+        margin-bottom: var(--spacing-lg);
+        max-width: 100%;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .album-detail-text {
+        text-align: center !important;
+        width: 100%;
+    }
+
+    .album-detail-text h1,
+    .album-detail-text h3,
+    .album-detail-text p {
+        text-align: center;
+    }
+}
+
+/* Desktop: Side-by-side layout */
+@media (min-width: 992px) {
+    .album-detail-info {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: var(--spacing-lg);
+    }
+
+    .album-detail-text {
+        text-align: left !important;
+        flex: 1;
+    }
+}
+
 /* =====================
    REVIEW CARDS
    ===================== */
+
 .review-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -653,66 +752,6 @@ main > h1 {
 @keyframes heartbeat {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.3); }
-}
-
-/* Responsive: Stack on mobile */
-@media (max-width: 991px) {
-    .feed-container {
-        flex-direction: column;
-        padding: var(--spacing-sm);
-    }
-  
-    .feed-sidebar {
-        width: 100%;
-        position: static;
-        max-height: none;
-    }
-  
-    .album-info {
-        flex-direction: column;
-        text-align: center;
-    }
-  
-    .album-cover {
-        width: 120px;
-        height: 120px;
-    }
-  
-    .review-actions {
-        justify-content: center;
-    }
-}
-
-/* ===============
-   HORIZONTAL RULE
-   =============== */
-hr {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: var(--spacing-lg) 0;
-}
-
-/* ======
-   FOOTER
-   ====== */
-footer {
-    text-align: center;
-    padding: var(--spacing-lg);
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-color);
-    color: var(--text-muted);
-}
-
-/* =====
-   LINKS
-   ===== */
-a {
-    color: var(--gradient-pink);
-    transition: color 0.3s ease;
-}
-
-a:hover {
-    color: var(--gradient-orange);
 }
 
 /* =========================

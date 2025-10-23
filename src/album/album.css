@@ -1,0 +1,136 @@
+/* =====================
+   ALBUM DETAIL PAGE
+   ===================== */
+
+.album-info {
+    margin-bottom: 2rem;
+    align-items: flex-start;
+}
+
+.album-detail-cover {
+    width: 300px;
+    height: 300px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+}
+
+.album-detail-text {
+    flex: 1;
+}
+
+.album-detail-text h1 {
+    margin-bottom: 0.5rem;
+}
+
+.album-detail-text h3 {
+    margin-bottom: 1rem;
+}
+
+.album-detail-text .aura {
+    margin-bottom: 1rem;
+}
+
+.album-detail-text p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.album-detail-text .genres {
+    margin-bottom: 1rem;
+}
+
+/* =====================
+   TRACKLIST
+   ===================== */
+
+.tracklist-container {
+    margin-bottom: 2rem;
+}
+
+.track-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm);
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+}
+
+.track-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.track-number {
+    color: var(--text-muted);
+    min-width: 30px;
+}
+
+.track-name {
+    color: var(--text-primary);
+}
+
+.explicit-tag {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--error);
+}
+
+.track-duration {
+    color: var(--text-secondary);
+}
+
+/* =====================
+   REVIEWS SECTION
+   ===================== */
+
+.reviews-placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* =====================
+   RESPONSIVE MOBILE
+   ===================== */
+
+@media (max-width: 991px) {
+    .album-info {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .album-detail-cover {
+        margin-bottom: var(--spacing-lg);
+        max-width: 100%;
+        width: auto;
+        height: auto;
+    }
+
+    .album-detail-text {
+        text-align: center;
+        width: 100%;
+    }
+
+    .album-detail-text h1,
+    .album-detail-text h3,
+    .album-detail-text p {
+        text-align: center;
+    }
+}
+
+/* =====================
+   RESPONSIVE DESKTOP
+   ===================== */
+
+@media (min-width: 992px) {
+    .album-info {
+        flex-direction: row;
+        gap: var(--spacing-lg);
+    }
+
+    .album-detail-text {
+        text-align: left;
+    }
+}

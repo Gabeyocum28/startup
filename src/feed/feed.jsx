@@ -5,7 +5,6 @@ export function Feed() {
     return (
         <div>
             <main>
-                <p className="dev">Data from here will be in DB</p>
                 <h1>Feed</h1>
                 <div className="feed-container">
                     <main className="feed-main">
@@ -71,35 +70,6 @@ export function Feed() {
                             </div>
                         </div>
                     </main>
-                    
-                    
-                    <aside className="feed-sidebar">
-                        <div className="sidebar-section">
-                            <h2>Quick Actions</h2>
-                            <button type="button">View Profile</button>
-                            <button type="button">Search Albums</button>
-                            <button type="button">Write a Review</button>
-                        </div>
-                        
-                        <p className="dev">Data from here will be from spotify api</p>
-                        
-                        <div className="sidebar-section">
-                            <h3>Top Friends' Spotify Tracks</h3>
-                            <ul>
-                                <li>
-                                    <p><strong>Alice:</strong> "Blinding Lights" by The Weeknd</p>
-                                </li>
-                                <li>
-                                    <p><strong>Bob:</strong> "Mr. Brightside" by The Killers</p>
-                                </li>
-                                <li>
-                                    <p><strong>Charlie:</strong> "Levitating" by Dua Lipa</p>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <p className="dev">Data from here will be in DB and webhook when a friend has reviewed</p>
-                    </aside>
                 </div>
             </main>
         </div>

@@ -10,7 +10,7 @@ export function Authenticated(props) {
   React.useEffect(() => {
     const timer = setTimeout(() => {
         navigate('/feed');
-        }, 3000); // 1000ms = 1 second
+        }, 1500); 
 
     
         return () => clearTimeout(timer);

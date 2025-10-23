@@ -2,10 +2,10 @@ import React from 'react';
 import '../app.css';
 
 export function Review() {
+
     return (
         <div>
             <main>
-                <p className="dev">Search and album cover will be helped by spotify api</p>
                 <h1>Review</h1>
                 
                 <div className="row g-4">
@@ -19,9 +19,6 @@ export function Review() {
                             <h2>Album Cover</h2>
                             <img src="https://via.placeholder.com/200x200?text=Album+Cover" alt="Album Cover" style={{width: '200px', height: '200px'}} className="rounded" />
                         </div>
-                        
-                        <p className="dev">Data from here will be stored in DB</p>
-
                         <div className="mb-4">
                             <h2>Rating</h2>
                             <div className="rating-group">
