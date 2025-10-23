@@ -1,0 +1,159 @@
+/* =====================
+   REVIEW PAGE
+   ===================== */
+
+.review-container {
+    text-align: center;
+}
+
+.album-cover-section {
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.album-cover-preview {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    object-fit: cover;
+}
+
+.album-cover-section h2 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.album-cover-section h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.rating-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.review-input-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.review-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: var(--spacing-sm);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.review-textarea:focus {
+    outline: none;
+    border-color: var(--gradient-orange);
+    box-shadow: 0 0 0 3px rgba(255, 138, 43, 0.1);
+}
+
+.review-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+/* =====================
+   STAR RATING
+   ===================== */
+
+.star-rating-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--spacing-md);
+}
+
+.star-rating {
+    display: flex;
+    gap: 0.25rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.star {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.star:hover {
+    transform: scale(1.1);
+}
+
+.star-background,
+.star-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 40px;
+    line-height: 1;
+}
+
+.star-background {
+    color: var(--border-color);
+}
+
+.star-fill {
+    color: var(--gradient-orange);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.2s ease;
+}
+
+/* Half star - show left 50% */
+.star-fill.half {
+    clip-path: inset(0 50% 0 0);
+}
+
+/* Full star - show all */
+.star-fill.full {
+    clip-path: inset(0 0 0 0);
+}
+
+/* Empty star - show none */
+.star-fill.empty {
+    clip-path: inset(0 100% 0 0);
+}
+
+/* Hover effects */
+.star:hover .star-fill {
+    filter: brightness(1.2);
+}
+
+.rating-display {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gradient-orange);
+    min-width: 60px;
+}
+
+.rating-display .rating-number {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Animation when rating changes */
+@keyframes starPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.star.selected {
+    animation: starPulse 0.3s ease;
+}

@@ -29,6 +29,10 @@ export function Album() {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
+    const handleImageError = (e) => {
+        e.target.src = '/images/no_album_cover.jpg';
+    };
+
     if (isLoading) {
         return (
             <div>
@@ -59,11 +63,17 @@ export function Album() {
                         src={album.images[0].url}
                         alt={album.name}
                         className="album-detail-cover"
+                        onError={handleImageError}
                     />
                     <div className="album-detail-text">
                         <h1>{album.name}</h1>
                         <h3>by {album.artists.map(a => a.name).join(', ')}</h3>
-                        <button type="button" className='aura' onClick={() => navigate('/review')}>Write a Review</button>
+                        <button type="button" className='aura' onClick={() => navigate('/review', { state: {
+                            albumId: album.id,
+                            albumName: album.name,
+                            artistName: album.artists.map(a => a.name).join(', '),
+                            albumCover: album.images[0].url
+                        } })}>Write a Review</button>
                         <p>
                             Released: {new Date(album.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                         </p>

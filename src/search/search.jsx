@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../app.css';
+import './search.css';
 
 export function Search() {
     const navigate = useNavigate();
@@ -9,6 +10,10 @@ export function Search() {
     const [searchResults, setSearchResults] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [hasSearched, setHasSearched] = React.useState(false);
+
+    const handleImageError = (e) => {
+        e.target.src = '/images/no_album_cover.jpg';
+    };
 
     React.useEffect(() => {
         // TODO: When switching to real Spotify API, remove this and use searchSpotify() instead
@@ -58,7 +63,7 @@ export function Search() {
                 <input
                     id="album-search"
                     name="album-search"
-                    className="standard"
+                    className="standard_search"
                     placeholder="Enter album or artist name"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -71,13 +76,12 @@ export function Search() {
                 {isLoading && <p>Searching...</p>}
 
                 {searchResults.length > 0 && (
-                    <div style={{ marginTop: '2rem' }}>
+                    <div className="search-results-container">
                         <h2>Search Results ({searchResults.length})</h2>
                         {searchResults.map(album => (
                             <div
                                 key={album.id}
                                 className="review-card search-result-card"
-                                style={{ cursor: 'pointer' }}
                                 onClick={() => handleAlbumClick(album.id)}
                             >
                                 <div className="album-info search-album-info">
@@ -85,11 +89,12 @@ export function Search() {
                                         src={album.images[2].url}
                                         alt={album.name}
                                         className="album-cover search-album-cover"
+                                        onError={handleImageError}
                                     />
                                     <div className="album-details">
                                         <h3 className="album-title">{album.name}</h3>
                                         <p className="album-artist">{album.artists[0].name}</p>
-                                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                        <p className="search-album-metadata">
                                             {album.release_date.split('-')[0]} • {album.total_tracks} tracks
                                         </p>
                                     </div>
@@ -100,7 +105,7 @@ export function Search() {
                 )}
 
                 {hasSearched && searchResults.length === 0 && !isLoading && (
-                    <p style={{ marginTop: '2rem', color: 'var(--text-muted)' }}>
+                    <p className="no-results">
                         No albums found for "{searchQuery}"
                     </p>
                 )}

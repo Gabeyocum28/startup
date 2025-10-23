@@ -75,11 +75,6 @@ function App() {
                         </NavLink>
                     )}
                     {authState === AuthState.Authenticated && (
-                        <NavLink className='nav-link' to='/review'>
-                            Review
-                        </NavLink>
-                    )}
-                    {authState === AuthState.Authenticated && (
                         <NavLink className='nav-link' to='/profile'>
                             Profile
                         </NavLink>
