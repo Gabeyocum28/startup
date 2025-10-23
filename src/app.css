@@ -276,12 +276,14 @@ main > h1 {
     }
 
     .bottom-nav .nav-link {
+        width: 100%;
         padding: var(--spacing-md);
         background: var(--bg-tertiary);
         border: 1px solid var(--border-color);
         border-radius: 8px;
         transition: all 0.3s ease;
-        text-align: left;
+        text-align: center;
+        box-sizing: border-box;
     }
 
     .bottom-nav .nav-link:hover {
@@ -307,6 +309,54 @@ main > h1 {
     .bottom-nav .footer-info a {
         font-size: 0.85rem;
     }
+
+    .bottom-nav .live-feed-section {
+        display: block;
+        margin-top: var(--spacing-md);
+        padding: var(--spacing-md);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .bottom-nav .live-feed-title {
+        font-size: 1rem;
+        color: var(--gradient-pink);
+        margin: 0 0 var(--spacing-sm) 0;
+        font-weight: 600;
+    }
+
+    .bottom-nav .live-feed-items {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+
+    .bottom-nav .live-feed-item {
+        padding: var(--spacing-xs);
+        background: var(--bg-primary);
+        border-radius: 6px;
+        border-left: 3px solid var(--gradient-orange);
+    }
+
+    .bottom-nav .live-feed-text {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .bottom-nav .live-feed-text strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+}
+
+/* Hide live feed on mobile */
+.live-feed-section {
+    display: none;
 }
 
 /* ====

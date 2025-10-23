@@ -18,11 +18,23 @@ export function Profile({ userName }) {
         const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
         return (
-            <>
-                {'★'.repeat(fullStars)}
-                {hasHalfStar && '⯨'}
-                {'☆'.repeat(emptyStars)}
-            </>
+            <span style={{ display: 'inline-flex', alignItems: 'center', position: 'relative' }}>
+                <span>{'★'.repeat(fullStars)}</span>
+                {hasHalfStar && (
+                    <span style={{ position: 'relative', display: 'inline-block' }}>
+                        <span>☆</span>
+                        <span style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            overflow: 'hidden',
+                            width: '50%',
+                            color: 'inherit'
+                        }}>★</span>
+                    </span>
+                )}
+                <span>{'☆'.repeat(emptyStars)}</span>
+            </span>
         );
     };
 

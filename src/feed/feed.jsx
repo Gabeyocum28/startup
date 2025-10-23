@@ -8,8 +8,23 @@ export function Feed() {
 
     React.useEffect(() => {
         // Load all reviews from localStorage
-        const reviews = getAllReviews();
-        setAllReviews(reviews);
+        const loadReviews = () => {
+            const reviews = getAllReviews();
+            setAllReviews(reviews);
+        };
+
+        loadReviews();
+
+        // Listen for new review events from WebSocket
+        const handleNewReview = () => {
+            loadReviews();
+        };
+
+        window.addEventListener('newReview', handleNewReview);
+
+        return () => {
+            window.removeEventListener('newReview', handleNewReview);
+        };
     }, []);
 
     const renderStars = (rating) => {
@@ -18,11 +33,23 @@ export function Feed() {
         const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
         return (
-            <>
-                {'★'.repeat(fullStars)}
-                {hasHalfStar && '⯨'}
-                {'☆'.repeat(emptyStars)}
-            </>
+            <span style={{ display: 'inline-flex', alignItems: 'center', position: 'relative' }}>
+                <span>{'★'.repeat(fullStars)}</span>
+                {hasHalfStar && (
+                    <span style={{ position: 'relative', display: 'inline-block' }}>
+                        <span>☆</span>
+                        <span style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            overflow: 'hidden',
+                            width: '50%',
+                            color: 'inherit'
+                        }}>★</span>
+                    </span>
+                )}
+                <span>{'☆'.repeat(emptyStars)}</span>
+            </span>
         );
     };
 

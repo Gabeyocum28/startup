@@ -7,6 +7,7 @@ import { Login } from './login/login';
 import { Profile } from './profile/profile';
 import { Review } from './review/review';
 import { Search } from './search/search';
+import { mockWebSocket } from './services/mockWebSocket';
 
 import { AuthState } from './login/authState';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,6 +17,28 @@ function App() {
     const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
     const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
     const [authState, setAuthState] = React.useState(currentAuthState);
+    const [liveNotifications, setLiveNotifications] = React.useState([]);
+
+    React.useEffect(() => {
+        if (authState === AuthState.Authenticated) {
+            // Start WebSocket and listen for notifications
+            const handleNotification = (notification) => {
+                setLiveNotifications(prev => [notification, ...prev].slice(0, 10)); // Keep last 10
+
+                // Dispatch custom event so other components can update
+                window.dispatchEvent(new CustomEvent('newReview'));
+            };
+
+            mockWebSocket.addListener(handleNotification);
+            mockWebSocket.start();
+
+            // Cleanup on unmount
+            return () => {
+                mockWebSocket.removeListener(handleNotification);
+                mockWebSocket.stop();
+            };
+        }
+    }, [authState]);
 
 
 
@@ -78,6 +101,20 @@ function App() {
                         <NavLink className='nav-link' to='/profile'>
                             Profile
                         </NavLink>
+                    )}
+                    {authState === AuthState.Authenticated && liveNotifications.length > 0 && (
+                        <div className="live-feed-section">
+                            <h3 className="live-feed-title">Live Activity</h3>
+                            <div className="live-feed-items">
+                                {liveNotifications.map(notification => (
+                                    <div key={notification.id} className="live-feed-item">
+                                        <p className="live-feed-text">
+                                            <strong>{notification.userName}</strong> gave <strong>{notification.albumName}</strong> {notification.rating} stars!
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     )}
                     <div className="footer-info">
                         <p>&copy; 2025 polyrhythmd</p>
