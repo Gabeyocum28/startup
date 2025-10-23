@@ -1,5 +1,6 @@
 import React from 'react';
 import '../app.css';
+import './feed.css';
 
 export function Feed() {
     return (

@@ -545,8 +545,9 @@ button:active {
     }
 
     .album-cover {
-        width: 120px;
-        height: 120px;
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
     }
 
     .review-actions {
@@ -593,9 +594,10 @@ button:active {
 
     .album-detail-cover {
         margin-bottom: var(--spacing-lg);
-        max-width: 100%;
-        width: auto !important;
-        height: auto !important;
+        max-width: 300px;
+        width: 300px !important;
+        height: 300px !important;
+        object-fit: cover !important;
     }
 
     .album-detail-text {

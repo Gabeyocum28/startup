@@ -1,75 +1,67 @@
 import React from 'react';
+import { getReviewsByUser } from '../review/reviewService';
 import '../app.css';
+import './profile.css';
 
-export function Profile(props) {
+export function Profile({ userName }) {
+    const [userReviews, setUserReviews] = React.useState([]);
+
+    React.useEffect(() => {
+        // Load reviews for this user
+        const reviews = getReviewsByUser(userName);
+        setUserReviews(reviews);
+    }, [userName]);
+
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 !== 0;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        return (
+            <>
+                {'★'.repeat(fullStars)}
+                {hasHalfStar && '⯨'}
+                {'☆'.repeat(emptyStars)}
+            </>
+        );
+    };
+
     return (
         <div>
             <main>
-                <h1>Hey {props.userName}!</h1>
+                <h1>Hey {userName}!</h1>
                 <div className="feed-container">
-                    <main className="feed-main">
-                        <div className="review-card">
-                            <div className="album-info">
-                                <img src="/images/igor.jpg" alt="IGOR Album Cover" className="album-cover" />
-                                <div className="album-details">
-                                    <h3 className="album-title">IGOR</h3>
-                                    <p className="album-artist">Tyler, the Creator</p>
-                                    <p className="review-rating">★★★★☆</p>
-                                </div>
-                            </div>
-                            
-                            <div className="review-content">
-                                <h4 className="review-title">Great Album!</h4>
-                                <p className="review-text">This album is a masterpiece. The production quality and lyrical depth are outstanding.</p>
-                            </div>
-                            
-                            <p className="review-author">@johndoe</p>
-                            
-                            <div className="review-actions">
-                                <button className="action-btn like-btn">
-                                    <span className="icon">♥</span>
-                                    <span className="count">24</span>
-                                </button>
-                                <button className="action-btn comment-btn">
-                                    <span className="icon">💬</span>
-                                    <span className="count">5</span>
-                                </button>
-                            </div>
-                        </div>
+                    <div className="feed-main">
+                        {userReviews.length === 0 ? (
+                            <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '2rem' }}>
+                                You haven't written any reviews yet. Search for an album and write your first review!
+                            </p>
+                        ) : (
+                            userReviews.map(review => (
+                                <div key={review.id} className="review-card">
+                                    <div className="album-info">
+                                        <img
+                                            src={review.albumCover}
+                                            alt={review.albumName}
+                                            className="album-cover"
+                                            onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
+                                        />
+                                        <div className="album-details">
+                                            <h3 className="album-title">{review.albumName}</h3>
+                                            <p className="album-artist">{review.artistName}</p>
+                                            <p className="review-rating">{renderStars(review.rating)}</p>
+                                        </div>
+                                    </div>
 
-                        
-                        <div className="review-card">
-                            <div className="album-info">
-                                <img src="https://via.placeholder.com/80x80?text=Album" alt="Album Cover" className="album-cover" />
-                                <div className="album-details">
-                                    <h3 className="album-title">Random Access Memories</h3>
-                                    <p className="album-artist">Daft Punk</p>
-                                    <p className="review-rating">★★☆☆☆</p>
+                                    <div className="review-content">
+                                        <p className="review-text">{review.reviewText}</p>
+                                    </div>
+
+                                    <p className="review-author">@{review.reviewerName}</p>
                                 </div>
-                            </div>
-                            
-                        
-                            <div className="review-content">
-                                <h4 className="review-title">Not my style</h4>
-                                <p className="review-text">I found the album to be a bit too experimental for my taste, but I can see why others enjoy it.</p>
-                            </div>
-                            
-                            
-                            <p className="review-author">@johndoe</p>
-                            
-                            
-                            <div className="review-actions">
-                                <button className="action-btn like-btn">
-                                    <span className="icon">♥</span>
-                                    <span className="count">12</span>
-                                </button>
-                                <button className="action-btn comment-btn">
-                                    <span className="icon">💬</span>
-                                    <span className="count">3</span>
-                                </button>
-                            </div>
-                        </div>
-                    </main>
+                            ))
+                        )}
+                    </div>
                 </div>
             </main>
         </div>
