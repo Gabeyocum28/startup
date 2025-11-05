@@ -1,41 +1,79 @@
-// Simple review service using localStorage with single array
-// Easy to migrate to MongoDB later
+// Review service using backend API
 
 // Get all reviews
-export function getAllReviews() {
-    const reviews = localStorage.getItem('reviews');
-    return reviews ? JSON.parse(reviews) : [];
+export async function getAllReviews() {
+    try {
+        const response = await fetch('/api/reviews');
+        if (response.ok) {
+            return await response.json();
+        }
+        console.error('Failed to fetch reviews:', response.statusText);
+        return [];
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        return [];
+    }
 }
 
 // Add a new review
-export function addReview(reviewData, userName) {
-    const reviews = getAllReviews();
+export async function addReview(reviewData, userName) {
     console.log('Adding review with userName:', userName);
 
     const newReview = {
-        id: Date.now().toString(),
         albumId: reviewData.albumId,
         albumName: reviewData.albumName,
         artistName: reviewData.artistName,
         albumCover: reviewData.albumCover,
         rating: reviewData.rating,
         reviewText: reviewData.reviewText,
-        reviewerName: userName || 'Anonymous',
-        createdAt: new Date().toISOString(),
-        likes: 0
+        reviewerName: userName || 'Anonymous'
     };
 
-    reviews.unshift(newReview); // Add to beginning (newest first)
-    localStorage.setItem('reviews', JSON.stringify(reviews));
-    return newReview;
+    try {
+        const response = await fetch('/api/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newReview)
+        });
+
+        if (response.ok) {
+            return await response.json();
+        } else {
+            const error = await response.json();
+            throw new Error(error.msg || 'Failed to add review');
+        }
+    } catch (error) {
+        console.error('Error adding review:', error);
+        throw error;
+    }
 }
 
 // Get reviews by user
-export function getReviewsByUser(username) {
-    return getAllReviews().filter(r => r.reviewerName === username);
+export async function getReviewsByUser(username) {
+    try {
+        const response = await fetch(`/api/reviews/user/${encodeURIComponent(username)}`);
+        if (response.ok) {
+            return await response.json();
+        }
+        console.error('Failed to fetch user reviews:', response.statusText);
+        return [];
+    } catch (error) {
+        console.error('Error fetching user reviews:', error);
+        return [];
+    }
 }
 
 // Get reviews by album
-export function getReviewsByAlbum(albumId) {
-    return getAllReviews().filter(r => r.albumId === albumId);
+export async function getReviewsByAlbum(albumId) {
+    try {
+        const response = await fetch(`/api/reviews/album/${encodeURIComponent(albumId)}`);
+        if (response.ok) {
+            return await response.json();
+        }
+        console.error('Failed to fetch album reviews:', response.statusText);
+        return [];
+    } catch (error) {
+        console.error('Error fetching album reviews:', error);
+        return [];
+    }
 }

@@ -24,9 +24,13 @@ export function Album() {
                 setIsLoading(false);
             });
 
-        // Load reviews for this album
-        const albumReviews = getReviewsByAlbum(albumId);
-        setReviews(albumReviews);
+        // Load reviews for this album from backend API
+        const loadAlbumReviews = async () => {
+            const albumReviews = await getReviewsByAlbum(albumId);
+            setReviews(albumReviews);
+        };
+
+        loadAlbumReviews();
     }, [albumId]);
 
     function formatDuration(ms) {

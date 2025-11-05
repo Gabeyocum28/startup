@@ -18,7 +18,7 @@ export function Review({ userName }) {
         e.target.src = '/images/no_album_cover.jpg';
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Validate review
@@ -32,25 +32,30 @@ export function Review({ userName }) {
             return;
         }
 
-        // Save review to localStorage
-        const review = addReview({
-            albumId: albumId,
-            albumName: albumName,
-            artistName: artistName,
-            albumCover: albumCover,
-            rating: rating,
-            reviewText: reviewText.trim()
-        }, userName);
+        try {
+            // Save review to backend API
+            const review = await addReview({
+                albumId: albumId,
+                albumName: albumName,
+                artistName: artistName,
+                albumCover: albumCover,
+                rating: rating,
+                reviewText: reviewText.trim()
+            }, userName);
 
-        console.log('Review saved:', review);
+            console.log('Review saved:', review);
 
-        // Reset form
-        setRating(0);
-        setReviewText('');
+            // Reset form
+            setRating(0);
+            setReviewText('');
 
-        // Navigate to feed or show success message
-        alert('Review submitted successfully!');
-        navigate('/feed');
+            // Navigate to feed or show success message
+            alert('Review submitted successfully!');
+            navigate('/feed');
+        } catch (error) {
+            alert('Failed to submit review. Please make sure you are logged in.');
+            console.error('Failed to submit review:', error);
+        }
     };
 
     const handleStarClick = (value) => {

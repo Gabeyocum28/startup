@@ -7,9 +7,9 @@ export function Feed() {
     const [allReviews, setAllReviews] = React.useState([]);
 
     React.useEffect(() => {
-        // Load all reviews from localStorage
-        const loadReviews = () => {
-            const reviews = getAllReviews();
+        // Load all reviews from backend API
+        const loadReviews = async () => {
+            const reviews = await getAllReviews();
             setAllReviews(reviews);
         };
 

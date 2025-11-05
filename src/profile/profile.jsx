@@ -7,9 +7,15 @@ export function Profile({ userName }) {
     const [userReviews, setUserReviews] = React.useState([]);
 
     React.useEffect(() => {
-        // Load reviews for this user
-        const reviews = getReviewsByUser(userName);
-        setUserReviews(reviews);
+        // Load reviews for this user from backend API
+        const loadUserReviews = async () => {
+            const reviews = await getReviewsByUser(userName);
+            setUserReviews(reviews);
+        };
+
+        if (userName) {
+            loadUserReviews();
+        }
     }, [userName]);
 
     const renderStars = (rating) => {
