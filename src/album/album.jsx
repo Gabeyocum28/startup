@@ -12,17 +12,24 @@ export function Album() {
     const [reviews, setReviews] = React.useState([]);
 
     React.useEffect(() => {
-        fetch('/album_info.JSON')
-            .then(response => response.json())
-            .then(data => {
-                const foundAlbum = data.albums.find(a => a.id === albumId);
-                setAlbum(foundAlbum);
-                setIsLoading(false);
-            })
-            .catch(error => {
+        const loadAlbum = async () => {
+            try {
+                // Fetch album details from Spotify API via backend
+                const response = await fetch(`/api/spotify/album/${albumId}`);
+                if (response.ok) {
+                    const albumData = await response.json();
+                    setAlbum(albumData);
+                } else {
+                    console.error('Failed to load album from Spotify');
+                    setAlbum(null);
+                }
+            } catch (error) {
                 console.error('Error loading album:', error);
+                setAlbum(null);
+            } finally {
                 setIsLoading(false);
-            });
+            }
+        };
 
         // Load reviews for this album from backend API
         const loadAlbumReviews = async () => {
@@ -30,6 +37,7 @@ export function Album() {
             setReviews(albumReviews);
         };
 
+        loadAlbum();
         loadAlbumReviews();
     }, [albumId]);
 
@@ -118,9 +126,6 @@ export function Album() {
                         </p>
                         <p>
                             Total Tracks: {album.total_tracks}
-                        </p>
-                        <p>
-                            Popularity: {album.popularity}/100
                         </p>
                         <p className="genres">
                             Genres: {album.genres.join(', ')}
