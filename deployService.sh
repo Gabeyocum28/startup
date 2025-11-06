@@ -24,6 +24,7 @@ npm run build # build the React front end
 cp -rf dist build/public # move the React front end to the target distribution
 cp service/*.js build # move the back end service to the target distribution
 cp service/*.json build
+cp service/ecosystem.config.js build 2>/dev/null || : # copy PM2 config if it exists
 
 # Step 2
 printf "\n----> Clearing out previous distribution on the target\n"
@@ -42,7 +43,11 @@ ssh -i "$key" ubuntu@$hostname << ENDSSH
 bash -i
 cd services/${service}
 npm install
-pm2 restart ${service}
+if [ -f ecosystem.config.js ]; then
+  pm2 restart ecosystem.config.js --update-env
+else
+  pm2 restart ${service}
+fi
 ENDSSH
 
 # Step 5

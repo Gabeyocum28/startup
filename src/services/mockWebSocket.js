@@ -31,39 +31,19 @@ class MockWebSocket {
         'Didn\'t really click with me.'
     ];
 
-    // Generate random notification and add to localStorage
+    // Generate random notification (no longer adds to localStorage)
     generateNotification() {
         const userName = this.sampleUsernames[Math.floor(Math.random() * this.sampleUsernames.length)];
         const album = this.sampleAlbums[Math.floor(Math.random() * this.sampleAlbums.length)];
         const rating = this.sampleRatings[Math.floor(Math.random() * this.sampleRatings.length)];
-        const reviewText = this.sampleReviews[Math.floor(Math.random() * this.sampleReviews.length)];
 
-        // Create a full review object to add to localStorage
-        const review = {
-            id: Date.now().toString(),
-            albumId: album.id,
-            albumName: album.name,
-            artistName: album.artist,
-            albumCover: album.cover,
-            rating: rating,
-            reviewText: reviewText,
-            reviewerName: userName,
-            createdAt: new Date().toISOString(),
-            likes: Math.floor(Math.random() * 50) // Random likes 0-49
-        };
-
-        // Add to localStorage
-        const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
-        reviews.unshift(review); // Add to beginning
-        localStorage.setItem('reviews', JSON.stringify(reviews));
-
-        // Return notification for live feed display
+        // Return notification for live feed display only
         return {
-            id: review.id,
+            id: Date.now().toString(),
             userName: userName,
             albumName: album.name,
             rating: rating,
-            timestamp: review.createdAt
+            timestamp: new Date().toISOString()
         };
     }
 
