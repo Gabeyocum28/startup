@@ -6,26 +6,16 @@ import './search.css';
 export function Search() {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = React.useState('');
-    const [albums, setAlbums] = React.useState([]);
     const [searchResults, setSearchResults] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [hasSearched, setHasSearched] = React.useState(false);
+    const [error, setError] = React.useState(null);
 
     const handleImageError = (e) => {
         e.target.src = '/images/no_album_cover.jpg';
     };
 
-    React.useEffect(() => {
-        // TODO: When switching to real Spotify API, remove this and use searchSpotify() instead
-        fetch('/album_info.JSON')
-            .then(response => response.json())
-            .then(data => {
-                setAlbums(data.albums);
-            })
-            .catch(error => console.error('Error loading albums:', error));
-    }, []);
-
-    function handleSearch() {
+    async function handleSearch() {
         if (!searchQuery.trim()) {
             setSearchResults([]);
             setHasSearched(false);
@@ -34,15 +24,27 @@ export function Search() {
 
         setIsLoading(true);
         setHasSearched(true);
+        setError(null);
 
-        const results = albums.filter(album =>
-            album.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            album.artists[0].name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        try {
+            // Call backend Spotify API endpoint
+            const response = await fetch(`/api/spotify/search?q=${encodeURIComponent(searchQuery)}`);
 
-        setSearchResults(results);
-        setIsLoading(false);
-
+            if (response.ok) {
+                const data = await response.json();
+                setSearchResults(data.items || []);
+            } else {
+                const errorData = await response.json();
+                setError(errorData.msg || 'Failed to search albums');
+                setSearchResults([]);
+            }
+        } catch (err) {
+            console.error('Search error:', err);
+            setError('Failed to connect to server. Please try again.');
+            setSearchResults([]);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     function handleAlbumClick(albumId) {
@@ -73,7 +75,13 @@ export function Search() {
                     <button className="aura" onClick={handleSearch}>Search</button>
                 </div>
 
-                {isLoading && <p>Searching...</p>}
+                {isLoading && <p>Searching Spotify...</p>}
+
+                {error && (
+                    <p className="error-message" style={{ color: 'var(--error-color, #ff4444)', marginTop: '1rem' }}>
+                        {error}
+                    </p>
+                )}
 
                 {searchResults.length > 0 && (
                     <div className="search-results-container">
