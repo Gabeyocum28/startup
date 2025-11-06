@@ -14,6 +14,12 @@ app.use(express.json());
 // Use the cookie parser middleware for tracking authentication tokens
 app.use(cookieParser());
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
+
 // Serve up the frontend static content hosting
 app.use(express.static('public'));
 
@@ -64,16 +70,21 @@ apiRouter.post('/auth/register', async (req, res) => {
   const token = uuid();
   authTokens[token] = user.email;
 
-  // Set cookie
+  // Set cookie - httpOnly false in dev for Vite proxy compatibility
   res.cookie('token', token, {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict'
+    secure: false,
+    httpOnly: false,
+    sameSite: 'lax',
+    path: '/'
   });
+
+  console.log(`Created user: ${email}, token: ${token}`);
+  console.log(`Set-Cookie header:`, res.getHeader('Set-Cookie'));
 
   res.status(201).json({
     id: user.id,
-    email: user.email
+    email: user.email,
+    token: token
   });
 });
 
@@ -101,16 +112,21 @@ apiRouter.post('/auth/login', async (req, res) => {
   const token = uuid();
   authTokens[token] = user.email;
 
-  // Set cookie
+  // Set cookie - httpOnly false in dev for Vite proxy compatibility
   res.cookie('token', token, {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict'
+    secure: false,
+    httpOnly: false,
+    sameSite: 'lax',
+    path: '/'
   });
+
+  console.log(`User logged in: ${email}, token: ${token}`);
+  console.log(`Set-Cookie header:`, res.getHeader('Set-Cookie'));
 
   res.json({
     id: user.id,
-    email: user.email
+    email: user.email,
+    token: token
   });
 });
 
@@ -126,7 +142,15 @@ apiRouter.delete('/auth/logout', (req, res) => {
 
 // Get current user (restricted endpoint)
 apiRouter.get('/user', (req, res) => {
-  const token = req.cookies.token;
+  // Try to get token from cookie or Authorization header
+  let token = req.cookies.token;
+  console.log(`Authorization header: ${req.headers.authorization}`);
+  console.log(`Cookie token: ${req.cookies.token}`);
+  if (!token && req.headers.authorization) {
+    token = req.headers.authorization.replace('Bearer ', '');
+  }
+
+  console.log(`GET /api/user - token: ${token}, has auth: ${!!authTokens[token]}`);
   const email = authTokens[token];
 
   if (!email) {

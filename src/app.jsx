@@ -8,16 +8,31 @@ import { Profile } from './profile/profile';
 import { Review } from './review/review';
 import { Search } from './search/search';
 import { mockWebSocket } from './services/mockWebSocket';
+import { getCurrentUser } from './login/authService';
 
 import { AuthState } from './login/authState';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 function App() {
-    const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
-    const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
-    const [authState, setAuthState] = React.useState(currentAuthState);
+    const [userName, setUserName] = React.useState('');
+    const [authState, setAuthState] = React.useState(AuthState.Unknown);
     const [liveNotifications, setLiveNotifications] = React.useState([]);
+
+    // Check authentication status on mount
+    React.useEffect(() => {
+        const checkAuth = async () => {
+            const user = await getCurrentUser();
+            if (user) {
+                setUserName(user.email);
+                setAuthState(AuthState.Authenticated);
+            } else {
+                setAuthState(AuthState.Unauthenticated);
+            }
+        };
+
+        checkAuth();
+    }, []);
 
     React.useEffect(() => {
         if (authState === AuthState.Authenticated) {
@@ -62,8 +77,10 @@ function App() {
                                 userName={userName}
                                 authState={authState}
                                 onAuthChange={(userName, authState) => {
+                                console.log('onAuthChange called:', { userName, authState });
                                 setAuthState(authState);
                                 setUserName(userName);
+                                console.log('Auth state updated to:', authState);
                                 }}
                             />
                             }
@@ -72,7 +89,10 @@ function App() {
                         <Route path='/about' element={<About />} />
                         <Route path='/album/:albumId' element={<Album />} />
                         <Route path='/feed' element={<Feed userName={userName} />} />
-                        <Route path='/profile' element={<Profile userName={userName} />} />
+                        <Route path='/profile' element={<Profile userName={userName} onLogout={() => {
+                            setAuthState(AuthState.Unauthenticated);
+                            setUserName('');
+                        }} />} />
                         <Route path='/review' element={<Review userName={userName} />} />
                         <Route path='/search' element={<Search />} />
                         <Route path='*' element={<NotFound />} />

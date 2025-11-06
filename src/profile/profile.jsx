@@ -1,9 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 import { getReviewsByUser } from '../review/reviewService';
+import { clearAuthToken } from '../login/authService';
 import '../app.css';
 import './profile.css';
 
-export function Profile({ userName }) {
+export function Profile({ userName, onLogout }) {
+    const navigate = useNavigate();
     const [userReviews, setUserReviews] = React.useState([]);
 
     React.useEffect(() => {
@@ -17,6 +21,20 @@ export function Profile({ userName }) {
             loadUserReviews();
         }
     }, [userName]);
+
+    function logout() {
+        fetch('/api/auth/logout', {
+            method: 'delete',
+        })
+            .catch(() => {
+                // Logout failed. Assuming offline
+            })
+            .finally(() => {
+                clearAuthToken();
+                onLogout();
+                navigate('/');
+            });
+    }
 
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
@@ -48,6 +66,9 @@ export function Profile({ userName }) {
         <div>
             <main>
                 <h1>Hey {userName}!</h1>
+                <Button variant='danger' onClick={() => logout()} style={{ marginBottom: '1rem' }}>
+                    Logout
+                </Button>
                 <div className="feed-container">
                     <div className="feed-main">
                         {userReviews.length === 0 ? (
