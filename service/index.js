@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serve up the frontend static content hosting
-app.use(express.static('public'));
+app.use(express.static('dist'));
 
 // Trust headers that are forwarded from the proxy so we can determine IP addresses
 app.set('trust proxy', true);
@@ -326,8 +326,8 @@ app.use((err, req, res, next) => {
 });
 
 // Return the application's default page if the path is unknown
-app.use((req, res) => {
-  res.sendFile('index.html', { root: 'public' });
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'dist' });
 });
 
 // Start the server
