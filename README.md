@@ -137,12 +137,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - 
-- [ ] **Static middleware for frontend** - 
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - completes
+- [x] **Static middleware for frontend** - middleware implemented
+- [x] **Calls to third party endpoints** - calls spotify API
+- [x] **Backend service endpoints** - Login and Logout on the backend
+- [x] **Frontend calls service endpoints** - yes
+- [x] **Supports registration, login, logout, and restricted endpoint** - yes
 
 
 ## 🚀 DB deliverable
