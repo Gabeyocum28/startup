@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const { v4: uuid } = require('uuid');
+const DB = require('./database.js');
 
 const app = express();
 
@@ -26,10 +27,7 @@ app.use(express.static('public'));
 // Trust headers that are forwarded from the proxy so we can determine IP addresses
 app.set('trust proxy', true);
 
-// In-memory data stores
-const users = [];
-const reviews = [];
-const authTokens = {};
+// NOTE: Removed in-memory storage - now using MongoDB via database.js
 
 // Router for service endpoints
 const apiRouter = express.Router();
@@ -48,7 +46,7 @@ apiRouter.post('/auth/register', async (req, res) => {
   }
 
   // Check if user already exists
-  const existingUser = users.find(u => u.email === email);
+  const existingUser = await DB.getUser(email);
   if (existingUser) {
     return res.status(409).json({ msg: 'User already exists' });
   }
@@ -56,19 +54,19 @@ apiRouter.post('/auth/register', async (req, res) => {
   // Hash the password
   const passwordHash = await bcrypt.hash(password, 10);
 
+  // Create auth token
+  const token = uuid();
+
   // Create new user
   const user = {
     id: uuid(),
     email,
     password: passwordHash,
+    token: token,
     createdAt: new Date().toISOString()
   };
 
-  users.push(user);
-
-  // Create auth token
-  const token = uuid();
-  authTokens[token] = user.email;
+  await DB.addUser(user);
 
   // Set cookie - httpOnly false in dev for Vite proxy compatibility
   res.cookie('token', token, {
@@ -96,7 +94,7 @@ apiRouter.post('/auth/login', async (req, res) => {
     return res.status(400).json({ msg: 'Email and password are required' });
   }
 
-  const user = users.find(u => u.email === email);
+  const user = await DB.getUser(email);
 
   if (!user) {
     return res.status(401).json({ msg: 'Invalid credentials' });
@@ -110,7 +108,10 @@ apiRouter.post('/auth/login', async (req, res) => {
 
   // Create auth token
   const token = uuid();
-  authTokens[token] = user.email;
+
+  // Update user with new token
+  user.token = token;
+  await DB.updateUser(user);
 
   // Set cookie - httpOnly false in dev for Vite proxy compatibility
   res.cookie('token', token, {
@@ -131,17 +132,22 @@ apiRouter.post('/auth/login', async (req, res) => {
 });
 
 // Logout user
-apiRouter.delete('/auth/logout', (req, res) => {
+apiRouter.delete('/auth/logout', async (req, res) => {
   const token = req.cookies.token;
   if (token) {
-    delete authTokens[token];
+    // Remove token from user in database
+    const user = await DB.getUserByToken(token);
+    if (user) {
+      user.token = null;
+      await DB.updateUser(user);
+    }
   }
   res.clearCookie('token');
   res.status(204).end();
 });
 
 // Get current user (restricted endpoint)
-apiRouter.get('/user', (req, res) => {
+apiRouter.get('/user', async (req, res) => {
   // Try to get token from cookie or Authorization header
   let token = req.cookies.token;
   console.log(`Authorization header: ${req.headers.authorization}`);
@@ -150,14 +156,13 @@ apiRouter.get('/user', (req, res) => {
     token = req.headers.authorization.replace('Bearer ', '');
   }
 
-  console.log(`GET /api/user - token: ${token}, has auth: ${!!authTokens[token]}`);
-  const email = authTokens[token];
-
-  if (!email) {
+  if (!token) {
     return res.status(401).json({ msg: 'Unauthorized' });
   }
 
-  const user = users.find(u => u.email === email);
+  const user = await DB.getUserByToken(token);
+  console.log(`GET /api/user - token: ${token}, user found: ${!!user}`);
+
   if (!user) {
     return res.status(401).json({ msg: 'Unauthorized' });
   }
@@ -173,40 +178,35 @@ apiRouter.get('/user', (req, res) => {
 // ===================================
 
 // Get all reviews
-apiRouter.get('/reviews', (req, res) => {
-  // Sort by newest first
-  const sortedReviews = [...reviews].sort((a, b) =>
-    new Date(b.createdAt) - new Date(a.createdAt)
-  );
-  res.json(sortedReviews);
+apiRouter.get('/reviews', async (req, res) => {
+  const reviews = await DB.getAllReviews();
+  res.json(reviews);
 });
 
 // Get reviews by user
-apiRouter.get('/reviews/user/:username', (req, res) => {
+apiRouter.get('/reviews/user/:username', async (req, res) => {
   const { username } = req.params;
-  const userReviews = reviews.filter(r => r.reviewerName === username);
-  const sortedReviews = userReviews.sort((a, b) =>
-    new Date(b.createdAt) - new Date(a.createdAt)
-  );
-  res.json(sortedReviews);
+  const userReviews = await DB.getReviewsByUser(username);
+  res.json(userReviews);
 });
 
 // Get reviews by album
-apiRouter.get('/reviews/album/:albumId', (req, res) => {
+apiRouter.get('/reviews/album/:albumId', async (req, res) => {
   const { albumId } = req.params;
-  const albumReviews = reviews.filter(r => r.albumId === albumId);
-  const sortedReviews = albumReviews.sort((a, b) =>
-    new Date(b.createdAt) - new Date(a.createdAt)
-  );
-  res.json(sortedReviews);
+  const albumReviews = await DB.getReviewsByAlbum(albumId);
+  res.json(albumReviews);
 });
 
 // Create new review (restricted - requires authentication)
-apiRouter.post('/reviews', (req, res) => {
+apiRouter.post('/reviews', async (req, res) => {
   const token = req.cookies.token;
-  const email = authTokens[token];
 
-  if (!email) {
+  if (!token) {
+    return res.status(401).json({ msg: 'Unauthorized - Please login to post a review' });
+  }
+
+  const user = await DB.getUserByToken(token);
+  if (!user) {
     return res.status(401).json({ msg: 'Unauthorized - Please login to post a review' });
   }
 
@@ -229,7 +229,7 @@ apiRouter.post('/reviews', (req, res) => {
     likes: 0
   };
 
-  reviews.push(review);
+  await DB.addReview(review);
 
   res.status(201).json(review);
 });
