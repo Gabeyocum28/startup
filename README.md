@@ -27,64 +27,58 @@ Music discovery shouldn't be limited to algorithmic recommendations. Polyrhythmd
 
 The application features a clean, music-focused interface designed for easy navigation and content discovery:
 
-**Authentication Flow**: Simple login and registration system allowing users to create accounts and manage their profiles.
+**Authentication Flow**: Simple login and registration system with secure bcrypt password hashing stored in MongoDB.
 
-**User Profiles**: Personalized spaces where users can showcase their favorite genres, view their review history, and customize their musical identity.
+**User Profiles**: User profiles displaying all reviews written by that user, with logout functionality.
 
-**Album Search & Review**: Integrated search functionality for finding albums, with detailed review forms including star ratings, written reviews, and tagging systems.
+**Album Search & Review**: Integrated Spotify API search for finding albums, with detailed review forms including 0.5-5 star ratings and written reviews stored in MongoDB.
 
-**Social Feed**: Community-driven discovery feed where users can see reviews from followed critics, trending albums, and personalized recommendations.
+**Social Feed**: Community-driven feed displaying all user reviews with album art, ratings, review text, and author information.
 
-**Music Discovery**: Browse albums by genre, rating, popularity, or through user-curated lists and recommendations.
+**Music Discovery**: Browse albums via Spotify search with full album details including tracklist, release date, label, and aggregate user review ratings.
 
 ### Key Features
 
-- **Album Search & Discovery**: Search for albums with integrated music database
-- **Review System**: Write detailed reviews with 0.5-5 star ratings and custom tags
-- **User Profiles**: Customizable profiles with favorite genres and review history
-- **Social Feed**: Follow other users and see their latest reviews and discoveries
-- **Rating Analytics**: View aggregate ratings and detailed review breakdowns
-- **Music Recommendations**: Get personalized suggestions based on your review history
-- **Community Features**: Like, comment on, and share reviews with other users
+- **Album Search & Discovery**: Search for albums using Spotify API with real-time results
+- **Review System**: Write detailed reviews with 0.5-5 star ratings stored in MongoDB
+- **User Profiles**: View user-specific review history with all reviews by that user
+- **Social Feed**: Community feed displaying all reviews from all users
+- **Rating Analytics**: View aggregate ratings calculated from all user reviews for each album
+- **Authentication**: Secure user registration and login with bcrypt password hashing
+- **Album Details**: Full album information including tracklist, release date, label, and genres from Spotify
 
 ### Technologies
 
-I am going to use the required technologies in the following ways.
+The application uses the required technologies in the following ways:
 
-- **HTML** - Proper HTML structure for authentication pages, user profiles, album search interface, review creation forms, and social feed displays. Semantic elements ensure accessibility and clean navigation throughout the application.
+- **HTML** - Single-page React application with proper HTML structure rendered via React components. The app uses semantic HTML elements throughout.
 
-- **CSS** - Professional responsive design with a dark theme featuring orange-pink gradient branding. Modern UI elements including album art displays, review cards, rating components, and smooth transitions. Responsive grid layouts optimized for both desktop and mobile viewing.
+- **CSS** - Professional responsive design with a dark theme featuring orange-pink gradient branding. Custom CSS for album art displays, review cards, star rating components, and responsive layouts optimized for desktop and mobile viewing.
 
-- **React** - Component-based architecture featuring:
-  - Authentication components for login/registration
-  - Album search and display components with dynamic filtering
-  - Review creation and editing interfaces
-  - User profile management and customization
-  - Social feed with infinite scroll and real-time updates
-  - Rating and tagging systems with interactive elements
+- **React** - Component-based architecture with:
+  - Authentication components for login/registration with form validation
+  - Album search component with Spotify API integration
+  - Album detail pages showing full album information and reviews
+  - Review creation forms with star rating input
+  - User profile pages displaying review history
+  - Social feed displaying all community reviews
+  - React Router for navigation between pages
 
-- **Service** - Backend service providing:
-  - User authentication and session management
-  - Album data integration with music APIs (Spotify/Last.fm)
-  - Review creation, editing, and retrieval endpoints
-  - User profile management and social following systems
-  - Search functionality with filtering and sorting
-  - Recommendation engine based on user preferences and behavior
+- **Service** - Node.js/Express backend service providing:
+  - User authentication endpoints (register, login, logout)
+  - Spotify API integration for album search and details
+  - Review CRUD endpoints (create, read by user, read by album, read all)
+  - Token-based authentication with cookies
+  - Static file serving for React frontend
 
-- **DB/Login** - MongoDB storage for:
-  - User accounts with encrypted passwords and profile data
-  - Album information and metadata cache
-  - User reviews with ratings, text content, and tags
-  - Social connections and following relationships
-  - User preferences and recommendation data
-  - Secure session management with role-based access
+- **DB/Login** - MongoDB Atlas database storing:
+  - User accounts with bcrypt-hashed passwords and auth tokens
+  - User reviews with ratings, text, album info, and timestamps
+  - Secure credential management and session handling
 
-- **WebSocket** - Real-time features including:
-  - Live updates for new reviews and ratings
-  - Real-time notifications for follows, likes, and comments
-  - Live activity feed updates
-  - Instant search suggestions and auto-complete
-  - Real-time recommendation updates based on user activity
+- **WebSocket** - Mock WebSocket implementation displaying:
+  - Live activity notifications in sidebar when users post reviews
+  - Real-time feed updates when new reviews are created
 
 ## 🚀 AWS deliverable
 
@@ -149,8 +143,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
+- [x] **Stores data in MongoDB** - done! reviews stored and retrieved from MongoDB
+- [x] **Stores credentials in MongoDB** - done! user authentication with hashed passwords stored in MongoDB
 
 ## 🚀 WebSocket deliverable
 
