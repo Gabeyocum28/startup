@@ -22,8 +22,8 @@ const reviewCollection = db.collection('review');
 // User Functions
 // ===================================
 
-function getUser(email) {
-  return userCollection.findOne({ email: email });
+function getUser(username) {
+  return userCollection.findOne({ username: username });
 }
 
 function getUserByToken(token) {
@@ -35,7 +35,7 @@ async function addUser(user) {
 }
 
 async function updateUser(user) {
-  await userCollection.updateOne({ email: user.email }, { $set: user });
+  await userCollection.updateOne({ username: user.username }, { $set: user });
 }
 
 // ===================================

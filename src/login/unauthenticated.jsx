@@ -20,7 +20,7 @@ export function Unauthenticated(props) {
   async function loginOrCreate(endpoint) {
     const response = await fetch(endpoint, {
       method: 'post',
-      body: JSON.stringify({ email: userName, password: password }),
+      body: JSON.stringify({ username: userName, password: password }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
@@ -48,7 +48,7 @@ export function Unauthenticated(props) {
     <>
       <div>
         <div>
-          <input className='standard' type='text' value={userName} onChange={(e) => setUserName(e.target.value)} placeholder='your@email.com' />
+          <input className='standard' type='text' value={userName} onChange={(e) => setUserName(e.target.value)} placeholder='username' />
         </div>
         <div>
           <input className='standard' type='password' onChange={(e) => setPassword(e.target.value)} placeholder='password' />

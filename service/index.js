@@ -39,14 +39,14 @@ app.use('/api', apiRouter);
 
 // Register a new user
 apiRouter.post('/auth/register', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ msg: 'Email and password are required' });
+  if (!username || !password) {
+    return res.status(400).json({ msg: 'Username and password are required' });
   }
 
   // Check if user already exists
-  const existingUser = await DB.getUser(email);
+  const existingUser = await DB.getUser(username);
   if (existingUser) {
     return res.status(409).json({ msg: 'User already exists' });
   }
@@ -60,7 +60,7 @@ apiRouter.post('/auth/register', async (req, res) => {
   // Create new user
   const user = {
     id: uuid(),
-    email,
+    username,
     password: passwordHash,
     token: token,
     createdAt: new Date().toISOString()
@@ -76,25 +76,25 @@ apiRouter.post('/auth/register', async (req, res) => {
     path: '/'
   });
 
-  console.log(`Created user: ${email}, token: ${token}`);
+  console.log(`Created user: ${username}, token: ${token}`);
   console.log(`Set-Cookie header:`, res.getHeader('Set-Cookie'));
 
   res.status(201).json({
     id: user.id,
-    email: user.email,
+    username: user.username,
     token: token
   });
 });
 
 // Login existing user
 apiRouter.post('/auth/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ msg: 'Email and password are required' });
+  if (!username || !password) {
+    return res.status(400).json({ msg: 'Username and password are required' });
   }
 
-  const user = await DB.getUser(email);
+  const user = await DB.getUser(username);
 
   if (!user) {
     return res.status(401).json({ msg: 'Invalid credentials' });
@@ -121,12 +121,12 @@ apiRouter.post('/auth/login', async (req, res) => {
     path: '/'
   });
 
-  console.log(`User logged in: ${email}, token: ${token}`);
+  console.log(`User logged in: ${username}, token: ${token}`);
   console.log(`Set-Cookie header:`, res.getHeader('Set-Cookie'));
 
   res.json({
     id: user.id,
-    email: user.email,
+    username: user.username,
     token: token
   });
 });
@@ -169,7 +169,7 @@ apiRouter.get('/user', async (req, res) => {
 
   res.json({
     id: user.id,
-    email: user.email
+    username: user.username
   });
 });
 

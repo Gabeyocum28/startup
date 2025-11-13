@@ -24,7 +24,7 @@ function App() {
         const checkAuth = async () => {
             const user = await getCurrentUser();
             if (user) {
-                setUserName(user.email);
+                setUserName(user.username);
                 setAuthState(AuthState.Authenticated);
             } else {
                 setAuthState(AuthState.Unauthenticated);

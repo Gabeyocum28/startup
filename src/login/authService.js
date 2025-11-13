@@ -21,14 +21,14 @@ export function clearAuthToken() {
     localStorage.removeItem('authToken');
 }
 
-export async function register(email, password) {
+export async function register(username, password) {
     try {
         const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ username, password })
         });
 
         if (!response.ok) {
@@ -43,14 +43,14 @@ export async function register(email, password) {
     }
 }
 
-export async function login(email, password) {
+export async function login(username, password) {
     try {
         const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ username, password })
         });
 
         if (!response.ok) {
