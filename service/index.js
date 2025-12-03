@@ -2,6 +2,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const { v4: uuid } = require('uuid');
+const http = require('http');
+const { WebSocketServer } = require('ws');
 const DB = require('./database.js');
 
 const app = express();
@@ -354,7 +356,55 @@ app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
+// Create HTTP server for both Express and WebSocket
+const server = http.createServer(app);
+
+// Create WebSocket server
+const wss = new WebSocketServer({ noServer: true });
+
+// Handle WebSocket upgrade requests
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
+  });
+});
+
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+  console.log('New WebSocket connection established');
+
+  // Mark connection as alive
+  ws.isAlive = true;
+
+  // Handle pong responses (for keepalive)
+  ws.on('pong', () => {
+    ws.isAlive = true;
+  });
+
+  // Handle disconnections
+  ws.on('close', () => {
+    console.log('WebSocket connection closed');
+  });
+
+  // Handle errors
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
+});
+
+// Ping clients every 30 seconds to detect dead connections
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    if (client.isAlive === false) {
+      console.log('Terminating dead connection');
+      return client.terminate();
+    }
+    client.isAlive = false;
+    client.ping();
+  });
+}, 30000);
+
 // Start the server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Polyrhythmd service listening on port ${port}`);
 });
