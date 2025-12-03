@@ -233,6 +233,20 @@ apiRouter.post('/reviews', async (req, res) => {
 
   await DB.addReview(review);
 
+  // Broadcast notification to all connected WebSocket clients
+  const notification = {
+    type: 'newReview',
+    userName: reviewerName,
+    albumName: albumName,
+    rating: rating
+  };
+
+  wss.clients.forEach((client) => {
+    if (client.readyState === 1) { // 1 = OPEN
+      client.send(JSON.stringify(notification));
+    }
+  });
+
   res.status(201).json(review);
 });
 
