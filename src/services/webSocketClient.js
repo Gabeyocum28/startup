@@ -12,8 +12,8 @@ class WebSocketClient {
   // Connect to WebSocket server
   connect() {
     // Determine protocol (ws or wss) based on current page protocol
-    const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
-    const wsUrl = `${protocol}://${window.location.host}`;
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const wsUrl = `${protocol}://${window.location.host}/ws`;
 
     console.log(`Connecting to WebSocket at ${wsUrl}`);
     this.socket = new WebSocket(wsUrl);

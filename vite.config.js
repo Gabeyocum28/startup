@@ -21,6 +21,11 @@ export default defineConfig({
         cookiePathRewrite: {
           '*': '/'
         }
+      },
+      '/ws': {
+        target: 'ws://localhost:4000',
+        ws: true,
+        changeOrigin: true
       }
     }
   }

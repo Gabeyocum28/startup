@@ -233,7 +233,7 @@ apiRouter.post('/reviews', async (req, res) => {
 
   await DB.addReview(review);
 
-  // Broadcast notification to all connected WebSocket clients
+  // Broadcast notification to all connected WebSocket clients EXCEPT the sender
   const notification = {
     type: 'newReview',
     userName: reviewerName,
@@ -242,7 +242,8 @@ apiRouter.post('/reviews', async (req, res) => {
   };
 
   wss.clients.forEach((client) => {
-    if (client.readyState === 1) { // 1 = OPEN
+    // Only send to clients that are connected and NOT the user who posted
+    if (client.readyState === 1 && client.userToken !== token) {
       client.send(JSON.stringify(notification));
     }
   });
@@ -376,19 +377,37 @@ const server = http.createServer(app);
 // Create WebSocket server
 const wss = new WebSocketServer({ noServer: true });
 
-// Handle WebSocket upgrade requests
+// Handle WebSocket upgrade requests on /ws path
 server.on('upgrade', (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
-  });
+  const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
+
+  if (pathname === '/ws') {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
 });
 
 // Handle WebSocket connections
-wss.on('connection', (ws) => {
+wss.on('connection', (ws, request) => {
   console.log('New WebSocket connection established');
 
   // Mark connection as alive
   ws.isAlive = true;
+
+  // Extract token from cookies to identify the user
+  let userToken = null;
+  if (request.headers.cookie) {
+    const cookies = request.headers.cookie.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = value;
+      return acc;
+    }, {});
+    userToken = cookies.token || null;
+  }
+  ws.userToken = userToken;
 
   // Handle pong responses (for keepalive)
   ws.on('pong', () => {
