@@ -7,7 +7,7 @@ import { Login } from './login/login';
 import { Profile } from './profile/profile';
 import { Review } from './review/review';
 import { Search } from './search/search';
-import { mockWebSocket } from './services/mockWebSocket';
+import { webSocketClient } from './services/webSocketClient';
 import { getCurrentUser } from './login/authService';
 
 import { AuthState } from './login/authState';
@@ -44,13 +44,13 @@ function App() {
                 window.dispatchEvent(new CustomEvent('newReview'));
             };
 
-            mockWebSocket.addListener(handleNotification);
-            mockWebSocket.start();
+            webSocketClient.addListener(handleNotification);
+            webSocketClient.connect();
 
             // Cleanup on unmount
             return () => {
-                mockWebSocket.removeListener(handleNotification);
-                mockWebSocket.stop();
+                webSocketClient.removeListener(handleNotification);
+                webSocketClient.disconnect();
             };
         }
     }, [authState]);
