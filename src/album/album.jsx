@@ -119,6 +119,21 @@ export function Album() {
     return (
         <div>
             <main>
+                <button
+                    onClick={() => navigate('/feed')}
+                    style={{
+                        marginBottom: '1rem',
+                        padding: '0.5rem 1rem',
+                        backgroundColor: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        color: 'var(--text-color)',
+                        fontSize: '1rem'
+                    }}
+                >
+                    ← Back to Feed
+                </button>
                 <div className="album-info">
                     <img
                         src={album.images[0].url}
