@@ -93,6 +93,7 @@ function App() {
                             setAuthState(AuthState.Unauthenticated);
                             setUserName('');
                         }} />} />
+                        <Route path='/user/:username' element={<Profile currentUser={userName} />} />
                         <Route path='/review' element={<Review userName={userName} />} />
                         <Route path='/search' element={<Search />} />
                         <Route path='*' element={<NotFound />} />

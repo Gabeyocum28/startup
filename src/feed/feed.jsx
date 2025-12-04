@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAllReviews } from '../review/reviewService';
 import '../app.css';
 import './feed.css';
 
-export function Feed() {
+export function Feed({ userName }) {
+    const navigate = useNavigate();
     const [allReviews, setAllReviews] = React.useState([]);
 
     React.useEffect(() => {
@@ -84,7 +86,22 @@ export function Feed() {
                                         <p className="review-text">{review.reviewText}</p>
                                     </div>
 
-                                    <p className="review-author">@{review.reviewerName}</p>
+                                    <p
+                                        className="review-author"
+                                        style={{ cursor: 'pointer', transition: 'color 0.2s' }}
+                                        onClick={() => {
+                                            // If clicking on own username, go to /profile, otherwise /user/:username
+                                            if (review.reviewerName === userName) {
+                                                navigate('/profile');
+                                            } else {
+                                                navigate(`/user/${review.reviewerName}`);
+                                            }
+                                        }}
+                                        onMouseOver={(e) => { e.currentTarget.style.color = 'var(--primary-color, #ff6b6b)'; }}
+                                        onMouseOut={(e) => { e.currentTarget.style.color = ''; }}
+                                    >
+                                        @{review.reviewerName}
+                                    </p>
                                 </div>
                             ))
                         )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { getReviewsByUser } from '../review/reviewService';
@@ -7,8 +7,9 @@ import { clearAuthToken } from '../login/authService';
 import '../app.css';
 import './profile.css';
 
-export function Profile({ userName, onLogout }) {
+export function Profile({ userName, currentUser, onLogout }) {
     const navigate = useNavigate();
+    const { username: urlUsername } = useParams();
     const [userReviews, setUserReviews] = React.useState([]);
     const [favoriteAlbums, setFavoriteAlbums] = React.useState([]);
     const [showFavoritesModal, setShowFavoritesModal] = React.useState(false);
@@ -16,31 +17,42 @@ export function Profile({ userName, onLogout }) {
     const [searchResults, setSearchResults] = React.useState([]);
     const [tempFavorites, setTempFavorites] = React.useState([]);
 
+    // Determine which user's profile we're viewing
+    const profileUser = urlUsername || userName;
+    const isOwnProfile = profileUser === userName || profileUser === currentUser;
+
     React.useEffect(() => {
         // Load reviews for this user from backend API
         const loadUserReviews = async () => {
-            const reviews = await getReviewsByUser(userName);
+            const reviews = await getReviewsByUser(profileUser);
             setUserReviews(reviews);
         };
 
         // Load user's favorite albums
         const loadFavoriteAlbums = async () => {
             try {
-                const response = await fetch('/api/user');
-                if (response.ok) {
-                    const userData = await response.json();
-                    setFavoriteAlbums(userData.favoriteAlbums || []);
+                // When viewing another user's profile, we need a different endpoint
+                // For now, we'll only show favorites on own profile
+                if (isOwnProfile) {
+                    const response = await fetch('/api/user');
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setFavoriteAlbums(userData.favoriteAlbums || []);
+                    }
+                } else {
+                    // For other users, we could fetch their public favorites if we had an endpoint
+                    setFavoriteAlbums([]);
                 }
             } catch (error) {
                 console.error('Error loading favorite albums:', error);
             }
         };
 
-        if (userName) {
+        if (profileUser) {
             loadUserReviews();
             loadFavoriteAlbums();
         }
-    }, [userName]);
+    }, [profileUser, isOwnProfile]);
 
     function logout() {
         fetch('/api/auth/logout', {
@@ -158,46 +170,52 @@ export function Profile({ userName, onLogout }) {
     return (
         <div>
             <main>
-                <h1>Hey {userName}!</h1>
-                <Button variant='danger' onClick={() => logout()} style={{ marginBottom: '1rem' }}>
-                    Logout
-                </Button>
+                <h1>{isOwnProfile ? `Hey ${profileUser}!` : `${profileUser}'s Profile`}</h1>
+                {isOwnProfile && onLogout && (
+                    <Button variant='danger' onClick={() => logout()} style={{ marginBottom: '1rem' }}>
+                        Logout
+                    </Button>
+                )}
 
-                {/* Favorite Albums Section */}
-                <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <h2 style={{ margin: 0 }}>Favorite Albums</h2>
-                        <Button variant='primary' onClick={handleOpenFavoritesModal}>
-                            Edit Favorites
-                        </Button>
-                    </div>
-                    {favoriteAlbums.length === 0 ? (
-                        <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
-                            No favorite albums yet. Click "Edit Favorites" to add some!
-                        </p>
-                    ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-                            {favoriteAlbums.map(album => (
-                                <div
-                                    key={album.id}
-                                    style={{ textAlign: 'center', cursor: 'pointer' }}
-                                    onClick={() => navigate(`/album/${album.id}`)}
-                                >
-                                    <img
-                                        src={album.image}
-                                        alt={album.name}
-                                        style={{ width: '100%', borderRadius: '8px', marginBottom: '0.5rem', transition: 'transform 0.2s' }}
-                                        onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
-                                        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-                                        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                                    />
-                                    <h4 style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>{album.name}</h4>
-                                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{album.artist}</p>
-                                </div>
-                            ))}
+                {/* Favorite Albums Section - only show if there are favorites or it's own profile */}
+                {(isOwnProfile || favoriteAlbums.length > 0) && (
+                    <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <h2 style={{ margin: 0 }}>Favorite Albums</h2>
+                            {isOwnProfile && (
+                                <Button variant='primary' onClick={handleOpenFavoritesModal}>
+                                    Edit Favorites
+                                </Button>
+                            )}
                         </div>
-                    )}
-                </div>
+                        {favoriteAlbums.length === 0 ? (
+                            <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
+                                No favorite albums yet. Click "Edit Favorites" to add some!
+                            </p>
+                        ) : (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                                {favoriteAlbums.map(album => (
+                                    <div
+                                        key={album.id}
+                                        style={{ textAlign: 'center', cursor: 'pointer' }}
+                                        onClick={() => navigate(`/album/${album.id}`)}
+                                    >
+                                        <img
+                                            src={album.image}
+                                            alt={album.name}
+                                            style={{ width: '100%', borderRadius: '8px', marginBottom: '0.5rem', transition: 'transform 0.2s' }}
+                                            onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
+                                            onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+                                            onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                                        />
+                                        <h4 style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>{album.name}</h4>
+                                        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{album.artist}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <div className="feed-container">
                     <div className="feed-main">
