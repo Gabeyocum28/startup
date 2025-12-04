@@ -10,6 +10,7 @@ export function Album() {
     const [album, setAlbum] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const [reviews, setReviews] = React.useState([]);
+    const [sortBy, setSortBy] = React.useState('newest');
 
     React.useEffect(() => {
         const loadAlbum = async () => {
@@ -75,6 +76,22 @@ export function Album() {
                 <span>{'☆'.repeat(emptyStars)}</span>
             </span>
         );
+    };
+
+    const getSortedReviews = () => {
+        const reviewsCopy = [...reviews];
+
+        switch (sortBy) {
+            case 'highest':
+                return reviewsCopy.sort((a, b) => b.rating - a.rating);
+            case 'lowest':
+                return reviewsCopy.sort((a, b) => a.rating - b.rating);
+            case 'oldest':
+                return reviewsCopy.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            case 'newest':
+            default:
+                return reviewsCopy.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
     };
 
     if (isLoading) {
@@ -165,13 +182,78 @@ export function Album() {
                             </div>
                         )}
                     </div>
+                    {reviews.length > 0 && (
+                        <div className="sort-controls" style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <span style={{ marginRight: '0.5rem', alignSelf: 'center', fontWeight: 'bold' }}>Sort by:</span>
+                            <button
+                                className={sortBy === 'newest' ? 'sort-button active' : 'sort-button'}
+                                onClick={() => setSortBy('newest')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '4px',
+                                    border: sortBy === 'newest' ? '2px solid var(--primary-color, #ff6b6b)' : '1px solid var(--border-color)',
+                                    backgroundColor: sortBy === 'newest' ? 'var(--primary-color, #ff6b6b)' : 'var(--bg-secondary)',
+                                    color: sortBy === 'newest' ? 'white' : 'var(--text-color)',
+                                    cursor: 'pointer',
+                                    fontWeight: sortBy === 'newest' ? 'bold' : 'normal'
+                                }}
+                            >
+                                Newest
+                            </button>
+                            <button
+                                className={sortBy === 'oldest' ? 'sort-button active' : 'sort-button'}
+                                onClick={() => setSortBy('oldest')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '4px',
+                                    border: sortBy === 'oldest' ? '2px solid var(--primary-color, #ff6b6b)' : '1px solid var(--border-color)',
+                                    backgroundColor: sortBy === 'oldest' ? 'var(--primary-color, #ff6b6b)' : 'var(--bg-secondary)',
+                                    color: sortBy === 'oldest' ? 'white' : 'var(--text-color)',
+                                    cursor: 'pointer',
+                                    fontWeight: sortBy === 'oldest' ? 'bold' : 'normal'
+                                }}
+                            >
+                                Oldest
+                            </button>
+                            <button
+                                className={sortBy === 'highest' ? 'sort-button active' : 'sort-button'}
+                                onClick={() => setSortBy('highest')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '4px',
+                                    border: sortBy === 'highest' ? '2px solid var(--primary-color, #ff6b6b)' : '1px solid var(--border-color)',
+                                    backgroundColor: sortBy === 'highest' ? 'var(--primary-color, #ff6b6b)' : 'var(--bg-secondary)',
+                                    color: sortBy === 'highest' ? 'white' : 'var(--text-color)',
+                                    cursor: 'pointer',
+                                    fontWeight: sortBy === 'highest' ? 'bold' : 'normal'
+                                }}
+                            >
+                                Highest Rating
+                            </button>
+                            <button
+                                className={sortBy === 'lowest' ? 'sort-button active' : 'sort-button'}
+                                onClick={() => setSortBy('lowest')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '4px',
+                                    border: sortBy === 'lowest' ? '2px solid var(--primary-color, #ff6b6b)' : '1px solid var(--border-color)',
+                                    backgroundColor: sortBy === 'lowest' ? 'var(--primary-color, #ff6b6b)' : 'var(--bg-secondary)',
+                                    color: sortBy === 'lowest' ? 'white' : 'var(--text-color)',
+                                    cursor: 'pointer',
+                                    fontWeight: sortBy === 'lowest' ? 'bold' : 'normal'
+                                }}
+                            >
+                                Lowest Rating
+                            </button>
+                        </div>
+                    )}
                     {reviews.length === 0 ? (
                         <p className="reviews-placeholder">
                             No reviews yet. Be the first to review this album!
                         </p>
                     ) : (
                         <div className="reviews-list">
-                            {reviews.map(review => (
+                            {getSortedReviews().map(review => (
                                 <div key={review.id} className="review-card">
                                     <div className="review-header">
                                         <div>
