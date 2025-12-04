@@ -31,17 +31,20 @@ export function Profile({ userName, currentUser, onLogout }) {
         // Load user's favorite albums
         const loadFavoriteAlbums = async () => {
             try {
-                // When viewing another user's profile, we need a different endpoint
-                // For now, we'll only show favorites on own profile
                 if (isOwnProfile) {
+                    // Load own favorites from authenticated endpoint
                     const response = await fetch('/api/user');
                     if (response.ok) {
                         const userData = await response.json();
                         setFavoriteAlbums(userData.favoriteAlbums || []);
                     }
                 } else {
-                    // For other users, we could fetch their public favorites if we had an endpoint
-                    setFavoriteAlbums([]);
+                    // Load other user's public favorites
+                    const response = await fetch(`/api/user/${profileUser}`);
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setFavoriteAlbums(userData.favoriteAlbums || []);
+                    }
                 }
             } catch (error) {
                 console.error('Error loading favorite albums:', error);

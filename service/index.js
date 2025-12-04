@@ -284,6 +284,27 @@ apiRouter.post('/reviews', async (req, res) => {
   res.status(201).json(review);
 });
 
+// Get public user profile by username (no auth required)
+apiRouter.get('/user/:username', async (req, res) => {
+  const { username } = req.params;
+
+  if (!username) {
+    return res.status(400).json({ msg: 'Username is required' });
+  }
+
+  const user = await DB.getUser(username);
+
+  if (!user) {
+    return res.status(404).json({ msg: 'User not found' });
+  }
+
+  // Return only public information
+  res.json({
+    username: user.username,
+    favoriteAlbums: user.favoriteAlbums || []
+  });
+});
+
 // ===================================
 // Spotify API Endpoints
 // ===================================
