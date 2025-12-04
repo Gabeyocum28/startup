@@ -158,6 +158,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Data sent over WebSocket connection** - Review notifications broadcast to all connected clients except the sender
 - [x] **WebSocket data displayed** - Live activity notifications appear in sidebar showing username, album name, and rating in real-time
 - [x] **Application is fully functional** - Complete real-time notification system with ping/pong heartbeat for connection health
+!
 
 
 Here is my first edit!

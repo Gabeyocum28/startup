@@ -178,12 +178,18 @@ export function Profile({ userName, onLogout }) {
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                             {favoriteAlbums.map(album => (
-                                <div key={album.id} style={{ textAlign: 'center' }}>
+                                <div
+                                    key={album.id}
+                                    style={{ textAlign: 'center', cursor: 'pointer' }}
+                                    onClick={() => navigate(`/album/${album.id}`)}
+                                >
                                     <img
                                         src={album.image}
                                         alt={album.name}
-                                        style={{ width: '100%', borderRadius: '8px', marginBottom: '0.5rem' }}
+                                        style={{ width: '100%', borderRadius: '8px', marginBottom: '0.5rem', transition: 'transform 0.2s' }}
                                         onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
+                                        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+                                        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                                     />
                                     <h4 style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>{album.name}</h4>
                                     <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{album.artist}</p>
