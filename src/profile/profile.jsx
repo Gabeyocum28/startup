@@ -226,7 +226,11 @@ export function Profile({ userName, currentUser, onLogout }) {
                         ) : (
                             userReviews.map(review => (
                                 <div key={review.id} className="review-card">
-                                    <div className="album-info">
+                                    <div
+                                        className="album-info"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/album/${review.albumId}`)}
+                                    >
                                         <img
                                             src={review.albumCover}
                                             alt={review.albumName}
@@ -240,7 +244,11 @@ export function Profile({ userName, currentUser, onLogout }) {
                                         </div>
                                     </div>
 
-                                    <div className="review-content">
+                                    <div
+                                        className="review-content"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/album/${review.albumId}`)}
+                                    >
                                         <p className="review-text">{review.reviewText}</p>
                                     </div>
 

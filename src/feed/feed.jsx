@@ -68,7 +68,11 @@ export function Feed({ userName }) {
                         ) : (
                             allReviews.map(review => (
                                 <div key={review.id} className="review-card">
-                                    <div className="album-info">
+                                    <div
+                                        className="album-info"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/album/${review.albumId}`)}
+                                    >
                                         <img
                                             src={review.albumCover}
                                             alt={review.albumName}
@@ -82,14 +86,19 @@ export function Feed({ userName }) {
                                         </div>
                                     </div>
 
-                                    <div className="review-content">
+                                    <div
+                                        className="review-content"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/album/${review.albumId}`)}
+                                    >
                                         <p className="review-text">{review.reviewText}</p>
                                     </div>
 
                                     <p
                                         className="review-author"
                                         style={{ cursor: 'pointer', transition: 'color 0.2s' }}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             // If clicking on own username, go to /profile, otherwise /user/:username
                                             if (review.reviewerName === userName) {
                                                 navigate('/profile');
