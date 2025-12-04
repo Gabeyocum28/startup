@@ -76,9 +76,12 @@ The application uses the required technologies in the following ways:
   - User reviews with ratings, text, album info, and timestamps
   - Secure credential management and session handling
 
-- **WebSocket** - Mock WebSocket implementation displaying:
+- **WebSocket** - Real-time WebSocket implementation providing:
+  - Backend WebSocket server on `/ws` endpoint using ws library
   - Live activity notifications in sidebar when users post reviews
-  - Real-time feed updates when new reviews are created
+  - Real-time broadcasting to all connected clients except the sender
+  - Automatic reconnection with exponential backoff
+  - Ping/pong heartbeat for connection health monitoring
 
 ## 🚀 AWS deliverable
 
@@ -150,11 +153,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Backend listens for WebSocket connection** - WebSocket server implemented using ws library, listens on `/ws` endpoint with user token tracking
+- [x] **Frontend makes WebSocket connection** - Custom WebSocketClient connects to backend, auto-reconnects with exponential backoff (5 attempts max)
+- [x] **Data sent over WebSocket connection** - Review notifications broadcast to all connected clients except the sender
+- [x] **WebSocket data displayed** - Live activity notifications appear in sidebar showing username, album name, and rating in real-time
+- [x] **Application is fully functional** - Complete real-time notification system with ping/pong heartbeat for connection health
 
 
 Here is my first edit!

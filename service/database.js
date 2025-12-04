@@ -38,6 +38,13 @@ async function updateUser(user) {
   await userCollection.updateOne({ username: user.username }, { $set: user });
 }
 
+async function updateUserFavorites(username, favoriteAlbums) {
+  await userCollection.updateOne(
+    { username: username },
+    { $set: { favoriteAlbums: favoriteAlbums } }
+  );
+}
+
 // ===================================
 // Review Functions
 // ===================================
@@ -78,6 +85,7 @@ module.exports = {
   getUserByToken,
   addUser,
   updateUser,
+  updateUserFavorites,
   addReview,
   getAllReviews,
   getReviewsByUser,

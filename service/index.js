@@ -171,8 +171,41 @@ apiRouter.get('/user', async (req, res) => {
 
   res.json({
     id: user.id,
-    username: user.username
+    username: user.username,
+    favoriteAlbums: user.favoriteAlbums || []
   });
+});
+
+// Update user's favorite albums (restricted endpoint)
+apiRouter.put('/user/favorites', async (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
+  const user = await DB.getUserByToken(token);
+  if (!user) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
+  const { favoriteAlbums } = req.body;
+
+  // Validate: must be array, max 3 albums
+  if (!Array.isArray(favoriteAlbums) || favoriteAlbums.length > 3) {
+    return res.status(400).json({ msg: 'favoriteAlbums must be an array with max 3 albums' });
+  }
+
+  // Validate each album has required fields
+  for (const album of favoriteAlbums) {
+    if (!album.id || !album.name || !album.artist || !album.image) {
+      return res.status(400).json({ msg: 'Each album must have id, name, artist, and image' });
+    }
+  }
+
+  await DB.updateUserFavorites(user.username, favoriteAlbums);
+
+  res.json({ favoriteAlbums });
 });
 
 // ===================================

@@ -515,45 +515,274 @@ apiRouter.post('/data', async (req, res) => {
 
 ---
 
-## WebSocket Deliverable (Upcoming)
+## WebSocket Deliverable
 
-**Plan:**
-- Real-time notifications when users post reviews
-- Live activity feed updates
-- Use WebSocket for bidirectional communication
+**What I Learned:**
+- WebSocket provides full-duplex bidirectional communication
+- ws library for Node.js backend, native WebSocket API for frontend
+- Ping/pong heartbeat pattern for connection health monitoring
+- Token-based filtering to exclude message sender from broadcasts
+- Auto-reconnect pattern with exponential backoff
 
-**Mock WebSocket (what I'm using now):**
+**Backend WebSocket Server (service/index.js):**
 ```javascript
-// Mock WebSocket that simulates real-time updates
-const mockWebSocket = {
-  listeners: [],
+const { WebSocketServer } = require('ws');
+const http = require('http');
+
+// Create HTTP server for both Express and WebSocket
+const server = http.createServer(app);
+
+// Create WebSocket server
+const wss = new WebSocketServer({ noServer: true });
+
+// Handle WebSocket upgrade requests on /ws path
+server.on('upgrade', (request, socket, head) => {
+  const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
+
+  if (pathname === '/ws') {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+
+// Handle WebSocket connections
+wss.on('connection', (ws, request) => {
+  console.log('New WebSocket connection established');
+
+  ws.isAlive = true;
+
+  // Extract token from cookies to identify the user
+  let userToken = null;
+  if (request.headers.cookie) {
+    const cookies = request.headers.cookie.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = value;
+      return acc;
+    }, {});
+    userToken = cookies.token || null;
+  }
+  ws.userToken = userToken;
+
+  ws.on('pong', () => {
+    ws.isAlive = true;
+  });
+
+  ws.on('close', () => {
+    console.log('WebSocket connection closed');
+  });
+
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
+});
+
+// Ping clients every 30 seconds to detect dead connections
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    if (client.isAlive === false) {
+      console.log('Terminating dead connection');
+      return client.terminate();
+    }
+    client.isAlive = false;
+    client.ping();
+  });
+}, 30000);
+
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+```
+
+**Broadcasting Messages (exclude sender):**
+```javascript
+// When a review is posted
+const notification = {
+  type: 'newReview',
+  userName: reviewerName,
+  albumName: albumName,
+  rating: rating
+};
+
+wss.clients.forEach((client) => {
+  // Only send to connected clients that are NOT the user who posted
+  if (client.readyState === 1 && client.userToken !== token) {
+    client.send(JSON.stringify(notification));
+  }
+});
+```
+
+**Frontend WebSocket Client (src/services/webSocketClient.js):**
+```javascript
+class WebSocketClient {
+  constructor() {
+    this.socket = null;
+    this.listeners = [];
+    this.connected = false;
+    this.reconnectAttempts = 0;
+    this.maxReconnectAttempts = 5;
+    this.reconnectDelay = 2000;
+  }
+
+  connect() {
+    // Use wss:// for HTTPS, ws:// for HTTP
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const wsUrl = `${protocol}://${window.location.host}/ws`;
+
+    console.log(`Connecting to WebSocket at ${wsUrl}`);
+    this.socket = new WebSocket(wsUrl);
+
+    this.socket.onopen = () => {
+      console.log('WebSocket connected');
+      this.connected = true;
+      this.reconnectAttempts = 0;
+    };
+
+    this.socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log('WebSocket message received:', data);
+
+        if (data.type === 'newReview') {
+          const notification = {
+            id: Date.now(),
+            userName: data.userName,
+            albumName: data.albumName,
+            rating: data.rating,
+            timestamp: new Date().toISOString()
+          };
+          this.notifyListeners(notification);
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+
+    this.socket.onclose = () => {
+      console.log('WebSocket disconnected');
+      this.connected = false;
+      this.attemptReconnect();
+    };
+
+    this.socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  }
+
+  attemptReconnect() {
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      console.log(`Reconnecting... (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+
+      setTimeout(() => {
+        this.connect();
+      }, this.reconnectDelay);
+    } else {
+      console.error('Max reconnection attempts reached');
+    }
+  }
 
   addListener(callback) {
     this.listeners.push(callback);
-  },
+  }
 
   removeListener(callback) {
     this.listeners = this.listeners.filter(l => l !== callback);
-  },
-
-  start() {
-    // Simulate periodic updates
-    this.interval = setInterval(() => {
-      const notification = {
-        id: Date.now(),
-        userName: 'User',
-        albumName: 'Album',
-        rating: 4.5
-      };
-      this.listeners.forEach(l => l(notification));
-    }, 30000);
-  },
-
-  stop() {
-    clearInterval(this.interval);
   }
-};
+
+  notifyListeners(notification) {
+    this.listeners.forEach(listener => {
+      try {
+        listener(notification);
+      } catch (error) {
+        console.error('Error in WebSocket listener:', error);
+      }
+    });
+  }
+
+  disconnect() {
+    if (this.socket) {
+      console.log('Closing WebSocket connection');
+      this.socket.close();
+      this.socket = null;
+      this.connected = false;
+    }
+  }
+}
+
+export const webSocketClient = new WebSocketClient();
 ```
+
+**React Integration (src/app.jsx):**
+```jsx
+import { webSocketClient } from './services/webSocketClient';
+
+function App() {
+  const [liveNotifications, setLiveNotifications] = useState([]);
+
+  useEffect(() => {
+    if (authState === AuthState.Authenticated) {
+      const handleNotification = (notification) => {
+        setLiveNotifications(prev => [notification, ...prev].slice(0, 10));
+      };
+
+      webSocketClient.addListener(handleNotification);
+      webSocketClient.connect();
+
+      return () => {
+        webSocketClient.removeListener(handleNotification);
+        webSocketClient.disconnect();
+      };
+    }
+  }, [authState]);
+
+  // Display notifications in sidebar
+  {liveNotifications.map(notification => (
+    <div key={notification.id}>
+      <strong>{notification.userName}</strong> gave{' '}
+      <strong>{notification.albumName}</strong> {notification.rating} stars!
+    </div>
+  ))}
+}
+```
+
+**Vite Configuration for WebSocket Proxy (vite.config.js):**
+```javascript
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+      '/ws': {
+        target: 'ws://localhost:4000',
+        ws: true,
+        changeOrigin: true
+      }
+    }
+  }
+});
+```
+
+**Key WebSocket Concepts:**
+
+1. **Upgrade Handshake**: HTTP connection upgraded to WebSocket protocol
+2. **Bidirectional**: Both client and server can send messages anytime
+3. **Persistent Connection**: Stays open until explicitly closed
+4. **Ping/Pong**: Heartbeat mechanism to detect dead connections
+5. **ReadyState**: 0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED
+
+**Tips:**
+- Use `ws` library for backend (not native Node.js WebSocket)
+- Store user context (token) with each connection for filtering
+- Always implement reconnection logic on frontend
+- Clean up listeners in React useEffect return function
+- Use `/ws` or similar path for WebSocket endpoint
+- WebSocket works through Caddy reverse proxy automatically
+- In production, use `wss://` (secure WebSocket over HTTPS)
 
 ---
 
@@ -633,12 +862,13 @@ startup/
 - ✅ User profiles with review history
 - ✅ Community feed
 - ✅ Aggregate rating calculations
-- ✅ Mock WebSocket for live updates
+- ✅ Real-time WebSocket notifications
 
-**Still To Do:**
-- [ ] Real WebSocket implementation
+**Future Enhancements:**
 - [ ] User following system
 - [ ] Review likes/comments
-- [ ] Better error handling
-- [ ] Loading states
+- [ ] Better error handling UI
+- [ ] Loading states for API calls
 - [ ] Form validation improvements
+- [ ] Profile pictures
+- [ ] Search filters and sorting

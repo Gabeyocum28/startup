@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { getReviewsByUser } from '../review/reviewService';
 import { clearAuthToken } from '../login/authService';
 import '../app.css';
@@ -9,6 +10,11 @@ import './profile.css';
 export function Profile({ userName, onLogout }) {
     const navigate = useNavigate();
     const [userReviews, setUserReviews] = React.useState([]);
+    const [favoriteAlbums, setFavoriteAlbums] = React.useState([]);
+    const [showFavoritesModal, setShowFavoritesModal] = React.useState(false);
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [searchResults, setSearchResults] = React.useState([]);
+    const [tempFavorites, setTempFavorites] = React.useState([]);
 
     React.useEffect(() => {
         // Load reviews for this user from backend API
@@ -17,8 +23,22 @@ export function Profile({ userName, onLogout }) {
             setUserReviews(reviews);
         };
 
+        // Load user's favorite albums
+        const loadFavoriteAlbums = async () => {
+            try {
+                const response = await fetch('/api/user');
+                if (response.ok) {
+                    const userData = await response.json();
+                    setFavoriteAlbums(userData.favoriteAlbums || []);
+                }
+            } catch (error) {
+                console.error('Error loading favorite albums:', error);
+            }
+        };
+
         if (userName) {
             loadUserReviews();
+            loadFavoriteAlbums();
         }
     }, [userName]);
 
@@ -62,6 +82,79 @@ export function Profile({ userName, onLogout }) {
         );
     };
 
+    const handleOpenFavoritesModal = () => {
+        setTempFavorites([...favoriteAlbums]);
+        setSearchQuery('');
+        setSearchResults([]);
+        setShowFavoritesModal(true);
+    };
+
+    const handleCloseFavoritesModal = () => {
+        setShowFavoritesModal(false);
+        setSearchQuery('');
+        setSearchResults([]);
+        setTempFavorites([]);
+    };
+
+    const handleSearch = async () => {
+        if (!searchQuery.trim()) return;
+
+        try {
+            const response = await fetch(`/api/spotify/search?q=${encodeURIComponent(searchQuery)}`);
+            if (response.ok) {
+                const data = await response.json();
+                setSearchResults(data.items || []);
+            } else {
+                console.error('Failed to search albums');
+                setSearchResults([]);
+            }
+        } catch (error) {
+            console.error('Error searching albums:', error);
+            setSearchResults([]);
+        }
+    };
+
+    const handleAddFavorite = (album) => {
+        if (tempFavorites.length >= 3) {
+            alert('You can only have 3 favorite albums');
+            return;
+        }
+
+        const albumData = {
+            id: album.id,
+            name: album.name,
+            artist: album.artists[0].name,
+            image: album.images[0]?.url || '/images/no_album_cover.jpg'
+        };
+
+        setTempFavorites([...tempFavorites, albumData]);
+    };
+
+    const handleRemoveFavorite = (albumId) => {
+        setTempFavorites(tempFavorites.filter(album => album.id !== albumId));
+    };
+
+    const handleSaveFavorites = async () => {
+        try {
+            const response = await fetch('/api/user/favorites', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ favoriteAlbums: tempFavorites })
+            });
+
+            if (response.ok) {
+                setFavoriteAlbums(tempFavorites);
+                handleCloseFavoritesModal();
+            } else {
+                console.error('Failed to save favorites');
+                alert('Failed to save favorites');
+            }
+        } catch (error) {
+            console.error('Error saving favorites:', error);
+            alert('Error saving favorites');
+        }
+    };
+
     return (
         <div>
             <main>
@@ -69,6 +162,37 @@ export function Profile({ userName, onLogout }) {
                 <Button variant='danger' onClick={() => logout()} style={{ marginBottom: '1rem' }}>
                     Logout
                 </Button>
+
+                {/* Favorite Albums Section */}
+                <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <h2 style={{ margin: 0 }}>Favorite Albums</h2>
+                        <Button variant='primary' onClick={handleOpenFavoritesModal}>
+                            Edit Favorites
+                        </Button>
+                    </div>
+                    {favoriteAlbums.length === 0 ? (
+                        <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
+                            No favorite albums yet. Click "Edit Favorites" to add some!
+                        </p>
+                    ) : (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                            {favoriteAlbums.map(album => (
+                                <div key={album.id} style={{ textAlign: 'center' }}>
+                                    <img
+                                        src={album.image}
+                                        alt={album.name}
+                                        style={{ width: '100%', borderRadius: '8px', marginBottom: '0.5rem' }}
+                                        onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
+                                    />
+                                    <h4 style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>{album.name}</h4>
+                                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{album.artist}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
                 <div className="feed-container">
                     <div className="feed-main">
                         {userReviews.length === 0 ? (
@@ -102,6 +226,101 @@ export function Profile({ userName, onLogout }) {
                         )}
                     </div>
                 </div>
+
+                {/* Favorites Modal */}
+                <Modal show={showFavoritesModal} onHide={handleCloseFavoritesModal} size="lg">
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit Favorite Albums (Max 3)</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {/* Search Section */}
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <h5>Search for Albums</h5>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search albums..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                                />
+                                <Button onClick={handleSearch}>Search</Button>
+                            </div>
+                        </div>
+
+                        {/* Search Results */}
+                        {searchResults.length > 0 && (
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <h5>Search Results</h5>
+                                <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                    {searchResults.map(album => {
+                                        const isAlreadyAdded = tempFavorites.some(fav => fav.id === album.id);
+                                        return (
+                                            <div key={album.id} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem', borderBottom: '1px solid var(--border-color)' }}>
+                                                <img
+                                                    src={album.images[0]?.url || '/images/no_album_cover.jpg'}
+                                                    alt={album.name}
+                                                    style={{ width: '50px', height: '50px', borderRadius: '4px', marginRight: '1rem' }}
+                                                />
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ fontWeight: 'bold' }}>{album.name}</div>
+                                                    <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{album.artists[0].name}</div>
+                                                </div>
+                                                <Button
+                                                    variant="success"
+                                                    size="sm"
+                                                    onClick={() => handleAddFavorite(album)}
+                                                    disabled={isAlreadyAdded || tempFavorites.length >= 3}
+                                                >
+                                                    {isAlreadyAdded ? 'Added' : 'Add'}
+                                                </Button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Current Favorites */}
+                        <div>
+                            <h5>Current Favorites ({tempFavorites.length}/3)</h5>
+                            {tempFavorites.length === 0 ? (
+                                <p style={{ color: 'var(--text-muted)' }}>No favorites selected</p>
+                            ) : (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                                    {tempFavorites.map(album => (
+                                        <div key={album.id} style={{ textAlign: 'center', position: 'relative' }}>
+                                            <img
+                                                src={album.image}
+                                                alt={album.name}
+                                                style={{ width: '100%', borderRadius: '8px', marginBottom: '0.5rem' }}
+                                            />
+                                            <Button
+                                                variant="danger"
+                                                size="sm"
+                                                onClick={() => handleRemoveFavorite(album.id)}
+                                                style={{ position: 'absolute', top: '5px', right: '5px' }}
+                                            >
+                                                Remove
+                                            </Button>
+                                            <div style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>{album.name}</div>
+                                            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{album.artist}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseFavoritesModal}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" onClick={handleSaveFavorites}>
+                            Save Favorites
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </main>
         </div>
     );
