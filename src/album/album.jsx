@@ -272,7 +272,15 @@ export function Album() {
                                 <div key={review.id} className="review-card">
                                     <div className="review-header">
                                         <div>
-                                            <p className="review-author">@{review.reviewerName}</p>
+                                            <p
+                                                className="review-author"
+                                                style={{ cursor: 'pointer', transition: 'color 0.2s' }}
+                                                onClick={() => navigate(`/user/${review.reviewerName}`)}
+                                                onMouseOver={(e) => { e.currentTarget.style.color = 'var(--primary-color, #ff6b6b)'; }}
+                                                onMouseOut={(e) => { e.currentTarget.style.color = ''; }}
+                                            >
+                                                @{review.reviewerName}
+                                            </p>
                                             <p className="review-rating">{renderStars(review.rating)}</p>
                                         </div>
                                         <p className="review-date">
