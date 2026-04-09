@@ -7,6 +7,9 @@ import { Login } from './login/login';
 import { Profile } from './profile/profile';
 import { Review } from './review/review';
 import { Search } from './search/search';
+import { Song } from './song/song';
+import { Artist } from './artist/artist';
+import { Post } from './feed/post';
 import { webSocketClient } from './services/webSocketClient';
 import { getCurrentUser } from './login/authService';
 
@@ -96,6 +99,9 @@ function App() {
                         <Route path='/user/:username' element={<Profile currentUser={userName} />} />
                         <Route path='/review' element={<Review userName={userName} />} />
                         <Route path='/search' element={<Search />} />
+                        <Route path='/song/:trackId' element={<Song />} />
+                        <Route path='/artist/:artistId' element={<Artist />} />
+                        <Route path='/post/:reviewId' element={<Post userName={userName} />} />
                         <Route path='*' element={<NotFound />} />
                     </Routes>
                 </main>
@@ -103,14 +109,9 @@ function App() {
                     <div className="sidebar-header">
                         <h1>Polyrhythmd</h1>
                     </div>
-                    {authState === AuthState.Unauthenticated && (
-                        <NavLink className='nav-link' to='/about'>
-                            About
-                        </NavLink>
-                    )}
                     {authState === AuthState.Authenticated && (
                         <NavLink className='nav-link' to='/search'>
-                            Review
+                            Search
                         </NavLink>
                     )}
                     {authState === AuthState.Authenticated && (
@@ -139,6 +140,8 @@ function App() {
                     )}
                     <div className="footer-info">
                         <p>&copy; 2025 polyrhythmd</p>
+                        <NavLink to="/about" style={{ textDecoration: 'none', color: 'inherit' }}>About</NavLink>
+                        <br />
                         <a href="https://github.com/Gabeyocum28/startup.git">GitHub</a>
                     </div>
                 </nav>

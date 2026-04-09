@@ -67,30 +67,34 @@ export function Feed({ userName }) {
                             </p>
                         ) : (
                             allReviews.map(review => (
-                                <div key={review.id} className="review-card">
-                                    <div
-                                        className="album-info"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => navigate(`/album/${review.albumId}`)}
-                                    >
+                                <div key={review.id} className="review-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/post/${review.id}`)}>
+                                    <div className="album-info">
                                         <img
-                                            src={review.albumCover}
-                                            alt={review.albumName}
+                                            src={review.contentCover || review.albumCover}
+                                            alt={review.contentName || review.albumName}
                                             className="album-cover"
                                             onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
                                         />
                                         <div className="album-details">
-                                            <h3 className="album-title">{review.albumName}</h3>
-                                            <p className="album-artist">{review.artistName}</p>
+                                            <h3
+                                                className="album-title search-link"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    const type = review.contentType || 'album';
+                                                    const id = review.contentId || review.albumId;
+                                                    if (type === 'artist') navigate(`/artist/${id}`);
+                                                    else if (type === 'track') navigate(`/song/${id}`);
+                                                    else navigate(`/album/${id}`);
+                                                }}
+                                            >
+                                                {review.contentName || review.albumName}
+                                            </h3>
+                                            {review.artistName && <p className="album-artist">{review.artistName}</p>}
                                             <p className="review-rating">{renderStars(review.rating)}</p>
                                         </div>
                                     </div>
 
-                                    <div
-                                        className="review-content"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => navigate(`/album/${review.albumId}`)}
-                                    >
+                                    <div className="review-content">
                                         <p className="review-text">{review.reviewText}</p>
                                     </div>
 
@@ -99,7 +103,6 @@ export function Feed({ userName }) {
                                         style={{ cursor: 'pointer', transition: 'color 0.2s' }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            // If clicking on own username, go to /profile, otherwise /user/:username
                                             if (review.reviewerName === userName) {
                                                 navigate('/profile');
                                             } else {

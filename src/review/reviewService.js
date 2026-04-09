@@ -24,6 +24,10 @@ export async function addReview(reviewData, userName) {
         albumName: reviewData.albumName,
         artistName: reviewData.artistName,
         albumCover: reviewData.albumCover,
+        contentId: reviewData.contentId,
+        contentType: reviewData.contentType || 'album',
+        contentName: reviewData.contentName,
+        contentCover: reviewData.contentCover,
         rating: reviewData.rating,
         reviewText: reviewData.reviewText,
         reviewerName: userName || 'Anonymous'

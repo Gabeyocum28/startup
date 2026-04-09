@@ -7,10 +7,20 @@ import './review.css';
 export function Review({ userName }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const albumData = location.state || {};
-    const { albumId, albumName, artistName, albumCover } = albumData;
+    const stateData = location.state || {};
+    // Support both legacy album fields and new content fields
+    const contentId = stateData.contentId || stateData.albumId;
+    const contentType = stateData.contentType || 'album';
+    const contentName = stateData.contentName || stateData.albumName;
+    const artistName = stateData.artistName;
+    const contentCover = stateData.contentCover || stateData.albumCover;
+    const prefillRating = stateData.prefillRating;
+    // Legacy aliases
+    const albumId = stateData.albumId || contentId;
+    const albumName = stateData.albumName || contentName;
+    const albumCover = stateData.albumCover || contentCover;
 
-    const [rating, setRating] = React.useState(0);
+    const [rating, setRating] = React.useState(prefillRating || 0);
     const [hoverRating, setHoverRating] = React.useState(0);
     const [reviewText, setReviewText] = React.useState('');
 
@@ -39,6 +49,10 @@ export function Review({ userName }) {
                 albumName: albumName,
                 artistName: artistName,
                 albumCover: albumCover,
+                contentId: contentId,
+                contentType: contentType,
+                contentName: contentName,
+                contentCover: contentCover,
                 rating: rating,
                 reviewText: reviewText.trim()
             }, userName);
@@ -132,8 +146,8 @@ export function Review({ userName }) {
                             className="album-cover-preview"
                             onError={handleImageError}
                         />
-                        <h2>{albumName || 'Album Name'}</h2>
-                        <h3>{artistName || 'Artist Name'}</h3>
+                        <h2>{contentName || 'Name'}</h2>
+                        {artistName && <h3>{artistName}</h3>}
                     </div>
 
                     <div className="rating-section">

@@ -17,9 +17,11 @@ app.use(express.json());
 // Use the cookie parser middleware for tracking authentication tokens
 app.use(cookieParser());
 
-// Request logging middleware
+// Request logging middleware - only log API calls
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
+  if (req.path.startsWith('/api')) {
+    console.log(`${req.method} ${req.path}`);
+  }
   next();
 });
 
@@ -78,9 +80,6 @@ apiRouter.post('/auth/register', async (req, res) => {
     path: '/'
   });
 
-  console.log(`Created user: ${username}, token: ${token}`);
-  console.log(`Set-Cookie header:`, res.getHeader('Set-Cookie'));
-
   res.status(201).json({
     id: user.id,
     username: user.username,
@@ -123,9 +122,6 @@ apiRouter.post('/auth/login', async (req, res) => {
     path: '/'
   });
 
-  console.log(`User logged in: ${username}, token: ${token}`);
-  console.log(`Set-Cookie header:`, res.getHeader('Set-Cookie'));
-
   res.json({
     id: user.id,
     username: user.username,
@@ -152,8 +148,6 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 apiRouter.get('/user', async (req, res) => {
   // Try to get token from cookie or Authorization header
   let token = req.cookies.token;
-  console.log(`Authorization header: ${req.headers.authorization}`);
-  console.log(`Cookie token: ${req.cookies.token}`);
   if (!token && req.headers.authorization) {
     token = req.headers.authorization.replace('Bearer ', '');
   }
@@ -163,7 +157,6 @@ apiRouter.get('/user', async (req, res) => {
   }
 
   const user = await DB.getUserByToken(token);
-  console.log(`GET /api/user - token: ${token}, user found: ${!!user}`);
 
   if (!user) {
     return res.status(401).json({ msg: 'Unauthorized' });
@@ -232,6 +225,13 @@ apiRouter.get('/reviews/album/:albumId', async (req, res) => {
   res.json(albumReviews);
 });
 
+// Get reviews by content type and id
+apiRouter.get('/reviews/:contentType/:contentId', async (req, res) => {
+  const { contentType, contentId } = req.params;
+  const reviews = await DB.getReviewsByContent(contentId, contentType);
+  res.json(reviews);
+});
+
 // Create new review (restricted - requires authentication)
 apiRouter.post('/reviews', async (req, res) => {
   const token = req.cookies.token;
@@ -245,18 +245,25 @@ apiRouter.post('/reviews', async (req, res) => {
     return res.status(401).json({ msg: 'Unauthorized - Please login to post a review' });
   }
 
-  const { albumId, albumName, artistName, albumCover, rating, reviewText, reviewerName } = req.body;
+  const { albumId, albumName, artistName, albumCover, contentId, contentType, contentName, contentCover, rating, reviewText, reviewerName } = req.body;
 
-  if (!albumId || !albumName || !rating || !reviewText || !reviewerName) {
+  const name = contentName || albumName;
+  const id = contentId || albumId;
+
+  if (!id || !name || !rating || !reviewText || !reviewerName) {
     return res.status(400).json({ msg: 'Missing required fields' });
   }
 
   const review = {
     id: uuid(),
-    albumId,
-    albumName,
+    albumId: albumId || contentId,
+    albumName: albumName || contentName,
     artistName,
-    albumCover,
+    albumCover: albumCover || contentCover,
+    contentId: id,
+    contentType: contentType || 'album',
+    contentName: name,
+    contentCover: contentCover || albumCover,
     rating,
     reviewText,
     reviewerName,
@@ -270,7 +277,7 @@ apiRouter.post('/reviews', async (req, res) => {
   const notification = {
     type: 'newReview',
     userName: reviewerName,
-    albumName: albumName,
+    albumName: name,
     rating: rating
   };
 
@@ -306,11 +313,57 @@ apiRouter.get('/user/:username', async (req, res) => {
 });
 
 // ===================================
-// Spotify API Endpoints
+// Quick Rating Endpoints
 // ===================================
 
-// Search albums on Spotify
-apiRouter.get('/spotify/search', async (req, res) => {
+// Set/update a quick rating for any content type
+apiRouter.post('/ratings', async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ msg: 'Unauthorized' });
+
+  const user = await DB.getUserByToken(token);
+  if (!user) return res.status(401).json({ msg: 'Unauthorized' });
+
+  const { contentId, rating, contentType } = req.body;
+  // Support legacy albumId field
+  const id = contentId || req.body.albumId;
+  const type = contentType || 'album';
+
+  if (!id || !rating || rating < 0.5 || rating > 5 || (rating * 2) % 1 !== 0) {
+    return res.status(400).json({ msg: 'contentId and rating (0.5-5, half steps) are required' });
+  }
+
+  await DB.setRating(user.username, id, rating, type);
+  res.json({ contentId: id, contentType: type, rating });
+});
+
+// Get current user's rating for content
+apiRouter.get('/ratings/:contentType/:contentId', async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.json({ rating: null });
+
+  const user = await DB.getUserByToken(token);
+  if (!user) return res.json({ rating: null });
+
+  const result = await DB.getRating(user.username, req.params.contentId, req.params.contentType);
+  res.json({ rating: result ? result.rating : null });
+});
+
+// Get average rating for content
+apiRouter.get('/ratings/:contentType/:contentId/average', async (req, res) => {
+  const ratings = await DB.getRatingsByContent(req.params.contentId, req.params.contentType);
+  if (ratings.length === 0) return res.json({ average: null, count: 0 });
+
+  const avg = ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length;
+  res.json({ average: Math.round(avg * 10) / 10, count: ratings.length });
+});
+
+// ===================================
+// Deezer API Endpoints (no auth required)
+// ===================================
+
+// Combined search — albums, tracks, and artists in parallel
+apiRouter.get('/search', async (req, res) => {
   const { q } = req.query;
 
   if (!q) {
@@ -318,99 +371,196 @@ apiRouter.get('/spotify/search', async (req, res) => {
   }
 
   try {
-    // Get Spotify access token
-    const token = await getSpotifyToken();
+    const encoded = encodeURIComponent(q);
+    const [albumRes, trackRes, artistRes] = await Promise.all([
+      fetch(`https://api.deezer.com/search/album?q=${encoded}&limit=5`),
+      fetch(`https://api.deezer.com/search/track?q=${encoded}&limit=5`),
+      fetch(`https://api.deezer.com/search/artist?q=${encoded}&limit=5`)
+    ]);
 
-    // Search for albums
-    const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=album&limit=20`;
-    const response = await fetch(searchUrl, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    const [albumData, trackData, artistData] = await Promise.all([
+      albumRes.json(), trackRes.json(), artistRes.json()
+    ]);
 
-    if (!response.ok) {
-      throw new Error('Spotify API request failed');
-    }
+    const albums = (albumData.data || []).map(album => ({
+      id: album.id,
+      name: album.title,
+      artists: [{ name: album.artist.name, id: album.artist.id }],
+      images: [
+        { url: album.cover_big },
+        { url: album.cover_medium },
+        { url: album.cover_small }
+      ],
+      total_tracks: album.nb_tracks || 0
+    }));
 
-    const data = await response.json();
-    res.json(data.albums);
+    const tracks = (trackData.data || []).map(track => ({
+      id: track.id,
+      name: track.title,
+      artist: track.artist.name,
+      artistId: track.artist.id,
+      albumName: track.album.title,
+      albumId: track.album.id,
+      image: track.album.cover_big || track.album.cover_medium,
+      duration_ms: track.duration * 1000,
+      preview: track.preview,
+      explicit: track.explicit_lyrics
+    }));
+
+    const artists = (artistData.data || []).map(artist => ({
+      id: artist.id,
+      name: artist.name,
+      image: artist.picture_big || artist.picture_medium,
+      fans: artist.nb_fan || 0
+    }));
+
+    res.json({ albums, tracks, artists });
   } catch (error) {
-    console.error('Spotify search error:', error);
-    res.status(500).json({ msg: 'Failed to search Spotify', error: error.message });
+    console.error('Deezer search error:', error);
+    res.status(500).json({ msg: 'Failed to search', error: error.message });
   }
 });
 
-// Get album details from Spotify
+// Keep legacy album search for profile favorites
+apiRouter.get('/spotify/search', async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ msg: 'Search query is required' });
+
+  try {
+    const response = await fetch(`https://api.deezer.com/search/album?q=${encodeURIComponent(q)}&limit=20`);
+    if (!response.ok) throw new Error(`Deezer API failed with status ${response.status}`);
+    const data = await response.json();
+    const items = (data.data || []).map(album => ({
+      id: album.id,
+      name: album.title,
+      artists: [{ name: album.artist.name }],
+      images: [
+        { url: album.cover_big },
+        { url: album.cover_medium },
+        { url: album.cover_small }
+      ],
+      total_tracks: album.nb_tracks || 0
+    }));
+    res.json({ items });
+  } catch (error) {
+    res.status(500).json({ msg: 'Failed to search albums', error: error.message });
+  }
+});
+
+// Get album details
 apiRouter.get('/spotify/album/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Get Spotify access token
-    const token = await getSpotifyToken();
-
-    // Get album details
-    const albumUrl = `https://api.spotify.com/v1/albums/${id}`;
-    const response = await fetch(albumUrl, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Spotify API request failed');
-    }
-
+    const response = await fetch(`https://api.deezer.com/album/${id}`);
+    if (!response.ok) throw new Error(`Deezer API failed with status ${response.status}`);
     const data = await response.json();
-    res.json(data);
+
+    const album = {
+      id: data.id,
+      name: data.title,
+      artists: (data.contributors || [{ name: data.artist.name, id: data.artist.id }]).map(a => ({ name: a.name, id: a.id })),
+      images: [
+        { url: data.cover_xl || data.cover_big },
+        { url: data.cover_big },
+        { url: data.cover_medium }
+      ],
+      release_date: data.release_date || '',
+      label: data.label || 'N/A',
+      total_tracks: data.nb_tracks || 0,
+      genres: data.genres?.data?.map(g => g.name) || [],
+      tracks: {
+        items: (data.tracks?.data || []).map(track => ({
+          id: track.id,
+          track_number: track.track_position,
+          name: track.title,
+          duration_ms: track.duration * 1000,
+          explicit: track.explicit_lyrics,
+          preview: track.preview
+        }))
+      }
+    };
+
+    res.json(album);
   } catch (error) {
-    console.error('Spotify album error:', error);
-    res.status(500).json({ msg: 'Failed to fetch album from Spotify', error: error.message });
+    res.status(500).json({ msg: 'Failed to fetch album', error: error.message });
   }
 });
 
-// ===================================
-// Spotify Authentication Helper
-// ===================================
+// Get track details
+apiRouter.get('/track/:id', async (req, res) => {
+  const { id } = req.params;
 
-let spotifyAccessToken = null;
-let spotifyTokenExpiry = null;
+  try {
+    const response = await fetch(`https://api.deezer.com/track/${id}`);
+    if (!response.ok) throw new Error(`Deezer API failed with status ${response.status}`);
+    const data = await response.json();
 
-async function getSpotifyToken() {
-  // Check if we have a valid token
-  if (spotifyAccessToken && spotifyTokenExpiry && Date.now() < spotifyTokenExpiry) {
-    return spotifyAccessToken;
+    const track = {
+      id: data.id,
+      name: data.title,
+      artist: data.artist.name,
+      artistId: data.artist.id,
+      albumName: data.album.title,
+      albumId: data.album.id,
+      image: data.album.cover_xl || data.album.cover_big,
+      duration_ms: data.duration * 1000,
+      preview: data.preview,
+      explicit: data.explicit_lyrics,
+      trackNumber: data.track_position,
+      releaseDate: data.release_date || ''
+    };
+
+    res.json(track);
+  } catch (error) {
+    res.status(500).json({ msg: 'Failed to fetch track', error: error.message });
   }
+});
 
-  // Get new token using Client Credentials flow
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+// Get artist details + top tracks + albums
+apiRouter.get('/artist/:id', async (req, res) => {
+  const { id } = req.params;
 
-  if (!clientId || !clientSecret) {
-    throw new Error('Spotify credentials not configured. Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET environment variables.');
+  try {
+    const [artistRes, topRes, albumsRes] = await Promise.all([
+      fetch(`https://api.deezer.com/artist/${id}`),
+      fetch(`https://api.deezer.com/artist/${id}/top?limit=10`),
+      fetch(`https://api.deezer.com/artist/${id}/albums?limit=20`)
+    ]);
+
+    const [artistData, topData, albumsData] = await Promise.all([
+      artistRes.json(), topRes.json(), albumsRes.json()
+    ]);
+
+    const artist = {
+      id: artistData.id,
+      name: artistData.name,
+      image: artistData.picture_xl || artistData.picture_big,
+      fans: artistData.nb_fan || 0,
+      topTracks: (topData.data || []).map(track => ({
+        id: track.id,
+        name: track.title,
+        albumName: track.album.title,
+        albumId: track.album.id,
+        image: track.album.cover_medium,
+        duration_ms: track.duration * 1000,
+        preview: track.preview,
+        explicit: track.explicit_lyrics
+      })),
+      albums: (albumsData.data || []).map(album => ({
+        id: album.id,
+        name: album.title,
+        image: album.cover_big || album.cover_medium,
+        releaseDate: album.release_date || '',
+        type: album.record_type
+      }))
+    };
+
+    res.json(artist);
+  } catch (error) {
+    res.status(500).json({ msg: 'Failed to fetch artist', error: error.message });
   }
-
-  const authString = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-
-  const response = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Basic ${authString}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: 'grant_type=client_credentials'
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to get Spotify access token');
-  }
-
-  const data = await response.json();
-  spotifyAccessToken = data.access_token;
-  spotifyTokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // Refresh 1 minute early
-
-  return spotifyAccessToken;
-}
+});
 
 // ===================================
 // Default error handler

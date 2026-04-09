@@ -1,5 +1,86 @@
 /* Feed page specific styles */
 
+/* Post detail page */
+.post-detail {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.post-album-section {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.post-album-cover {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.post-album-info h2 {
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+}
+
+.post-artist {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.post-rating {
+    color: var(--gradient-orange, #ff8a2b);
+    font-size: 1.3rem;
+}
+
+.post-rating span {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.post-review-text {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-author {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.post-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 991px) {
+    .post-album-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .post-album-cover {
+        width: 150px;
+        height: 150px;
+    }
+}
+
 /* Mobile responsive */
 @media (max-width: 991px) {
     main {

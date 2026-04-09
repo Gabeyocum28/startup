@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getReviewsByAlbum } from '../review/reviewService';
+import { InlineRate } from '../services/InlineRate';
 import '../app.css';
 import './album.css';
 
@@ -11,6 +12,10 @@ export function Album() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [reviews, setReviews] = React.useState([]);
     const [sortBy, setSortBy] = React.useState('newest');
+    const [playingTrack, setPlayingTrack] = React.useState(null);
+    const audioRef = React.useRef(null);
+    const [userRating, setUserRating] = React.useState(null);
+    const [hoverRating, setHoverRating] = React.useState(0);
 
     React.useEffect(() => {
         const loadAlbum = async () => {
@@ -38,8 +43,19 @@ export function Album() {
             setReviews(albumReviews);
         };
 
+        const loadUserRating = async () => {
+            try {
+                const response = await fetch(`/api/ratings/album/${albumId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.rating) setUserRating(data.rating);
+                }
+            } catch (err) { /* ignore */ }
+        };
+
         loadAlbum();
         loadAlbumReviews();
+        loadUserRating();
     }, [albumId]);
 
     function formatDuration(ms) {
@@ -47,6 +63,48 @@ export function Album() {
         const seconds = Math.floor((ms % 60000) / 1000);
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
+
+    const handleQuickRate = async (rating) => {
+        try {
+            const response = await fetch('/api/ratings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contentId: albumId, contentType: 'album', rating })
+            });
+            if (response.ok) {
+                setUserRating(rating);
+            }
+        } catch (err) {
+            console.error('Failed to save rating:', err);
+        }
+    };
+
+    const handlePlayPreview = (track) => {
+        if (!track.preview) return;
+
+        if (playingTrack === track.id) {
+            audioRef.current?.pause();
+            setPlayingTrack(null);
+            return;
+        }
+
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+
+        const audio = new Audio(track.preview);
+        audio.volume = 0.5;
+        audio.play();
+        audio.onended = () => setPlayingTrack(null);
+        audioRef.current = audio;
+        setPlayingTrack(track.id);
+    };
+
+    React.useEffect(() => {
+        return () => {
+            if (audioRef.current) audioRef.current.pause();
+        };
+    }, []);
 
     const handleImageError = (e) => {
         e.target.src = '/images/no_album_cover.jpg';
@@ -136,20 +194,62 @@ export function Album() {
                 </button>
                 <div className="album-info">
                     <img
-                        src={album.images[0].url}
+                        src={album.images?.[0]?.url || '/images/no_album_cover.jpg'}
                         alt={album.name}
                         className="album-detail-cover"
                         onError={handleImageError}
                     />
                     <div className="album-detail-text">
                         <h1>{album.name}</h1>
-                        <h3>by {album.artists.map(a => a.name).join(', ')}</h3>
-                        <button type="button" className='aura' onClick={() => navigate('/review', { state: {
-                            albumId: album.id,
-                            albumName: album.name,
-                            artistName: album.artists.map(a => a.name).join(', '),
-                            albumCover: album.images[0].url
-                        } })}>Write a Review</button>
+                        <h3>{album.artists.map((a, i) => (
+                            <span key={a.id || i}>
+                                {i > 0 && ', '}
+                                <span className="search-link" onClick={() => navigate(`/artist/${a.id}`)}>{a.name}</span>
+                            </span>
+                        ))}</h3>
+                        <div className="quick-rate-row">
+                            <div
+                                className="quick-stars"
+                                onMouseLeave={() => setHoverRating(0)}
+                            >
+                                {[1, 2, 3, 4, 5].map(starIndex => {
+                                    const current = hoverRating || userRating || 0;
+                                    let fillClass = 'empty';
+                                    if (current >= starIndex) fillClass = 'full';
+                                    else if (current >= starIndex - 0.5) fillClass = 'half';
+
+                                    return (
+                                        <div key={starIndex} className="quick-star-wrap">
+                                            <div
+                                                className="quick-star-half left"
+                                                onMouseEnter={() => setHoverRating(starIndex - 0.5)}
+                                                onClick={() => handleQuickRate(starIndex - 0.5)}
+                                            />
+                                            <div
+                                                className="quick-star-half right"
+                                                onMouseEnter={() => setHoverRating(starIndex)}
+                                                onClick={() => handleQuickRate(starIndex)}
+                                            />
+                                            <span className="quick-star-bg">★</span>
+                                            <span className={`quick-star-fill ${fillClass}`}>★</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <button
+                                className="review-icon-btn"
+                                title="Write a review"
+                                onClick={() => navigate('/review', { state: {
+                                    albumId: album.id,
+                                    albumName: album.name,
+                                    artistName: album.artists.map(a => a.name).join(', '),
+                                    albumCover: album.images?.[0]?.url || '/images/no_album_cover.jpg',
+                                    prefillRating: userRating
+                                } })}
+                            >
+                                ✎
+                            </button>
+                        </div>
                         <p>
                             Released: {new Date(album.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                         </p>
@@ -160,7 +260,7 @@ export function Album() {
                             Total Tracks: {album.total_tracks}
                         </p>
                         <p className="genres">
-                            Genres: {album.genres.join(', ')}
+                            Genres: {album.genres?.length ? album.genres.join(', ') : 'N/A'}
                         </p>
                     </div>
                 </div>
@@ -168,8 +268,17 @@ export function Album() {
                 <div className="tracklist-container">
                     <h2>Tracklist</h2>
                     {album.tracks.items.map(track => (
-                        <div key={track.id} className="track-item">
+                        <div key={track.id} className="track-item" onClick={() => navigate(`/song/${track.id}`)} style={{ cursor: 'pointer' }}>
                             <div className="track-info">
+                                {track.preview && (
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handlePlayPreview(track); }}
+                                        className="track-play-btn"
+                                        title={playingTrack === track.id ? 'Pause' : 'Play preview'}
+                                    >
+                                        {playingTrack === track.id ? '⏸' : '▶'}
+                                    </button>
+                                )}
                                 <span className="track-number">
                                     {track.track_number}
                                 </span>
@@ -178,6 +287,13 @@ export function Album() {
                                     {track.explicit && <span className="explicit-tag">🅴</span>}
                                 </span>
                             </div>
+                            <InlineRate
+                                contentId={track.id}
+                                contentType="track"
+                                contentName={track.name}
+                                artistName={album.artists.map(a => a.name).join(', ')}
+                                contentCover={album.images?.[0]?.url}
+                            />
                             <span className="track-duration">
                                 {formatDuration(track.duration_ms)}
                             </span>

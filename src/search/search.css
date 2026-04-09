@@ -21,6 +21,19 @@
     font-size: 0.9rem;
 }
 
+.search-artist-cover {
+    border-radius: 50%;
+}
+
+.search-result-type {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--primary-color, #ff6b6b);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.1rem;
+}
+
 .no-results {
     margin-top: 2rem;
     color: var(--text-muted);

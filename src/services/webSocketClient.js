@@ -4,6 +4,7 @@ class WebSocketClient {
     this.socket = null;
     this.listeners = [];
     this.connected = false;
+    this.intentionalClose = false;
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 5;
     this.reconnectDelay = 2000;
@@ -16,6 +17,7 @@ class WebSocketClient {
     const wsUrl = `${protocol}://${window.location.host}/ws`;
 
     console.log(`Connecting to WebSocket at ${wsUrl}`);
+    this.intentionalClose = false;
     this.socket = new WebSocket(wsUrl);
 
     // Connection opened
@@ -53,7 +55,9 @@ class WebSocketClient {
     this.socket.onclose = () => {
       console.log('WebSocket disconnected');
       this.connected = false;
-      this.attemptReconnect();
+      if (!this.intentionalClose) {
+        this.attemptReconnect();
+      }
     };
 
     // Connection error
@@ -101,9 +105,11 @@ class WebSocketClient {
   disconnect() {
     if (this.socket) {
       console.log('Closing WebSocket connection');
+      this.intentionalClose = true;
       this.socket.close();
       this.socket = null;
       this.connected = false;
+      this.reconnectAttempts = 0;
     }
   }
 }

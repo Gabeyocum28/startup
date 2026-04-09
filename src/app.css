@@ -816,3 +816,90 @@ button:active {
     color: var(--error) !important;
     font-weight: 500;
 }
+
+/* Inline rate on track items (widescreen only) */
+.inline-rate {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+}
+
+@media (min-width: 768px) {
+    .inline-rate {
+        display: flex;
+    }
+}
+
+.inline-stars {
+    display: flex;
+    gap: 0.05rem;
+}
+
+.inline-star-wrap {
+    position: relative;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.inline-star-half {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.inline-star-half.left { left: 0; }
+.inline-star-half.right { right: 0; }
+
+.inline-star-bg {
+    color: var(--border-color);
+}
+
+.inline-star-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--gradient-orange, #ff8a2b);
+}
+
+.inline-star-fill.empty { width: 0; }
+.inline-star-fill.half { width: 50%; }
+.inline-star-fill.full { width: 100%; }
+
+.inline-review-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+.inline-review-btn:hover {
+    background-color: var(--primary-color, #ff6b6b);
+    border-color: var(--primary-color, #ff6b6b);
+    color: white;
+}
+
+/* Global clickable link style */
+.search-link {
+    color: var(--primary-color, #ff6b6b);
+    cursor: pointer;
+}
+
+.search-link:hover {
+    text-decoration: underline;
+}

@@ -56,6 +56,11 @@
     border-radius: 8px;
     margin-bottom: var(--spacing-xs);
     border: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.track-item:hover {
+    background: var(--bg-secondary);
 }
 
 .track-info {
@@ -77,6 +82,110 @@
     margin-left: 0.5rem;
     font-size: 0.8rem;
     color: var(--error);
+}
+
+.quick-rate-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.quick-stars {
+    display: flex;
+    gap: 0.15rem;
+}
+
+.quick-star-wrap {
+    position: relative;
+    font-size: 1.8rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.quick-star-half {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.quick-star-half.left {
+    left: 0;
+}
+
+.quick-star-half.right {
+    right: 0;
+}
+
+.quick-star-bg {
+    color: var(--border-color);
+}
+
+.quick-star-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--gradient-orange, #ff8a2b);
+}
+
+.quick-star-fill.empty {
+    width: 0;
+}
+
+.quick-star-fill.half {
+    width: 50%;
+}
+
+.quick-star-fill.full {
+    width: 100%;
+}
+
+.review-icon-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.review-icon-btn:hover {
+    background-color: var(--primary-color, #ff6b6b);
+    border-color: var(--primary-color, #ff6b6b);
+    color: white;
+}
+
+.track-play-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    padding: 0;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.track-play-btn:hover {
+    background-color: var(--primary-color, #ff6b6b);
+    border-color: var(--primary-color, #ff6b6b);
+    color: white;
 }
 
 .track-duration {
