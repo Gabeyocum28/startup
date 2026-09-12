@@ -1,121 +1,101 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAllReviews } from '../review/reviewService';
+import { getReviews } from '../review/reviewService';
+import { ReviewCard } from '../components/ReviewCard';
+import { Loading, EmptyState, ErrorMessage } from '../components/ui';
+import { useAuth } from '../services/AuthContext';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import '../app.css';
 import './feed.css';
 
-export function Feed({ userName }) {
-    const navigate = useNavigate();
-    const [allReviews, setAllReviews] = React.useState([]);
+const PAGE = 20;
 
-    React.useEffect(() => {
-        // Load all reviews from backend API
-        const loadReviews = async () => {
-            const reviews = await getAllReviews();
-            setAllReviews(reviews);
-        };
+export function Feed() {
+    useDocumentTitle('Feed', 'The latest music reviews from the Polyrhythmd community.');
+    const { user } = useAuth();
+    const [scope, setScope] = React.useState('all');
+    const [reviews, setReviews] = React.useState([]);
+    const [nextBefore, setNextBefore] = React.useState(null);
+    const [loading, setLoading] = React.useState(true);
+    const [loadingMore, setLoadingMore] = React.useState(false);
+    const [error, setError] = React.useState(null);
 
-        loadReviews();
-
-        // Listen for new review events from WebSocket
-        const handleNewReview = () => {
-            loadReviews();
-        };
-
-        window.addEventListener('newReview', handleNewReview);
-
-        return () => {
-            window.removeEventListener('newReview', handleNewReview);
-        };
+    const loadFirstPage = React.useCallback(async (which) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await getReviews({ limit: PAGE, scope: which });
+            setReviews(data.reviews);
+            setNextBefore(data.nextBefore);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
-    const renderStars = (rating) => {
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 !== 0;
-        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    React.useEffect(() => {
+        loadFirstPage(scope);
+        const refresh = () => loadFirstPage(scope);
+        window.addEventListener('newReview', refresh);
+        return () => window.removeEventListener('newReview', refresh);
+    }, [scope, loadFirstPage]);
 
-        return (
-            <span style={{ display: 'inline-flex', alignItems: 'center', position: 'relative' }}>
-                <span>{'★'.repeat(fullStars)}</span>
-                {hasHalfStar && (
-                    <span style={{ position: 'relative', display: 'inline-block' }}>
-                        <span>☆</span>
-                        <span style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            overflow: 'hidden',
-                            width: '50%',
-                            color: 'inherit'
-                        }}>★</span>
-                    </span>
-                )}
-                <span>{'☆'.repeat(emptyStars)}</span>
-            </span>
-        );
-    };
+    async function loadMore() {
+        if (!nextBefore) return;
+        setLoadingMore(true);
+        try {
+            const data = await getReviews({ limit: PAGE, before: nextBefore, scope });
+            setReviews(prev => [...prev, ...data.reviews]);
+            setNextBefore(data.nextBefore);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoadingMore(false);
+        }
+    }
+
+    const followingCount = user?.following?.length || 0;
 
     return (
         <div>
             <main>
-                <h1>Feed</h1>
+                <div className="feed-header">
+                    <h1>Feed</h1>
+                    {user && (
+                        <div className="feed-tabs" role="tablist">
+                            <button type="button" role="tab" aria-selected={scope === 'all'} className={scope === 'all' ? 'active' : ''} onClick={() => setScope('all')}>Everyone</button>
+                            <button type="button" role="tab" aria-selected={scope === 'following'} className={scope === 'following' ? 'active' : ''} onClick={() => setScope('following')}>Following</button>
+                        </div>
+                    )}
+                </div>
                 <div className="feed-container">
                     <div className="feed-main">
-                        {allReviews.length === 0 ? (
-                            <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '2rem' }}>
-                                No reviews yet. Be the first to write a review!
-                            </p>
+                        <ErrorMessage>{error}</ErrorMessage>
+                        {loading ? <Loading label="Loading reviews…" /> : reviews.length === 0 ? (
+                            scope === 'following' ? (
+                                <EmptyState title="Nothing here yet">
+                                    {followingCount === 0
+                                        ? 'You are not following anyone. Open a profile and hit Follow.'
+                                        : 'The people you follow have not posted yet.'}
+                                </EmptyState>
+                            ) : (
+                                <EmptyState title="No reviews yet">Be the first to write one.</EmptyState>
+                            )
                         ) : (
-                            allReviews.map(review => (
-                                <div key={review.id} className="review-card" style={{ cursor: 'pointer' }} onClick={() => navigate(`/post/${review.id}`)}>
-                                    <div className="album-info">
-                                        <img
-                                            src={review.contentCover || review.albumCover}
-                                            alt={review.contentName || review.albumName}
-                                            className="album-cover"
-                                            onError={(e) => { e.target.src = '/images/no_album_cover.jpg'; }}
-                                        />
-                                        <div className="album-details">
-                                            <h3
-                                                className="album-title search-link"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    const type = review.contentType || 'album';
-                                                    const id = review.contentId || review.albumId;
-                                                    if (type === 'artist') navigate(`/artist/${id}`);
-                                                    else if (type === 'track') navigate(`/song/${id}`);
-                                                    else navigate(`/album/${id}`);
-                                                }}
-                                            >
-                                                {review.contentName || review.albumName}
-                                            </h3>
-                                            {review.artistName && <p className="album-artist">{review.artistName}</p>}
-                                            <p className="review-rating">{renderStars(review.rating)}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="review-content">
-                                        <p className="review-text">{review.reviewText}</p>
-                                    </div>
-
-                                    <p
-                                        className="review-author"
-                                        style={{ cursor: 'pointer', transition: 'color 0.2s' }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (review.reviewerName === userName) {
-                                                navigate('/profile');
-                                            } else {
-                                                navigate(`/user/${review.reviewerName}`);
-                                            }
-                                        }}
-                                        onMouseOver={(e) => { e.currentTarget.style.color = 'var(--primary-color, #ff6b6b)'; }}
-                                        onMouseOut={(e) => { e.currentTarget.style.color = ''; }}
-                                    >
-                                        @{review.reviewerName}
-                                    </p>
-                                </div>
-                            ))
+                            <>
+                                {reviews.map(review => (
+                                    <ReviewCard
+                                        key={review.id}
+                                        review={review}
+                                        onDelete={(id) => setReviews(prev => prev.filter(r => r.id !== id))}
+                                    />
+                                ))}
+                                {nextBefore && (
+                                    <button type="button" className="aura load-more" disabled={loadingMore} onClick={loadMore}>
+                                        {loadingMore ? 'Loading…' : 'Load more'}
+                                    </button>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
@@ -123,4 +103,3 @@ export function Feed({ userName }) {
         </div>
     );
 }
-

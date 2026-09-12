@@ -157,3 +157,7 @@
 .star.selected {
     animation: starPulse 0.3s ease;
 }
+
+.star-hit { position: absolute; top: 0; width: 50%; height: 100%; z-index: 2; cursor: pointer; }
+.star-hit.left { left: 0; }
+.star-hit.right { right: 0; }

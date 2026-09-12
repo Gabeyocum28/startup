@@ -1,83 +1,47 @@
 // Review service using backend API
+import { api } from '../services/api';
 
-// Get all reviews
-export async function getAllReviews() {
+// Paginated feed. Returns { reviews, nextBefore }.
+export function getReviews({ limit = 20, before = null, scope = 'all' } = {}) {
+    const params = new URLSearchParams({ limit: String(limit) });
+    if (before) params.set('before', before);
+    if (scope === 'following') params.set('scope', 'following');
+    return api(`/api/reviews?${params}`);
+}
+
+export function getReview(id) {
+    return api(`/api/reviews/${encodeURIComponent(id)}`);
+}
+
+export function addReview(reviewData) {
+    return api('/api/reviews', { method: 'POST', body: reviewData });
+}
+
+export function updateReview(id, { rating, reviewText }) {
+    return api(`/api/reviews/${encodeURIComponent(id)}`, { method: 'PUT', body: { rating, reviewText } });
+}
+
+export function deleteReview(id) {
+    return api(`/api/reviews/${encodeURIComponent(id)}`, { method: 'DELETE' });
+}
+
+async function safeList(path) {
     try {
-        const response = await fetch('/api/reviews');
-        if (response.ok) {
-            return await response.json();
-        }
-        console.error('Failed to fetch reviews:', response.statusText);
-        return [];
+        return await api(path);
     } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error('Failed to fetch', path, error);
         return [];
     }
 }
 
-// Add a new review
-export async function addReview(reviewData, userName) {
-    console.log('Adding review with userName:', userName);
-
-    const newReview = {
-        albumId: reviewData.albumId,
-        albumName: reviewData.albumName,
-        artistName: reviewData.artistName,
-        albumCover: reviewData.albumCover,
-        contentId: reviewData.contentId,
-        contentType: reviewData.contentType || 'album',
-        contentName: reviewData.contentName,
-        contentCover: reviewData.contentCover,
-        rating: reviewData.rating,
-        reviewText: reviewData.reviewText,
-        reviewerName: userName || 'Anonymous'
-    };
-
-    try {
-        const response = await fetch('/api/reviews', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newReview)
-        });
-
-        if (response.ok) {
-            return await response.json();
-        } else {
-            const error = await response.json();
-            throw new Error(error.msg || 'Failed to add review');
-        }
-    } catch (error) {
-        console.error('Error adding review:', error);
-        throw error;
-    }
+export function getReviewsByUser(username) {
+    return safeList(`/api/reviews/user/${encodeURIComponent(username)}`);
 }
 
-// Get reviews by user
-export async function getReviewsByUser(username) {
-    try {
-        const response = await fetch(`/api/reviews/user/${encodeURIComponent(username)}`);
-        if (response.ok) {
-            return await response.json();
-        }
-        console.error('Failed to fetch user reviews:', response.statusText);
-        return [];
-    } catch (error) {
-        console.error('Error fetching user reviews:', error);
-        return [];
-    }
+export function getReviewsByAlbum(albumId) {
+    return safeList(`/api/reviews/album/${encodeURIComponent(albumId)}`);
 }
 
-// Get reviews by album
-export async function getReviewsByAlbum(albumId) {
-    try {
-        const response = await fetch(`/api/reviews/album/${encodeURIComponent(albumId)}`);
-        if (response.ok) {
-            return await response.json();
-        }
-        console.error('Failed to fetch album reviews:', response.statusText);
-        return [];
-    } catch (error) {
-        console.error('Error fetching album reviews:', error);
-        return [];
-    }
+export function getReviewsByContent(contentType, contentId) {
+    return safeList(`/api/reviews/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}`);
 }

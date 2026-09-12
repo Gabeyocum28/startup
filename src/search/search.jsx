@@ -1,98 +1,123 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { api } from '../services/api';
+import { AverageBadge } from '../components/Stars';
+import { Loading, EmptyState, ErrorMessage } from '../components/ui';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import '../app.css';
 import './search.css';
+
+const DEBOUNCE_MS = 350;
+const RECENT_KEY = 'polyrhythmd.recentSearches';
+const RESULTS_KEY = 'polyrhythmd.lastSearch';
+const RECENT_MAX = 8;
 
 function scoreResult(item, query) {
     const q = query.toLowerCase();
     const name = item.name.toLowerCase();
-
-    // Name relevance (smaller gaps so popularity can override)
     if (name === q) return 50;
     if (name.startsWith(q)) return 45;
     if (name.includes(` ${q}`) || name.includes(`${q} `)) return 40;
     if (name.includes(q)) return 35;
-
-    // Check secondary fields (artist name on albums/tracks)
     const secondary = (item._artist || '').toLowerCase();
     if (secondary === q) return 40;
     if (secondary.startsWith(q)) return 35;
     if (secondary.includes(q)) return 25;
-
     return 10;
 }
 
-const typeBonus = { artist: 0, album: 0, track: 0 };
+function rank(data, q) {
+    const all = [
+        ...(data.artists || []).map((a, i) => ({ ...a, _type: 'artist', _artist: a.name, _rank: i })),
+        ...(data.albums || []).map((a, i) => ({ ...a, _type: 'album', _artist: a.artists[0].name, _rank: i })),
+        ...(data.tracks || []).map((t, i) => ({ ...t, _type: 'track', _artist: t.artist, _rank: i })),
+    ];
+    all.forEach(item => {
+        item._score = scoreResult(item, q) + Math.max(0, 15 - item._rank * 3);
+        if (item._type === 'artist' && item.fans) item._score += Math.min(Math.log10(item.fans + 1), 2);
+    });
+    return all.sort((a, b) => b._score - a._score);
+}
+
+function readJson(storage, key, fallback) {
+    try { return JSON.parse(storage.getItem(key)) ?? fallback; } catch { return fallback; }
+}
+function writeJson(storage, key, value) {
+    try { storage.setItem(key, JSON.stringify(value)); } catch { /* storage unavailable */ }
+}
 
 export function Search() {
+    useDocumentTitle('Search', 'Find albums, songs, and artists to rate and review.');
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const [rankedResults, setRankedResults] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [hasSearched, setHasSearched] = React.useState(false);
+    const [params, setParams] = useSearchParams();
+    const urlQuery = params.get('q') || '';
+
+    // Restore the last search so Back returns to the same results.
+    const saved = React.useMemo(() => readJson(sessionStorage, RESULTS_KEY, null), []);
+    const [query, setQuery] = React.useState(urlQuery || saved?.query || '');
+    const [results, setResults] = React.useState(saved && (!urlQuery || saved.query === urlQuery) ? saved.results : []);
+    const [averages, setAverages] = React.useState(saved?.averages || {});
+    const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
+    const [searched, setSearched] = React.useState(!!saved?.results?.length);
+    const [recent, setRecent] = React.useState(() => readJson(localStorage, RECENT_KEY, []));
+    const latest = React.useRef(0);
 
-    const handleImageError = (e) => {
-        e.target.src = '/images/no_album_cover.jpg';
-    };
-
-    async function handleSearch() {
-        if (!searchQuery.trim()) {
-            setRankedResults([]);
-            setHasSearched(false);
-            return;
-        }
-
-        setIsLoading(true);
-        setHasSearched(true);
+    const runSearch = React.useCallback(async (q) => {
+        const trimmed = q.trim();
+        if (!trimmed) { setResults([]); setSearched(false); return; }
+        const seq = ++latest.current;
+        setLoading(true);
         setError(null);
-
         try {
-            const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+            const data = await api(`/api/search?q=${encodeURIComponent(trimmed)}`);
+            if (seq !== latest.current) return; // a newer search superseded this one
+            const ranked = rank(data, trimmed);
+            setResults(ranked);
+            setSearched(true);
 
-            if (response.ok) {
-                const data = await response.json();
-                const q = searchQuery;
+            const keys = ranked.map(r => `${r._type}:${r.id}`).join(',');
+            const avg = keys ? await api(`/api/ratings/batch?keys=${encodeURIComponent(keys)}`).catch(() => ({})) : {};
+            if (seq !== latest.current) return;
+            setAverages(avg);
+            writeJson(sessionStorage, RESULTS_KEY, { query: trimmed, results: ranked, averages: avg });
 
-                // Tag each result with its type, index (Deezer returns by popularity), and score
-                const all = [
-                    ...(data.artists || []).map((a, i) => ({ ...a, _type: 'artist', _artist: a.name, _rank: i })),
-                    ...(data.albums || []).map((a, i) => ({ ...a, _type: 'album', _artist: a.artists[0].name, _rank: i })),
-                    ...(data.tracks || []).map((t, i) => ({ ...t, _type: 'track', _artist: t.artist, _rank: i }))
-                ];
-
-                all.forEach((item) => {
-                    item._score = scoreResult(item, q) + typeBonus[item._type];
-                    // Deezer returns results by popularity — first result = most popular
-                    // Bonus: rank 0 gets 15, rank 1 gets 12, rank 2 gets 9, etc.
-                    item._score += Math.max(0, 15 - item._rank * 3);
-                    // Fan count only as tiebreaker between artists with same score
-                    if (item._type === 'artist' && item.fans) {
-                        item._score += Math.min(Math.log10(item.fans + 1), 2);
-                    }
-                });
-
-                all.sort((a, b) => b._score - a._score);
-
-                setRankedResults(all);
-            } else {
-                const errorData = await response.json();
-                setError(errorData.msg || 'Failed to search');
-                setRankedResults([]);
-            }
+            setRecent(prev => {
+                const next = [trimmed, ...prev.filter(r => r.toLowerCase() !== trimmed.toLowerCase())].slice(0, RECENT_MAX);
+                writeJson(localStorage, RECENT_KEY, next);
+                return next;
+            });
         } catch (err) {
-            console.error('Search error:', err);
-            setError('Failed to connect to server. Please try again.');
-            setRankedResults([]);
+            if (seq !== latest.current) return;
+            setError(err.message || 'Search failed. Try again.');
+            setResults([]);
         } finally {
-            setIsLoading(false);
+            if (seq === latest.current) setLoading(false);
         }
+    }, []);
+
+    // Search from the URL (e.g. /search?q=radiohead) on arrival.
+    React.useEffect(() => {
+        if (urlQuery && urlQuery !== saved?.query) { setQuery(urlQuery); runSearch(urlQuery); }
+    }, [urlQuery, runSearch, saved]);
+
+    // Debounced search as you type.
+    React.useEffect(() => {
+        if (!query.trim()) return undefined;
+        if (query === saved?.query && results.length) return undefined;
+        const t = setTimeout(() => runSearch(query), DEBOUNCE_MS);
+        return () => clearTimeout(t);
+    }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    function submit(e) {
+        e.preventDefault();
+        setParams(query.trim() ? { q: query.trim() } : {});
+        runSearch(query);
     }
 
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
+    function clearRecent() {
+        setRecent([]);
+        writeJson(localStorage, RECENT_KEY, []);
     }
 
     function formatDuration(ms) {
@@ -101,23 +126,17 @@ export function Search() {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
+    const onImgError = (e) => { e.target.src = '/images/no_album_cover.jpg'; };
+
     function renderResult(item) {
+        const avg = averages[`${item._type}:${item.id}`];
         if (item._type === 'artist') {
             return (
-                <div
-                    key={`artist-${item.id}`}
-                    className="review-card search-result-card"
-                    onClick={() => navigate(`/artist/${item.id}`)}
-                >
+                <div key={`artist-${item.id}`} className="review-card search-result-card" onClick={() => navigate(`/artist/${item.id}`)}>
                     <div className="album-info search-album-info">
-                        <img
-                            src={item.image || '/images/no_album_cover.jpg'}
-                            alt={item.name}
-                            className="album-cover search-album-cover search-artist-cover"
-                            onError={handleImageError}
-                        />
+                        <img src={item.image || '/images/no_album_cover.jpg'} alt={item.name} className="album-cover search-album-cover search-artist-cover" loading="lazy" onError={onImgError} />
                         <div className="album-details">
-                            <h3 className="album-title">{item.name}</h3>
+                            <h3 className="album-title">{item.name} <AverageBadge {...(avg || {})} /></h3>
                             <p className="search-result-type">Artist</p>
                             <p className="album-artist">{item.fans.toLocaleString()} fans</p>
                         </div>
@@ -125,23 +144,13 @@ export function Search() {
                 </div>
             );
         }
-
         if (item._type === 'album') {
             return (
-                <div
-                    key={`album-${item.id}`}
-                    className="review-card search-result-card"
-                    onClick={() => navigate(`/album/${item.id}`)}
-                >
+                <div key={`album-${item.id}`} className="review-card search-result-card" onClick={() => navigate(`/album/${item.id}`)}>
                     <div className="album-info search-album-info">
-                        <img
-                            src={item.images?.[2]?.url || item.images?.[0]?.url || '/images/no_album_cover.jpg'}
-                            alt={item.name}
-                            className="album-cover search-album-cover"
-                            onError={handleImageError}
-                        />
+                        <img src={item.images?.[2]?.url || item.images?.[0]?.url || '/images/no_album_cover.jpg'} alt={item.name} className="album-cover search-album-cover" loading="lazy" onError={onImgError} />
                         <div className="album-details">
-                            <h3 className="album-title">{item.name}</h3>
+                            <h3 className="album-title">{item.name} <AverageBadge {...(avg || {})} /></h3>
                             <p className="search-result-type">Album</p>
                             <p className="album-artist">
                                 <span className="search-link" onClick={(e) => { e.stopPropagation(); navigate(`/artist/${item.artists[0].id}`); }}>{item.artists[0].name}</span>
@@ -152,23 +161,12 @@ export function Search() {
                 </div>
             );
         }
-
-        // track
         return (
-            <div
-                key={`track-${item.id}`}
-                className="review-card search-result-card"
-                onClick={() => navigate(`/song/${item.id}`)}
-            >
+            <div key={`track-${item.id}`} className="review-card search-result-card" onClick={() => navigate(`/song/${item.id}`)}>
                 <div className="album-info search-album-info">
-                    <img
-                        src={item.image || '/images/no_album_cover.jpg'}
-                        alt={item.name}
-                        className="album-cover search-album-cover"
-                        onError={handleImageError}
-                    />
+                    <img src={item.image || '/images/no_album_cover.jpg'} alt={item.name} className="album-cover search-album-cover" loading="lazy" onError={onImgError} />
                     <div className="album-details">
-                        <h3 className="album-title">{item.name}</h3>
+                        <h3 className="album-title">{item.name} <AverageBadge {...(avg || {})} /></h3>
                         <p className="search-result-type">Song</p>
                         <p className="album-artist">
                             <span className="search-link" onClick={(e) => { e.stopPropagation(); navigate(`/artist/${item.artistId}`); }}>{item.artist}</span>
@@ -185,39 +183,46 @@ export function Search() {
         <div>
             <main>
                 <h1>Search</h1>
-                <label htmlFor="album-search">Search albums, songs, and artists:</label>
-                <input
-                    id="album-search"
-                    name="album-search"
-                    className="standard_search"
-                    placeholder="Enter a name..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                />
-                <div>
-                    <button className="aura" onClick={handleSearch}>Search</button>
-                </div>
+                <form onSubmit={submit} className="search-form">
+                    <label htmlFor="album-search">Search albums, songs, and artists:</label>
+                    <input
+                        id="album-search"
+                        name="q"
+                        className="standard_search"
+                        placeholder="Start typing…"
+                        value={query}
+                        autoComplete="off"
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <div><button type="submit" className="aura">Search</button></div>
+                </form>
 
-                {isLoading && <p>Searching...</p>}
-
-                {error && (
-                    <p className="error-message" style={{ color: 'var(--error-color, #ff4444)', marginTop: '1rem' }}>
-                        {error}
-                    </p>
-                )}
-
-                {rankedResults.length > 0 && (
-                    <div className="search-results-container">
-                        <h2>Results ({rankedResults.length})</h2>
-                        {rankedResults.map(item => renderResult(item))}
+                {!query.trim() && recent.length > 0 && (
+                    <div className="recent-searches">
+                        <div className="recent-head">
+                            <span>Recent searches</span>
+                            <button type="button" className="text-btn" onClick={clearRecent}>Clear</button>
+                        </div>
+                        <div className="recent-chips">
+                            {recent.map(r => (
+                                <button key={r} type="button" className="chip" onClick={() => { setQuery(r); setParams({ q: r }); runSearch(r); }}>{r}</button>
+                            ))}
+                        </div>
                     </div>
                 )}
 
-                {hasSearched && rankedResults.length === 0 && !isLoading && (
-                    <p className="no-results">
-                        No results found for "{searchQuery}"
-                    </p>
+                {loading && <Loading label="Searching…" />}
+                <ErrorMessage>{error}</ErrorMessage>
+
+                {results.length > 0 && (
+                    <div className="search-results-container">
+                        <h2>Results ({results.length})</h2>
+                        {results.map(renderResult)}
+                    </div>
+                )}
+
+                {searched && results.length === 0 && !loading && !error && (
+                    <EmptyState title={`No results for "${query}"`}>Try a different spelling or the artist's name.</EmptyState>
                 )}
             </main>
         </div>

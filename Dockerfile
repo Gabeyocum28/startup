@@ -28,7 +28,7 @@ FROM node:22-alpine AS api
 ENV NODE_ENV=production PORT=3000
 WORKDIR /app
 COPY --from=api-deps /app/node_modules ./node_modules
-COPY service/package.json service/index.js service/database.js ./
+COPY service/package.json service/index.js service/app.js service/database.js ./
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \

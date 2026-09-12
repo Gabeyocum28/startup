@@ -36,6 +36,12 @@ ssh oracle-a1 'cd ~/stacks/polyrhythmd && docker compose up -d --build'
 ssh oracle-a1 'docker compose -f ~/stacks/caddy/docker-compose.yml up -d'
 ```
 
+## Run the tests first
+
+```sh
+cd service && npm test   # API tests against an in-memory MongoDB
+```
+
 ## Deploy an update
 
 ```sh

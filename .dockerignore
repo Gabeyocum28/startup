@@ -20,3 +20,4 @@ LICENSE
 DEPLOY.md
 docker-compose.yml
 polyrhythmd logo.png
+service/test

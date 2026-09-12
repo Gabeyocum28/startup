@@ -31,21 +31,21 @@ The application features a clean, music-focused interface designed for easy navi
 
 **User Profiles**: User profiles displaying all reviews written by that user, with logout functionality.
 
-**Album Search & Review**: Integrated Spotify API search for finding albums, with detailed review forms including 0.5-5 star ratings and written reviews stored in MongoDB.
+**Album Search & Review**: Integrated Deezer API search for finding albums, with detailed review forms including 0.5-5 star ratings and written reviews stored in MongoDB.
 
 **Social Feed**: Community-driven feed displaying all user reviews with album art, ratings, review text, and author information.
 
-**Music Discovery**: Browse albums via Spotify search with full album details including tracklist, release date, label, and aggregate user review ratings.
+**Music Discovery**: Browse albums via Deezer search with full album details including tracklist, release date, label, and aggregate user review ratings.
 
 ### Key Features
 
-- **Album Search & Discovery**: Search for albums using Spotify API with real-time results
-- **Review System**: Write detailed reviews with 0.5-5 star ratings stored in MongoDB
-- **User Profiles**: View user-specific review history with all reviews by that user
-- **Social Feed**: Community feed displaying all reviews from all users
-- **Rating Analytics**: View aggregate ratings calculated from all user reviews for each album
-- **Authentication**: Secure user registration and login with bcrypt password hashing
-- **Album Details**: Full album information including tracklist, release date, label, and genres from Spotify
+- **Search & Discovery**: Search albums, songs, and artists via the public Deezer API, with community average ratings shown inline and recent searches remembered
+- **Review System**: Write, edit, and delete reviews with 0.5-5 star ratings; like and comment on other people's reviews
+- **User Profiles**: Reviews, rating history, Listened and Want-to-listen lists, three favorite albums, and follow/followers
+- **Social Feed**: Paginated feed with an Everyone tab and a Following tab, readable without an account
+- **Rating Analytics**: Quick half-star ratings on any album, song, or artist with community averages
+- **Authentication**: Registration and login with bcrypt hashing, httpOnly secure cookies, rate limiting, password change, and account deletion
+- **Album Details**: Tracklist with 30-second previews, release date, label, and genres from Deezer
 
 ### Technologies
 
@@ -57,7 +57,7 @@ The application uses the required technologies in the following ways:
 
 - **React** - Component-based architecture with:
   - Authentication components for login/registration with form validation
-  - Album search component with Spotify API integration
+  - Album search component with Deezer API integration
   - Album detail pages showing full album information and reviews
   - Review creation forms with star rating input
   - User profile pages displaying review history
@@ -66,7 +66,7 @@ The application uses the required technologies in the following ways:
 
 - **Service** - Node.js/Express backend service providing:
   - User authentication endpoints (register, login, logout)
-  - Spotify API integration for album search and details
+  - Deezer API integration for album search and details
   - Review CRUD endpoints (create, read by user, read by album, read all)
   - Token-based authentication with cookies
   - Static file serving for React frontend
@@ -87,7 +87,7 @@ The application uses the required technologies in the following ways:
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Server deployed and accessible with custom domain name** - [My server link](https://polyrhythmd.com/).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://polyrhythmd.gabeyocum.com/).
 
 ## 🚀 HTML deliverable
 
