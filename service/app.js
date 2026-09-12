@@ -232,8 +232,10 @@ apiRouter.put('/user/password', requireAuth, wrap(async (req, res) => {
   if (typeof currentPassword !== 'string' || typeof newPassword !== 'string') {
     return res.status(400).json({ msg: 'currentPassword and newPassword are required' });
   }
-  const problem = validateCredentials(req.user.username, newPassword);
-  if (problem) return res.status(400).json({ msg: problem });
+  // Only the password is validated here: older accounts may have usernames
+  // that predate the current username rule.
+  if (newPassword.length < LIMITS.passwordMin) return res.status(400).json({ msg: `Password must be at least ${LIMITS.passwordMin} characters` });
+  if (newPassword.length > LIMITS.passwordMax) return res.status(400).json({ msg: 'Password is too long' });
   if (!await bcrypt.compare(currentPassword, req.user.password)) {
     return res.status(401).json({ msg: 'Current password is incorrect' });
   }
