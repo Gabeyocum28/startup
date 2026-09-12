@@ -1,7 +1,13 @@
 const { MongoClient } = require('mongodb');
-const config = require('./dbConfig.json');
+// Connection string comes from MONGO_URI (production / Docker). Falls back to
+// the local dbConfig.json for development.
+function getMongoUrl() {
+  if (process.env.MONGO_URI) return process.env.MONGO_URI;
+  const config = require('./dbConfig.json');
+  return `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+}
 
-const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+const url = getMongoUrl();
 const client = new MongoClient(url);
 const db = client.db('polyrhythmd');
 const userCollection = db.collection('user');
@@ -18,7 +24,7 @@ const ratingCollection = db.collection('rating');
       return;
     } catch (ex) {
       retries--;
-      console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+      console.log(`Unable to connect to database because ${ex.message}`);
       if (retries > 0) {
         console.log(`Retrying in 5 seconds... (${retries} attempts left)`);
         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -139,7 +145,12 @@ function getReviewsByContent(contentId, contentType) {
   return reviewCollection.find(query, { sort: { createdAt: -1 } }).toArray();
 }
 
+function ping() {
+  return db.command({ ping: 1 });
+}
+
 module.exports = {
+  ping,
   getUser,
   getUserByToken,
   addUser,

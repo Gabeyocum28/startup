@@ -1,0 +1,47 @@
+# polyrhythmd stack. Lives at ~/stacks/polyrhythmd/docker-compose.yml on the server.
+# Nothing here binds a host port; Caddy (separate stack) reaches the API by
+# container name over the external `web` network and serves the static
+# frontend from the `polyrhythmd_web` volume mounted at /www/polyrhythmd.
+
+services:
+  polyrhythmd-api:
+    build:
+      context: .
+      target: api
+    image: polyrhythmd-api:local
+    container_name: polyrhythmd-api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: "3000"
+    expose:
+      - "3000"
+    networks: [web]
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.5
+    pids_limit: 200
+
+  # One-shot job: builds the Vite bundle and copies it into the shared volume,
+  # then exits 0. It is not a long-running service, so `restart: "no"`.
+  polyrhythmd-frontend:
+    build:
+      context: .
+      target: frontend
+    image: polyrhythmd-frontend:local
+    container_name: polyrhythmd-frontend
+    restart: "no"
+    volumes:
+      - polyrhythmd_web:/www/polyrhythmd
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.25
+    pids_limit: 200
+
+volumes:
+  polyrhythmd_web:
+    name: polyrhythmd_web
+
+networks:
+  web:
+    external: true

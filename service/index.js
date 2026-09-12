@@ -9,7 +9,7 @@ const DB = require('./database.js');
 const app = express();
 
 // The service port. In production this is set by the hosting provider.
-const port = process.argv.length > 2 ? process.argv[2] : 4000;
+const port = process.env.PORT || (process.argv.length > 2 ? process.argv[2] : 4000);
 
 // JSON body parsing using built-in middleware
 app.use(express.json());
@@ -36,6 +36,16 @@ app.set('trust proxy', true);
 // Router for service endpoints
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
+
+// Health check used by Docker. Fails if the database is unreachable.
+apiRouter.get('/health', async (_req, res) => {
+  try {
+    await DB.ping();
+    res.json({ status: 'ok', db: 'connected' });
+  } catch (err) {
+    res.status(503).json({ status: 'error', db: err.message });
+  }
+});
 
 // ===================================
 // Authentication Endpoints

@@ -1,0 +1,22 @@
+node_modules
+service/node_modules
+dist
+build
+.git
+.github
+.vscode
+.claude
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+service/dbConfig.json
+service/ecosystem.config.js
+deployService.sh
+notes.md
+README.md
+LICENSE
+DEPLOY.md
+docker-compose.yml
+polyrhythmd logo.png
